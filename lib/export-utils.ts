@@ -236,6 +236,20 @@ const sections = [
   }
 ]
 
+// Sections specifically for Excavator Loader (used by PDF export)
+const loaderSections = [
+  { title: "Fire & Safety Equipment", items: ["Fire extinguisher (serviced/sealed)", "First aid kit"] },
+  { title: "Operator Environment", items: ["Seat belt","Mirrors","Lights (head/tail/work)","Horn / reverse alarm","Windscreen / wipers","Steps / handrails","Guards / covers in place","Cabin (clean/undamaged)"] },
+  { title: "Fluids & Filters", items: ["Engine oil level","Hydraulic oil level","Coolant level","Fuel level","Air filter indicator"] },
+  { title: "Electrical", items: ["Battery (condition/terminals)"] },
+  { title: "Undercarriage & Attachments", items: ["Tracks / undercarriage","Bucket (teeth/cutting edge)","Boom / stick / linkage pins","Hydraulic hoses / fittings","Slew ring / bearing","Swing mechanism"] },
+  { title: "Exhaust & Instruments", items: ["Exhaust system","Instruments / gauges","Controls (levers/pedals)"] },
+  { title: "Brakes & Steering", items: ["Brakes (service/park)","Steering"] },
+  { title: "Wheels & Tyres", items: ["Tyres / wheels (if applicable)"] },
+  { title: "Lubrication & Leaks", items: ["Grease points","No leaks (oil/fuel/coolant)"] },
+  { title: "Loader & Quick Hitch", items: ["Loader arms / linkage","Quick hitch (if fitted)","Attachments secure"] },
+]
+
 // ============================================================================
 // ICON MAPPING – maps section titles to image filenames
 // ============================================================================
@@ -273,7 +287,19 @@ const iconMap: Record<string, string> = {
   "All Excess Loose Debris Removed Pre-Shift": "all-excess-loose-debris.png",
   "Escape Hatch & Hammer": "escape-hatch.png",
   "Communication": "communication.png",
-  "Fire Systems": "fire-system.png"
+  "Fire Systems": "fire-system.png",
+
+  // Excavator Loader specific mappings (use existing icons that match DocuWare visuals)
+  "Fire & Safety Equipment": "fire-system.png",
+  "Operator Environment": "cabs.png",
+  "Fluids & Filters": "air-pre-cleaner.png",
+  "Electrical": "battery.png",
+  "Undercarriage & Attachments": "tracks-sprockets.png",
+  "Exhaust & Instruments": "exhaust.png",
+  "Brakes & Steering": "gauges.png",
+  "Wheels & Tyres": "tracks-sprockets.png",
+  "Lubrication & Leaks": "grease.png",
+  "Loader & Quick Hitch": "boom-structure.png"
 }
 
 // ============================================================================
@@ -310,6 +336,8 @@ async function getImageBase64(filename: string): Promise<string> {
 // ============================================================================
 function formTypeLabel(type: string) {
   switch (type) {
+    case "daily-attachment-checklist":
+      return "Daily Attachment Checklist"
     case "light-delivery":
       return "Light Delivery Vehicle Daily Checklist"
     case "excavator-loader":
@@ -327,6 +355,8 @@ function formTypeLabel(type: string) {
 
 function getDocumentDetails(type: string) {
   switch (type) {
+    case "daily-attachment-checklist":
+      return { ref: "HSEMS/8.1.19/DOC/0", rev: "1", date: "07.03.2024" }
     case "light-delivery":
       return { ref: "HSEMS/8.1.19/REG/012", rev: "2", date: "27.03.2020" }
     case "excavator-loader":
@@ -485,18 +515,19 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
   doc.text("Ringomode DSP", 14, yOffset)
   doc.text("Excellence - Relevance - Significance", 14, yOffset + 5)
 
-  doc.setFontSize(7)
-  doc.setTextColor(150)
-  doc.text("HSE Management System", pageWidth - 14, yOffset, { align: "right" })
+  // Center the HSE header and title while keeping the logo on the left
+  doc.setFontSize(10)
+  doc.setTextColor(100)
+  doc.text("HSE Management System", pageWidth / 2, yOffset, { align: "center" })
 
   doc.setDrawColor(34, 100, 54)
   doc.setLineWidth(0.5)
   doc.line(14, yOffset + 9, pageWidth - 14, yOffset + 9)
 
-  // ----- Form Title -----
+  // ----- Form Title (centered) -----
   doc.setFontSize(14)
   doc.setTextColor(34, 100, 54)
-  doc.text(formTypeLabel(sub.formType), 14, yOffset + 18)
+  doc.text(formTypeLabel(sub.formType), pageWidth / 2, yOffset + 18, { align: 'center' })
 
   // ----- Document Reference -----
   const docDetails = getDocumentDetails(sub.formType);
@@ -566,9 +597,11 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
   let y = (doc as any).lastAutoTable?.finalY ?? yOffset + 33
   y += 10
 
-  // Only process if this is an excavator‑harvester submission
-  if (sub.formType === "excavator-harvester") {
-    for (const section of sections) {
+  // Choose sections array based on form type (harvester or loader)
+  const formSections = sub.formType === 'excavator-harvester' ? sections : (sub.formType === 'excavator-loader' ? loaderSections : null)
+
+  if (formSections) {
+    for (const section of formSections) {
       // Find which items of this section are present in the submission
       const sectionItems = section.items.filter(item => sub.data.items && item in sub.data.items)
       if (sectionItems.length === 0) continue

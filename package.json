@@ -38,6 +38,7 @@
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
     "autoprefixer": "^10.4.20",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
@@ -48,12 +49,14 @@
     "jspdf-autotable": "^3.8.4",
     "lucide-react": "^0.544.0",
     "next": "^14.2.5",
+    "next-auth": "5.0.0-beta.30",
     "next-themes": "^0.4.6",
     "react": "19.2.3",
     "react-day-picker": "^9.0.0",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
+    "react-signature-canvas": "1.1.0-alpha.2",
     "recharts": "2.15.0",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
@@ -63,12 +66,14 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^22",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "playwright": "^1.40.0"
   },
   "pnpm": {
     "overrides": {

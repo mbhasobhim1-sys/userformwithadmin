@@ -2,6 +2,7 @@ import React from "react"
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Toaster } from 'sonner'
+import { SessionProvider } from 'next-auth/react'
 
 import './globals.css'
 
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans antialiased">
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
         <Toaster richColors position="top-right" />
       </body>
     </html>

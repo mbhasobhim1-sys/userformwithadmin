@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import React, { useRef, useState, useMemo, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Separator } from "@/components/ui/separator"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChecklistRadioGroup } from "@/components/checklist-radio-group"
+import { ChecklistStatusBadge } from "@/components/checklist-status-badge"
 import { excavatorLoaderItems, type CheckStatus } from "@/lib/types"
 import { AlertTriangle, CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser } from "lucide-react"
 import Link from "next/link"
@@ -106,8 +107,23 @@ const sections = [
 // Flatten all items for progress and state
 const allItems = sections.flatMap(section => section.items)
 
+// Map section titles to illustrative images (use images from public/images when available)
+const sectionImages: Record<string, string | undefined> = {
+  "Fire & Safety Equipment": "fire-system.png",
+  "Operator Environment": "cabs.png",
+  "Fluids & Filters": "air-pre-cleaner.png",
+  "Electrical": "battery.png",
+  "Undercarriage & Attachments": "tracks-sprockets.png",
+  "Exhaust & Instruments": "exhaust.png",
+  "Brakes & Steering": "gauges.png",
+  "Wheels & Tyres": "tracks-sprockets.png",
+  "Lubrication & Leaks": "grease.png",
+  "Loader & Quick Hitch": "boom-structure.png",
+}
+
 export function ExcavatorLoaderForm() {
   const router = useRouter()
+  const pathname = usePathname()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // ---------- Operator Information ----------
@@ -295,11 +311,20 @@ export function ExcavatorLoaderForm() {
         }),
       })
 
+      if (response.status === 401) {
+        toast.error("Session expired — please sign in")
+        router.push(`/login?callbackUrl=${pathname}`)
+        return
+      }
+
       if (response.ok) {
         toast.success("Checklist submitted successfully!")
         router.push("/")
+      } else if (response.status === 403) {
+        toast.error("Forbidden — you do not have permission to submit this form")
       } else {
-        toast.error("Failed to submit checklist")
+        const body = await response.json().catch(() => null)
+        toast.error(body?.error || "Failed to submit checklist")
       }
     } catch {
       toast.error("An error occurred. Please try again.")
@@ -321,9 +346,10 @@ export function ExcavatorLoaderForm() {
       </div>
 
       {/* ===== HEADER ===== */}
-      <Card>
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-3">
+      <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="grid grid-cols-3 items-center gap-4">
+          {/* Left: logo */}
+          <div className="flex items-start">
             <Image
               src="/images/ringomode-logo.png"
               alt="Ringomode DSP logo"
@@ -332,14 +358,21 @@ export function ExcavatorLoaderForm() {
               className="object-contain"
             />
           </div>
-          <div className="mb-1 text-xs font-medium text-muted-foreground">HSE Management System</div>
-          <CardTitle className="text-xl text-foreground">
-            Excavator Loader Pre-Shift Inspection Checklist
-          </CardTitle>
-          <CardDescription>
-            Document Ref: HSEMS/8.1.19/REG/002 | Rev. 4 | 27.03.2020
-          </CardDescription>
-        </CardHeader>
+
+          {/* Center: headings (stacked, centered) */}
+          <div className="text-center">
+            <h1 className="text-xl font-semibold text-emerald-700">HSE Management System</h1>
+            <h2 className="text-xl font-semibold text-emerald-700 underline decoration-emerald-200 underline-offset-4">
+              Excavator Loader Pre-Shift Inspection
+            </h2>
+          </div>
+
+          {/* Right: completion */}
+          <div className="flex flex-col items-end">
+            <ChecklistStatusBadge completion={Math.round((checkedCount / allItems.length) * 100)} />
+            <span className="text-sm text-gray-600 mt-1">{Math.round((checkedCount / allItems.length) * 100)}% Complete</span>
+          </div>
+        </div>
       </Card>
 
       {/* ===== GENERAL INSTRUCTIONS ===== */}
@@ -372,7 +405,7 @@ export function ExcavatorLoaderForm() {
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="operatorName" className="text-foreground">
-              Operator Name & Surname <span className="text-destructive">*</span>
+              Operators Name & Surname <span className="text-destructive">*</span>
             </Label>
             <Input
               id="operatorName"
@@ -395,13 +428,13 @@ export function ExcavatorLoaderForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="shift" className="text-foreground">Shift</Label>
+            <Label htmlFor="shift" className="text-foreground">Select Shift</Label>
             <Select
               value={formData.shift}
               onValueChange={(val) => setFormData((p) => ({ ...p, shift: val }))}
             >
               <SelectTrigger id="shift">
-                <SelectValue placeholder="Select shift" />
+                <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="day">Day Shift</SelectItem>
@@ -421,17 +454,6 @@ export function ExcavatorLoaderForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hourMeterStart" className="text-foreground">Hour Meter Start</Label>
-            <Input
-              id="hourMeterStart"
-              type="number"
-              value={formData.hourMeterStart}
-              onChange={(e) => setFormData((p) => ({ ...p, hourMeterStart: e.target.value }))}
-              placeholder="e.g. 1250"
-            />
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="hourMeterStop" className="text-foreground">Hour Meter Stop</Label>
             <Input
               id="hourMeterStop"
@@ -443,7 +465,18 @@ export function ExcavatorLoaderForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="validTrainingCard" className="text-foreground">Valid Training Card (Exp. Date)</Label>
+            <Label htmlFor="hourMeterStart" className="text-foreground">Hour Meter Start</Label>
+            <Input
+              id="hourMeterStart"
+              type="number"
+              value={formData.hourMeterStart}
+              onChange={(e) => setFormData((p) => ({ ...p, hourMeterStart: e.target.value }))}
+              placeholder="e.g. 1250"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="validTrainingCard" className="text-foreground">Valid Training Card (Exp Date)</Label>
             <Input
               id="validTrainingCard"
               type="date"
@@ -504,24 +537,39 @@ export function ExcavatorLoaderForm() {
           <CardTitle className="text-base text-foreground">Inspection Items</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {sections.map((section, sectionIdx) => (
-            <div key={sectionIdx} className="space-y-2">
-              <h4 className="text-sm font-semibold text-primary">
-                {section.title}
-              </h4>
-              <div className="ml-4 space-y-2">
-                {section.items.map((item, itemIdx) => (
-                  <ChecklistRadioGroup
-                    key={`${sectionIdx}-${itemIdx}`}
-                    label={item}
-                    value={items[item]}
-                    onChange={(val) => handleItemChange(item, val)}
-                    index={itemIdx}
-                  />
-                ))}
+          {sections.map((section, sectionIdx) => {
+            const img = sectionImages[section.title]
+            return (
+              <div key={sectionIdx} className="space-y-2">
+                <h4 className="text-sm font-semibold text-primary">{section.title}</h4>
+
+                {/* render section image (when available) to mirror DocuWare visuals */}
+                {img && (
+                  <div className="flex justify-center py-6">
+                    <Image
+                      src={`/images/${img}`}
+                      alt={`${section.title} icon`}
+                      width={200}
+                      height={200}
+                      className="object-contain"
+                    />
+                  </div>
+                )}
+
+                <div className="ml-4 space-y-2">
+                  {section.items.map((item, itemIdx) => (
+                    <ChecklistRadioGroup
+                      key={`${sectionIdx}-${itemIdx}`}
+                      label={item}
+                      value={items[item]}
+                      onChange={(val) => handleItemChange(item, val)}
+                      index={itemIdx}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </CardContent>
       </Card>
 
@@ -534,16 +582,17 @@ export function ExcavatorLoaderForm() {
               Defects Detected
             </CardTitle>
             <CardDescription>
-              Please provide details for all defects identified above.
+              Are There Any Defects Selected
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <Label className="text-sm font-medium">Details of Defects (If "Def" is selected, please specify defects here)</Label>
             <Textarea
               value={defectDetails}
               onChange={(e) => setDefectDetails(e.target.value)}
-              placeholder="Describe the defects in detail..."
+              placeholder={"Details of Defects (If \"Def\" is selected, please specify defects here)"}
               rows={4}
-              className="resize-none"
+              className="resize-none mt-2"
               required={hasDefects}
             />
           </CardContent>
@@ -584,6 +633,31 @@ export function ExcavatorLoaderForm() {
                 Clear
               </Button>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-muted/20 bg-muted/5">
+        <CardContent className="grid grid-cols-2 gap-4">
+          <div className="text-sm">
+            <div className="font-medium">Document Reference No</div>
+            <div className="text-xs text-muted-foreground mt-1">HSEMS / 8.1.19 / REG / 002</div>
+          </div>
+          <div className="text-sm">
+            <div className="font-medium">Author</div>
+            <div className="text-xs text-muted-foreground mt-1">HSE MANAGER</div>
+          </div>
+          <div className="text-sm">
+            <div className="font-medium">Revision</div>
+            <div className="text-xs text-muted-foreground mt-1">4</div>
+          </div>
+          <div className="text-sm">
+            <div className="font-medium">Creation Date</div>
+            <div className="text-xs text-muted-foreground mt-1">03/27/2020</div>
+          </div>
+          <div className="text-sm col-span-2">
+            <div className="font-medium">Automatic Number</div>
+            <div className="text-xs text-muted-foreground mt-1">{documentNo}</div>
           </div>
         </CardContent>
       </Card>

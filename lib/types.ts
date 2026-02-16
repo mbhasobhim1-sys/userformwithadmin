@@ -57,6 +57,19 @@ export interface ExcavatorHarvesterFormData {
   signature: string
 }
 
+// ✅ ADDED: Daily Attachment Checklist Form Data
+export interface DailyAttachmentFormData {
+  mechanicName: string
+  harvesterNumber: string
+  date: string
+  harvesterHours: string
+  items: Record<string, CheckStatus>
+  hasDefects: boolean
+  defectDetails: string
+  signature: string
+  attachments?: string[]
+}
+
 // ✅ ADDED: Lowbed Trailer Form Data
 export interface LowbedTrailerFormData {
   operatorName: string
@@ -94,6 +107,7 @@ export type FormDataUnion =
   | LightDeliveryFormData 
   | ExcavatorLoaderFormData 
   | ExcavatorHarvesterFormData
+  | DailyAttachmentFormData       // ✅ ADDED
   | LowbedTrailerFormData      // ✅ ADDED
   | MechanicLDVFormData        // ✅ ADDED
 
@@ -104,6 +118,7 @@ export type FormType =
   | "light-delivery" 
   | "excavator-loader" 
   | "excavator-harvester"
+  | "daily-attachment-checklist"  // ✅ ADDED
   | "lowbed-trailer"          // ✅ ADDED
   | "mechanic-ldv"            // ✅ ADDED
 
@@ -276,6 +291,63 @@ export const excavatorHarvesterItems = [
   "Computer / display functional",
 ] as const
 
+// ✅ ADDED: Daily Attachment Checklist Items
+export const dailyAttachmentItemsA = [
+  "Hangar link / Spacers (Figure 8)",
+  "Check all grease nipples functional / Greasing adequate",
+  "Check harvester head frame / tilt frame for cracks and wear",
+  "Check H frame bushing",
+  "Check all pins / bushes secure",
+  "Knife and roller edges sharp",
+  "Check delimbing knife condition",
+  "Check knife stoppers",
+  "Roller motor bypass",
+  "Fasten and tighten feed motor and feed rollers",
+  "Check feed roller condition",
+  "Check feed roller stoppers",
+  "All covers secure",
+  "Check for hydraulic oil leaks",
+  "Tighten all shaft and pin locks",
+  "Check measurement sensor and chain",
+  "Check saw bar movement limits",
+  "Check chain tensioner condition",
+  "Check cutter bar tank secure",
+  "Check all cylinders for leaks",
+  "Check accumulator condition",
+  "Check pressure hose routing",
+  "Check manifold connections",
+] as const
+
+// B. Attachment (Grab) - inferred common grab checks (match original wording if you prefer)
+export const dailyAttachmentItemsB = [
+  "Grab teeth / tines condition",
+  "Grab pivot pins / bushes secure",
+  "Grab hydraulic cylinder(s) (leaks/operation)",
+  "Grab hoses & fittings (routing/no abrasion)",
+  "Grab linkage operation / play",
+  "Grab safety latches and locks",
+  "Grease points on grab (nipples)",
+  "Grab mounting bolts secure",
+] as const
+
+// C. Attachment (Winch) - common winch checks
+export const dailyAttachmentItemsC = [
+  "Winch (condition/operation)",
+  "Winch cable (no fraying)",
+  "Winch hook & safety latch",
+  "Winch drum secure / no abnormal play",
+  "Winch brake function",
+  "Winch hydraulic/control operation",
+  "Winch mounting / bolts secure",
+  "Winch hydraulic hoses (no leaks)",
+] as const
+
+export const dailyAttachmentAllItems = [
+  ...dailyAttachmentItemsA,
+  ...dailyAttachmentItemsB,
+  ...dailyAttachmentItemsC,
+] as const
+
 // ✅ ADDED: Lowbed Trailer Checklist Items
 export const lowbedTrailerItems = [
   "Lowbed deck condition (no cracks/welds intact)",
@@ -361,6 +433,7 @@ export type FormDataMap = {
   'light-delivery': LightDeliveryFormData
   'excavator-loader': ExcavatorLoaderFormData
   'excavator-harvester': ExcavatorHarvesterFormData
+  'daily-attachment-checklist': DailyAttachmentFormData  // ✅ ADDED
   'lowbed-trailer': LowbedTrailerFormData    // ✅ ADDED
   'mechanic-ldv': MechanicLDVFormData        // ✅ ADDED
 }
@@ -393,6 +466,13 @@ export const formConfigs: Record<FormType, FormConfig> = {
     title: 'Excavator Harvester Pre-Shift Inspection',
     description: 'Complete your pre-shift excavator harvester inspection checklist.',
     items: excavatorHarvesterItems
+  },
+  // ✅ ADDED: Daily Attachment config
+  'daily-attachment-checklist': {
+    type: 'daily-attachment-checklist',
+    title: 'Daily Attachment Checklist',
+    description: 'Complete the daily attachment mechanical inspection checklist.',
+    items: dailyAttachmentAllItems
   },
   // ✅ ADDED: Lowbed Trailer config
   'lowbed-trailer': {

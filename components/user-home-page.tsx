@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { SiteHeader } from "@/components/site-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { 
@@ -16,6 +15,16 @@ import {
 } from "lucide-react"
 
 const forms = [
+  {
+    id: "daily-attachment-checklist",
+    title: "Daily Attachment Checklist",
+    subtitle: "Mechanical Inspection",
+    description: "Daily inspection for harvester head attachments, hydraulics, cylinders, and related mechanical systems.",
+    icon: Wrench,
+    href: "/daily-attachment-checklist",
+    docRef: "HSEMS/8.1.19/REG/025",
+    itemCount: 23,
+  },
   {
     id: "light-delivery",
     title: "Light Delivery Vehicle",
@@ -70,10 +79,7 @@ const forms = [
 
 export function UserHomePage() {
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader role="user" />
-
-      <main className="mx-auto max-w-7xl p-4 lg:p-8">
+    <main className="mx-auto max-w-7xl p-4 lg:p-8">
         {/* Hero Section */}
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-4">
@@ -169,6 +175,5 @@ export function UserHomePage() {
           <p className="mt-2 text-[10px]">Document Control: HSEMS/8.1.19/REG | Rev. 2 | 27.03.2024</p>
         </footer>
       </main>
-    </div>
   )
 }

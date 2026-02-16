@@ -1,0 +1,52 @@
+name: E2E — Excavator Loader
+
+on:
+  push:
+    paths:
+      - 'components/**'
+      - 'lib/**'
+      - 'app/**'
+      - 'test-*.js'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - 'components/**'
+      - 'lib/**'
+      - 'app/**'
+      - 'test-*.js'
+
+jobs:
+  e2e-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Start dev server
+        run: pnpm dev & npx wait-on http://localhost:3000
+        env:
+          NODE_ENV: development
+      - name: Run E2E (submit + admin verify)
+        run: node test-submit-excavator-loader.js
+
+  e2e-playwright:
+    runs-on: ubuntu-latest
+    needs: e2e-node
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      - name: Start dev server
+        run: pnpm dev & npx wait-on http://localhost:3000
+      - name: Run PDF E2E (Playwright)
+        run: node test-excavator-loader-pdf.js

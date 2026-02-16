@@ -1,6 +1,7 @@
 ﻿"use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -51,6 +52,7 @@ import {
   Trees,
   Container,
   Wrench,
+  Trash,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -78,6 +80,8 @@ function StatusBadge({ status }: { status: CheckStatus }) {
 // ✅ UPDATED: Added new form types
 function formTypeLabel(type: string) {
   switch (type) {
+    case "daily-attachment-checklist":
+      return "Daily Attachment Checklist"
     case "light-delivery":
       return "Light Delivery Vehicle"
     case "excavator-loader":
@@ -96,6 +100,8 @@ function formTypeLabel(type: string) {
 // ✅ ADDED: Form icon mapping
 function getFormIcon(type: string) {
   switch (type) {
+    case "daily-attachment-checklist":
+      return <Wrench className="h-4 w-4 text-muted-foreground" />
     case "light-delivery":
       return <Truck className="h-4 w-4 text-muted-foreground" />
     case "excavator-loader":
@@ -254,6 +260,7 @@ function SubmissionPreview({ submission }: { submission: Submission }) {
 
 // Main Dashboard
 export function AdminDashboard() {
+  const router = useRouter()
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -261,15 +268,30 @@ export function AdminDashboard() {
   const [defectFilter, setDefectFilter] = useState<string>("all")
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null)
   const [dialogTab, setDialogTab] = useState<string>("preview")
+  const [startDate, setStartDate] = useState<string>("")
+  const [endDate, setEndDate] = useState<string>("")
 
   // ✅ ADDED: Notification states
   const [unreadCount, setUnreadCount] = useState(0)
   const [notifications, setNotifications] = useState<any[]>([])
 
+  // Users state (admin can change roles)
+  const [users, setUsers] = useState<any[]>([])
+  const [loadingUsers, setLoadingUsers] = useState(false)
+
   const fetchSubmissions = useCallback(async () => {
     setLoading(true)
     try {
       const res = await fetch("/api/submissions")
+      if (res.status === 401) {
+        toast.error("Session expired — please sign in")
+        router.push(`/login?callbackUrl=/admin`)
+        return
+      }
+      if (res.status === 403) {
+        toast.error("Forbidden — admin access required")
+        return
+      }
       const data = await res.json()
       setSubmissions(data)
     } catch {
@@ -279,10 +301,38 @@ export function AdminDashboard() {
     }
   }, [])
 
+  // Fetch users for admin management
+  const fetchUsers = useCallback(async () => {
+    setLoadingUsers(true)
+    try {
+      const res = await fetch('/api/users')
+      if (res.status === 401) {
+        toast.error('Session expired — please sign in')
+        router.push(`/login?callbackUrl=/admin`)
+        return
+      }
+      if (res.status === 403) {
+        toast.error('Forbidden — admin access required')
+        return
+      }
+      const data = await res.json()
+      setUsers(data || [])
+    } catch (err) {
+      console.error('Failed to fetch users', err)
+    } finally {
+      setLoadingUsers(false)
+    }
+  }, [])
+
   // ✅ ADDED: Fetch notifications
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await fetch("/api/notifications")
+      if (res.status === 401) {
+        toast.error("Session expired — please sign in")
+        router.push(`/login?callbackUrl=/admin`)
+        return
+      }
       const data = await res.json()
       setNotifications(data.notifications || [])
       setUnreadCount(data.unreadCount || 0)
@@ -291,14 +341,48 @@ export function AdminDashboard() {
     }
   }, [])
 
+  // Delete a submission (admin only)
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this submission? This action cannot be undone.")) return
+    try {
+      const res = await fetch(`/api/submissions/${id}`, { method: "DELETE" })
+      if (res.status === 401) {
+        toast.error("Session expired — please sign in")
+        router.push(`/login?callbackUrl=/admin`)
+        return
+      }
+      if (res.status === 403) {
+        toast.error("Forbidden — admin access required")
+        return
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        toast.error(body?.error || "Failed to delete submission")
+        return
+      }
+
+      // Remove locally
+      setSubmissions((prev) => prev.filter((s) => s.id !== id))
+      toast.success("Submission deleted")
+    } catch (error) {
+      console.error("Delete error", error)
+      toast.error("Failed to delete submission")
+    }
+  }
+
   // ✅ ADDED: Mark as read function
   const markAsRead = async (submissionId: string) => {
     try {
-      await fetch("/api/notifications", {
+      const res = await fetch("/api/notifications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ submissionId }),
       })
+      if (res.status === 401) {
+        toast.error("Session expired — please sign in")
+        router.push(`/login?callbackUrl=/admin`)
+        return
+      }
       
       setNotifications(prev => prev.filter(n => n.id !== submissionId))
       setUnreadCount(prev => Math.max(0, prev - 1))
@@ -315,18 +399,59 @@ export function AdminDashboard() {
     }
   }
 
+  // ✅ ADDED: Change user role (admin only)
+  const changeUserRole = async (userId: string, role: 'admin' | 'user') => {
+    const prev = users
+    // optimistic update
+    setUsers((u) => u.map((x) => (x.id === userId ? { ...x, role } : x)))
+
+    try {
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role }),
+      })
+      if (res.status === 401) {
+        toast.error('Session expired — please sign in')
+        router.push(`/login?callbackUrl=/admin`)
+        setUsers(prev)
+        return
+      }
+      if (res.status === 403) {
+        toast.error('Forbidden — admin access required')
+        setUsers(prev)
+        return
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        toast.error(body?.error || 'Failed to update role')
+        setUsers(prev)
+        return
+      }
+      const updated = await res.json()
+      setUsers((u) => u.map((x) => (x.id === userId ? updated : x)))
+      toast.success('Role updated')
+    } catch (err) {
+      console.error('changeUserRole error', err)
+      setUsers(prev)
+      toast.error('Failed to update role')
+    }
+  }
+
   useEffect(() => {
     fetchSubmissions()
     fetchNotifications()
-    
+    fetchUsers()
+
     // Poll for new notifications every 10 seconds
     const interval = setInterval(() => {
       fetchNotifications()
       fetchSubmissions()
+      fetchUsers()
     }, 10000)
-    
+
     return () => clearInterval(interval)
-  }, [fetchSubmissions, fetchNotifications])
+  }, [fetchSubmissions, fetchNotifications, fetchUsers])
 
   const filtered = submissions.filter((s) => {
     const matchesSearch =
@@ -337,7 +462,22 @@ export function AdminDashboard() {
       defectFilter === "all" ||
       (defectFilter === "defects" && s.hasDefects) ||
       (defectFilter === "clean" && !s.hasDefects)
-    return matchesSearch && matchesType && matchesDefect
+      // Date range filter
+      let matchesDate = true
+      if (startDate) {
+        const start = new Date(startDate)
+        const subDate = new Date(s.submittedAt)
+        if (subDate < start) matchesDate = false
+      }
+      if (endDate) {
+        // include entire end day
+        const end = new Date(endDate)
+        end.setHours(23, 59, 59, 999)
+        const subDate = new Date(s.submittedAt)
+        if (subDate > end) matchesDate = false
+      }
+
+      return matchesSearch && matchesType && matchesDefect && matchesDate
   })
 
   const totalSubmissions = submissions.length
@@ -499,6 +639,64 @@ export function AdminDashboard() {
         </Card>
       </div>
 
+      {/* Users Management (admin) */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base text-foreground">Users</CardTitle>
+          <CardDescription>Manage users and change roles (admin only)</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingUsers ? (
+            <div className="text-sm text-muted-foreground">Loading users...</div>
+          ) : users.length === 0 ? (
+            <div className="text-sm text-muted-foreground">No users found</div>
+          ) : (
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="text-foreground">Name</TableHead>
+                    <TableHead className="text-foreground">Email</TableHead>
+                    <TableHead className="text-foreground">Department</TableHead>
+                    <TableHead className="text-foreground">Role</TableHead>
+                    <TableHead className="text-right text-foreground">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {users.map((u) => (
+                    <TableRow key={u.id}>
+                      <TableCell className="font-medium text-foreground">{u.name}</TableCell>
+                      <TableCell className="text-muted-foreground">{u.email}</TableCell>
+                      <TableCell className="text-muted-foreground">{u.department || '-'}</TableCell>
+                      <TableCell>
+                        <Select value={u.role} onValueChange={(val) => changeUserRole(u.id, val as 'admin' | 'user')}>
+                          <SelectTrigger className="w-32">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="user">User</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {u.role === 'admin' ? (
+                            <Badge className="bg-primary/10 text-primary">Admin</Badge>
+                          ) : (
+                            <Badge className="bg-muted text-muted-foreground">User</Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Submissions Table */}
       <Card>
         <CardHeader>
@@ -542,6 +740,22 @@ export function AdminDashboard() {
                 <SelectItem value="clean">Clean Only</SelectItem>
               </SelectContent>
             </Select>
+            <div className="flex items-center gap-2">
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate((e.target as HTMLInputElement).value)}
+                className="w-36"
+                placeholder="Start date"
+              />
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate((e.target as HTMLInputElement).value)}
+                className="w-36"
+                placeholder="End date"
+              />
+            </div>
             <Button
               variant="outline"
               size="sm"
@@ -652,6 +866,17 @@ export function AdminDashboard() {
                               <span className="hidden sm:inline">Mark Read</span>
                             </Button>
                           )}
+                          {/* Delete button (admin only) */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(sub.id)}
+                            className="gap-2 text-destructive"
+                            title="Delete submission"
+                          >
+                            <Trash className="h-4 w-4" />
+                            <span className="hidden sm:inline">Delete</span>
+                          </Button>
                           
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>

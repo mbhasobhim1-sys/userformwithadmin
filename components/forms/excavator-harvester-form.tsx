@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import React, { useRef, useState, useMemo, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Separator } from "@/components/ui/separator"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChecklistRadioGroup } from "@/components/checklist-radio-group"
+import { ChecklistStatusBadge } from "@/components/checklist-status-badge"
 import { excavatorHarvesterItems, type CheckStatus } from "@/lib/types"
 import { AlertTriangle, CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser } from "lucide-react"
 import Link from "next/link"
@@ -381,6 +382,7 @@ const renderGroupedSection = (
 
 export function ExcavatorHarvesterForm() {
   const router = useRouter()
+  const pathname = usePathname()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // ---------- Operator Information ----------
@@ -581,11 +583,20 @@ export function ExcavatorHarvesterForm() {
         })
       })
 
+      if (response.status === 401) {
+        toast.error("Session expired — please sign in")
+        router.push(`/login?callbackUrl=${pathname}`)
+        return
+      }
+
       if (response.ok) {
         toast.success("Checklist submitted successfully!")
         router.push("/")
+      } else if (response.status === 403) {
+        toast.error("Forbidden — you do not have permission to submit this form")
       } else {
-        toast.error("Failed to submit checklist")
+        const body = await response.json().catch(() => null)
+        toast.error(body?.error || "Failed to submit checklist")
       }
     } catch {
       toast.error("An error occurred. Please try again.")
@@ -613,9 +624,10 @@ export function ExcavatorHarvesterForm() {
       </div>
 
       {/* HEADER */}
-      <Card>
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-3">
+      <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="grid grid-cols-3 items-center gap-4">
+          {/* Left: logo */}
+          <div className="flex items-start">
             <Image
               src="/images/ringomode-logo.png"
               alt="Ringomode DSP logo"
@@ -624,16 +636,21 @@ export function ExcavatorHarvesterForm() {
               className="object-contain"
             />
           </div>
-          <div className="mb-1 text-xs font-medium text-muted-foreground">
-            HSE Management System
+
+          {/* Center: headings (stacked, centered) */}
+          <div className="text-center">
+            <h1 className="text-xl font-semibold text-emerald-700">HSE Management System</h1>
+            <h2 className="text-xl font-semibold text-emerald-700 underline decoration-emerald-200 underline-offset-4">
+              Excavator Harvester Pre-Shift Inspection
+            </h2>
           </div>
-          <CardTitle className="text-xl text-foreground">
-            Excavator Harvester Pre-Shift Inspection Checklist
-          </CardTitle>
-          <CardDescription>
-            Document Ref: HSEMS/8.1.19/REG/001 | Rev. 5 | 27.03.2020
-          </CardDescription>
-        </CardHeader>
+
+          {/* Right: completion */}
+          <div className="flex flex-col items-end">
+            <ChecklistStatusBadge completion={Math.round((checkedCount / excavatorHarvesterItems.length) * 100)} />
+            <span className="text-sm text-gray-600 mt-1">{Math.round((checkedCount / excavatorHarvesterItems.length) * 100)}% Complete</span>
+          </div>
+        </div>
       </Card>
 
       {/* GENERAL INSTRUCTIONS */}

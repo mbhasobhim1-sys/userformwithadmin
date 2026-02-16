@@ -26,6 +26,31 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers (for extractor)
+        run: npx playwright install --with-deps
+
+      - name: Run DocuWare image extractor (non-blocking)
+        run: |
+          node scripts/extract-docuware-images.js || echo "extractor exited with non-zero status"
+        continue-on-error: true
+
+      - name: Commit extracted images (if any)
+        env:
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "$GIT_AUTHOR_NAME"
+          git config user.email "$GIT_AUTHOR_EMAIL"
+          git add public/images/*excavator-loader*.png || true
+          if git diff --cached --quiet; then
+            echo "No extracted images to commit"
+          else
+            git commit -m "ci: add extracted DocuWare images" || echo "commit failed"
+            git push origin HEAD:HEAD || echo "push failed"
+          fi
+
       - name: Start dev server
         run: pnpm dev & npx wait-on http://localhost:3000
         env:

@@ -289,17 +289,17 @@ const iconMap: Record<string, string> = {
   "Communication": "communication.png",
   "Fire Systems": "fire-system.png",
 
-  // Excavator Loader specific mappings (use existing icons that match DocuWare visuals)
-  "Fire & Safety Equipment": "fire-system.png",
-  "Operator Environment": "cabs.png",
-  "Fluids & Filters": "air-pre-cleaner.png",
-  "Electrical": "battery.png",
-  "Undercarriage & Attachments": "tracks-sprockets.png",
-  "Exhaust & Instruments": "exhaust.png",
-  "Brakes & Steering": "gauges.png",
-  "Wheels & Tyres": "tracks-sprockets.png",
-  "Lubrication & Leaks": "grease.png",
-  "Loader & Quick Hitch": "boom-structure.png"
+  // Excavator Loader specific mappings — prefer the extracted DocuWare images when available
+  "Fire & Safety Equipment": "excavator-loader-fire-safety.png",
+  "Operator Environment": "excavator-loader-operator-environment.png",
+  "Fluids & Filters": "excavator-loader-fluids-filters.png",
+  "Electrical": "excavator-loader-electrical.png",
+  "Undercarriage & Attachments": "excavator-loader-undercarriage-attachments.png",
+  "Exhaust & Instruments": "excavator-loader-exhaust-instruments.png",
+  "Brakes & Steering": "excavator-loader-brakes-steering.png",
+  "Wheels & Tyres": "excavator-loader-wheels-tyres.png",
+  "Lubrication & Leaks": "excavator-loader-lubrication-leaks.png",
+  "Loader & Quick Hitch": "excavator-loader-loader-quick-hitch.png"
 }
 
 // ============================================================================

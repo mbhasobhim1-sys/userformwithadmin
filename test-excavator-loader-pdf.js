@@ -98,9 +98,44 @@ const { chromium } = require('playwright')
     if (buf.indexOf(Buffer.from('Excavator Loader Pre-Shift Inspection')) === -1) {
       throw new Error('PDF does not contain expected title text')
     }
+
     // Check PDF binary contains an embedded PNG signature (0x89 0x50 0x4E 0x47)
     if (buf.indexOf(Buffer.from([0x89, 0x50, 0x4E, 0x47])) === -1) {
       throw new Error('PDF does not contain embedded PNG bytes (images)')
+    }
+
+    // If the DocuWare extractor images are present in `public/images`, assert at least
+    // one of the Excavator Loader originals was embedded in the PDF. If not present
+    // locally (e.g. during local dev), skip this stronger assertion.
+    const loaderImageNames = [
+      'excavator-loader-fire-safety.png',
+      'excavator-loader-operator-environment.png',
+      'excavator-loader-fluids-filters.png',
+      'excavator-loader-electrical.png',
+      'excavator-loader-undercarriage-attachments.png',
+      'excavator-loader-exhaust-instruments.png',
+      'excavator-loader-brakes-steering.png',
+      'excavator-loader-wheels-tyres.png',
+      'excavator-loader-lubrication-leaks.png',
+      'excavator-loader-loader-quick-hitch.png'
+    ]
+
+    const imagesOnDisk = loaderImageNames.filter(n => fs.existsSync(path.join(process.cwd(), 'public', 'images', n)))
+    if (imagesOnDisk.length > 0) {
+      let foundAny = false
+      for (const name of imagesOnDisk) {
+        const imgBuf = fs.readFileSync(path.join(process.cwd(), 'public', 'images', name))
+        if (buf.indexOf(imgBuf) !== -1) {
+          console.log('Found embedded image in PDF:', name)
+          foundAny = true
+          break
+        }
+      }
+      if (!foundAny) {
+        throw new Error('PDF does not contain any of the Excavator Loader DocuWare images found in public/images')
+      }
+    } else {
+      console.log('No Excavator Loader DocuWare images present in public/images — skipping image-specific assertion')
     }
 
     console.log('PDF verification passed')

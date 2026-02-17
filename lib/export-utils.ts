@@ -236,18 +236,105 @@ const sections = [
   }
 ]
 
+// Sections specifically for Skidder Pre-Shift Inspection
+const skidderSections = [
+  { title: "License and Phepha", items: ["Phepha valid", "Displayed and visible"] },
+  { title: "Protective Structure", items: ["No cracks/damages", "No bolts missing/loose", "Guards not damaged and intact"] },
+  { title: "Exhaust", items: ["Clamps secure", "No excessive smoking/blowing"] },
+  { title: "Cab", items: ["Cab neat and tidy", "Door and mechanism working", "Door rubber in good condition", "Door handles functional"] },
+  { title: "Windscreen, Windows & Wipers", items: ["Clean/secure", "No cracks or damages to windscreen", "Window visibility not obscured by cracks", "Wipers are working"] },
+  { title: "Seats", items: ["Condition of seat", "Seat secured", "Rotating lock functional", "Seat adjuster functional"] },
+  { title: "Safety Belt", items: ["Safety belts bolted/secured", "No damage", "Retractor clip functional"] },
+  { title: "Hooter and Reverse Alarm", items: ["Hooter working and in good condition", "Reverse alarm working"] },
+  { title: "Gauges", items: ["In working order", "Any warning symbols/lights"] },
+  { title: "Hydraulic Controls", items: ["Not loose/responsive", "No steering play", "Rear steering", "Pivot/steering ram pins not loose"] },
+  { title: "Working Lights (LED)", items: ["In working order", "If LED's, 2 thirds must be working"] },
+  { title: "Rotating Light", items: ["Flashing/rotating beacon light in working condition"] },
+  { title: "Foot Brake", items: ["In working order", "Check brake fluid levels in order"] },
+  { title: "Emergency Park Brake", items: ["Working"] },
+  { title: "Battery", items: ["Secure", "Sufficient water", "Terminals clean/tight & covers on", "No exposed wiring"] },
+  { title: "Air Pre-Cleaner", items: ["Good condition - no damage/no sucking of air", "Clean and secure", "No dust in pre-cleaner bowl"] },
+  { title: "Radiator", items: ["Secure", "Water level correct", "No signs of leaking"] },
+  { title: "Fan Belt", items: ["No squeaking", "No signs of damage"] },
+  { title: "Oil/Fluid/Air Levels", items: ["Check all oil levels/brake fluid levels/clutch fluid levels are correct", "Check air gauge in order"] },
+  { title: "Fuel, Air and Oil leaks", items: ["No more than 4 drops of oil per minute"] },
+  { title: "Grease", items: ["Adequately greased chassis", "No missing or damaged grease nipples"] },
+  { title: "Tyres", items: ["No excessive wear and tear", "No loose/missing/damaged nuts", "Wheel nuts secure"] },
+  { title: "Hydraulic Cylinders", items: ["Good condition – no damage", "No loose fittings", "No oil leaks", "No missing bolts/nuts"] },
+  { title: "Hydraulic Hoses and Fittings", items: ["No excessive rubbing", "No loose brackets/bolts/nuts", "Smooth operation", "Jaws not cracked or broken"] },
+  { title: "Winch", items: ["Condition of cable good", "Condition of drum good", "Clutch and brake working", "Roller guides in good condition"] },
+  { title: "Tackle", items: ["Cable/chains/hooks/slings/chocker chains/tag lines and sliders all in good condition", "No fraying or damage"] },
+  { title: "Communication", items: ["Radio or cell phone in working condition", "Handheld panic alarm functional"] },
+  { title: "Fire Extinguisher", items: ["In working order", "Serviced", "Gauge in order", "Seal in place"] },
+]
+
 // Sections specifically for Excavator Loader (used by PDF export)
 const loaderSections = [
   { title: "Fire & Safety Equipment", items: ["Fire extinguisher (serviced/sealed)", "First aid kit"] },
-  { title: "Operator Environment", items: ["Seat belt","Mirrors","Lights (head/tail/work)","Horn / reverse alarm","Windscreen / wipers","Steps / handrails","Guards / covers in place","Cabin (clean/undamaged)"] },
-  { title: "Fluids & Filters", items: ["Engine oil level","Hydraulic oil level","Coolant level","Fuel level","Air filter indicator"] },
+  { title: "Operator Environment", items: ["Seat belt", "Mirrors", "Lights (head/tail/work)", "Horn / reverse alarm", "Windscreen / wipers", "Steps / handrails", "Guards / covers in place", "Cabin (clean/undamaged)"] },
+  { title: "Fluids & Filters", items: ["Engine oil level", "Hydraulic oil level", "Coolant level", "Fuel level", "Air filter indicator"] },
   { title: "Electrical", items: ["Battery (condition/terminals)"] },
-  { title: "Undercarriage & Attachments", items: ["Tracks / undercarriage","Bucket (teeth/cutting edge)","Boom / stick / linkage pins","Hydraulic hoses / fittings","Slew ring / bearing","Swing mechanism"] },
-  { title: "Exhaust & Instruments", items: ["Exhaust system","Instruments / gauges","Controls (levers/pedals)"] },
-  { title: "Brakes & Steering", items: ["Brakes (service/park)","Steering"] },
+  { title: "Undercarriage & Attachments", items: ["Tracks / undercarriage", "Bucket (teeth/cutting edge)", "Boom / stick / linkage pins", "Hydraulic hoses / fittings", "Slew ring / bearing", "Swing mechanism"] },
+  { title: "Exhaust & Instruments", items: ["Exhaust system", "Instruments / gauges", "Controls (levers/pedals)"] },
+  { title: "Brakes & Steering", items: ["Brakes (service/park)", "Steering"] },
   { title: "Wheels & Tyres", items: ["Tyres / wheels (if applicable)"] },
-  { title: "Lubrication & Leaks", items: ["Grease points","No leaks (oil/fuel/coolant)"] },
-  { title: "Loader & Quick Hitch", items: ["Loader arms / linkage","Quick hitch (if fitted)","Attachments secure"] },
+  { title: "Lubrication & Leaks", items: ["Grease points", "No leaks (oil/fuel/coolant)"] },
+  { title: "Loader & Quick Hitch", items: ["Loader arms / linkage", "Quick hitch (if fitted)", "Attachments secure"] },
+]
+
+const weeklyAssessmentSections = [
+  { title: "Chassis & Bodywork", items: ["Main frame & structure", "Steps, handrails & catwalks", "Covers, panels & doors", "Cab structure & mounting"] },
+  { title: "Engine Compartment", items: ["Oil level & condition", "Coolant level & leaks", "Fan, belts & pulleys", "Air intake & filters", "Exhaust system & shields"] },
+  { title: "Hydraulic System", items: ["Tank level & breather", "Pump mounting & leaks", "Control valves & levers", "Hoses, pipes & fittings", "Cylinders & seals"] },
+  { title: "Electrical System", items: ["Battery condition & terminals", "Wiring harness & connections", "Alternator & starter motor", "Work lights & beacons", "Gauges & monitors"] },
+  { title: "Drivetrain & Tyres", items: ["Transmission / Diff levels", "Axle mounting & pivots", "Tyre condition & pressure", "Wheel nuts & rims", "Brake operation (Foot & Park)"] },
+  { title: "Safety & Fire", items: ["Fire extinguisher (Charged)", "Automatic fire system", "Hooter & reverse alarm", "Seat belt condition", "Window glass & wipers"] },
+]
+
+const dailyChecklistSections = [
+  { title: "Visual Checks", items: ["General Machine Condition", "Tyres / Tracks Condition", "Structure / Frame", "Cleanliness"] },
+  { title: "Fluid Levels", items: ["Engine Oil", "Coolant / Water", "Hydraulic Oil", "Fuel Level", "Brake Fluid"] },
+  { title: "Operational Checks", items: ["Foot Brake", "Emergency / Park Brake", "Steering", "All Lights & Indicators", "Reverse Alarm & Hooter"] },
+  { title: "Safety Equipment", items: ["Fire Extinguisher", "Seat Belt", "First Aid Kit", "Safety Guards / Shields"] },
+]
+
+const dezziTimberTruckSections = [
+  { title: "License and Phepha", items: ["Phepha valid.", "Displayed and visible."] },
+  { title: "Protective Structure", items: ["No cracks/damages.", "No bolts missing/loose.", "Guards not damaged and intact."] },
+  { title: "Steps and Rails", items: ["Steps in good condition.", "Not loose/broken."] },
+  { title: "Bonnet Shock Absorbers", items: ["In place.", "In good condition."] },
+  { title: "Cab", items: ["Cab neat and tidy.", "Door and mechanism working.", "Door rubber in good condition.", "Door handles functional."] },
+  { title: "Mirrors", items: ["Mirrors in good condition.", "Not damaged.", "Adequately secured – not loose."] },
+  { title: "Windscreen, Windows & Wipers", items: ["Clean/secure.", "No cracks or damages to windscreen.", "Window visibility not obscured by cracks.", "Wipers are working."] },
+  { title: "Air Conditioner", items: ["In working condition."] },
+  { title: "Seats", items: ["Condition of seat.", "Seat secured.", "Rotating lock functional.", "Seat adjuster functional."] },
+  { title: "Safety Belt", items: ["Safety belts bolted/secured.", "No damage/not extremely dirty/bleached or dyed.", "Retractor clip in order and clicks into place."] },
+  { title: "Steering", items: ["Not loose/responsive.", "No steering play – Not > than 15 degrees.", "Power steering in order/no leaks."] },
+  { title: "Hydraulic Controls", items: ["Not loose/responsive.", "No steering play.", "Rear steering.", "Pivot/steering ram pins not loose."] },
+  { title: "Hooter and Reverse Alarm", items: ["Hooter working and in good condition.", "Reverse alarm working."] },
+  { title: "Gauges", items: ["In working order.", "Any warning symbols/lights."] },
+  { title: "Working Lights", items: ["Dim/bright working.", "No fused or damaged bulbs.", "Indicators and hazards working.", "Brake light in working order."] },
+  { title: "Rotating Light", items: ["Flashing/rotating beacon light in working condition."] },
+  { title: "Braking System (Foot Brake/Exhaust Brake)", items: ["Working.", "Retarder working (check lights on dash)."] },
+  { title: "Emergency Park Brake", items: ["Working."] },
+  { title: "Oil/Fluid/Air Levels", items: ["Check all oil levels/brake fluid levels/clutch fluid levels are correct.", "Check air gauge in order."] },
+  { title: "Fuel, Air and Oil leaks", items: ["No more than 4 drops of oil per minute."] },
+  { title: "Grease", items: ["Adequately greased chassis.", "No missing or damaged grease nipples."] },
+  { title: "Grill", items: ["Good condition – no damage.", "Not clogged/air is moving freely."] },
+  { title: "Battery", items: ["Secure.", "Sufficient water.", "Terminals clean/tight & covers on.", "No exposed wiring."] },
+  { title: "Air Pre-Cleaner", items: ["Good condition – no damage/no sucking of air.", "Clean and secure.", "No dust in pre-cleaner bowl."] },
+  { title: "V-Belt", items: ["Not squeaking.", "No signs of damage.", "Tension in order."] },
+  { title: "Radiator", items: ["Secure.", "Water level correct.", "No signs of leaking."] },
+  { title: "Air Tank Drain", items: ["Good condition.", "Drained daily."] },
+  { title: "Wiring", items: ["No loose, damaged or exposed wires.", "No loose broken plugs."] },
+  { title: "Visibility Triangle", items: ["On the back of the machine.", "Secure.", "Clean and visible."] },
+  { title: "Boom Structure", items: ["Not bent/cracked.", "Pins all secured.", "No loose/missing bolts."] },
+  { title: "Hydraulic Cylinders", items: ["Good condition – no damage.", "No loose fittings.", "No oil leaks.", "No missing bolts/nuts."] },
+  { title: "Hydraulic Hoses and Fittings", items: ["No excessive rubbing.", "No loose brackets/bolts/nuts.", "Smooth operation.", "Jaws not cracked or broken."] },
+  { title: "Communication", items: ["Radio or cell phone in working condition.", "Handheld panic alarm functional."] },
+  { title: "Chocks", items: ["2 x chocks available.", "In good condition."] },
+  { title: "Fire Extinguisher", items: ["Mounted and secured.", "Serviced.", "Gauge in order.", "Seal in place."] },
+  { title: "Emergency Triangles", items: ["2 x available as per legal requirements.", "In good condition."] },
 ]
 
 // ============================================================================
@@ -260,6 +347,7 @@ const iconMap: Record<string, string> = {
   "Steps and Rails": "steps-and-rails.png",
   "Cab": "cabs.png",
   "Windscreen, Windows & Wipers": "wipes.png",
+  "Mirrors": "mirrors.png",
   "Air Conditioner": "air-conditioner.png",
   "Seats": "seats.png",
   "Safety Belt": "safety-belt.png",
@@ -288,18 +376,44 @@ const iconMap: Record<string, string> = {
   "Escape Hatch & Hammer": "escape-hatch.png",
   "Communication": "communication.png",
   "Fire Systems": "fire-system.png",
+  "Bonnet Shock Absorbers": "bonnet-shocks.png",
+  "Steering": "excavator-loader-brakes-steering.png",
+  "Working Lights": "led.png",
+  "Braking System (Foot Brake/Exhaust Brake)": "excavator-loader-brakes-steering.png",
+  "Emergency Park Brake": "excavator-loader-brakes-steering.png",
+  "Air Tank Drain": "air-tank-drain.png",
+  "Visibility Triangle": "visibility-triangle.png",
+  "Chocks": "chocks.png",
+  "Emergency Triangles": "emergency-triangles.png",
+  "Tackle": "hydraulic-hoses.png"
+}
 
-  // Excavator Loader specific mappings — prefer the extracted DocuWare images when available
-  "Fire & Safety Equipment": "excavator-loader-fire-safety.png",
-  "Operator Environment": "excavator-loader-operator-environment.png",
-  "Fluids & Filters": "excavator-loader-fluids-filters.png",
-  "Electrical": "excavator-loader-electrical.png",
-  "Undercarriage & Attachments": "excavator-loader-undercarriage-attachments.png",
-  "Exhaust & Instruments": "excavator-loader-exhaust-instruments.png",
-  "Brakes & Steering": "excavator-loader-brakes-steering.png",
-  "Wheels & Tyres": "excavator-loader-wheels-tyres.png",
-  "Lubrication & Leaks": "excavator-loader-lubrication-leaks.png",
-  "Loader & Quick Hitch": "excavator-loader-loader-quick-hitch.png"
+// Maps Dezzi section titles to high-risk danger icons
+const dezziDangerTypeMap: Record<string, "skull" | "warning"> = {
+  "License and Phepha": "skull",
+  "Protective Structure": "skull",
+  "Safety Belt": "skull",
+  "Working Lights": "skull",
+  "Steering": "skull",
+  "Braking System (Foot Brake/Exhaust Brake)": "skull",
+  "Emergency Park Brake": "skull",
+  "Fuel, Air and Oil leaks": "skull",
+  "Wiring": "skull",
+  "Boom Structure": "skull",
+  "Fire Extinguisher": "skull",
+  "Emergency Triangles": "skull"
+}
+
+// Maps Skidder section titles to high-risk danger icons (matches web form)
+const skidderDangerTypeMap: Record<string, "skull" | "warning"> = {
+  "License and Phepha": "skull",
+  "Protective Structure": "skull",
+  "Safety Belt": "skull",
+  "Working Lights (LED)": "skull",
+  "Foot Brake": "skull",
+  "Emergency Park Brake": "skull",
+  "Fuel, Air and Oil leaks": "skull",
+  "Fire Extinguisher": "skull"
 }
 
 // ============================================================================
@@ -353,6 +467,12 @@ function formTypeLabel(type: string) {
       return "Timber Truck And Trailer Checklist"
     case "trailer-inspection-checklist":
       return "Trailer (Excluding Labour) Inspection Checklist"
+    case "daily-machine-checklist":
+      return "Daily Machine Checklist"
+    case "weekly-machinery-condition-assessment":
+      return "Weekly Machinery Condition Assessment"
+    case "cintasign-shorthaul":
+      return "Cintasign Shorthaul Trip Sheet"
     case "vehicle-job-card":
       return "Motorized Equipment/Vehicle Job Card"
     case "water-cart-trailer-pressure-washer":
@@ -383,8 +503,14 @@ function getDocumentDetails(type: string) {
       return { ref: "HSEMS/8.1.19/REG/010", rev: "2", date: "20.04.2020" }
     case "trailer-inspection-checklist":
       return { ref: "HSEMS/4.4.6.19/REG/013", rev: "2", date: "27.03.2020" }
+    case "daily-machine-checklist":
+      return { ref: "HSEMS/8.2.3/REG/01", rev: "1", date: "15.05.2024" }
+    case "weekly-machinery-condition-assessment":
+      return { ref: "HSEMS/8.2.2/REG/01", rev: "1", date: "15.05.2024" }
+    case "cintasign-shorthaul":
+      return { ref: "HSEMS/8.2.4/REG/01", rev: "1", date: "15.05.2024" }
     case "vehicle-job-card":
-      return { ref: "HSEMS/8.1.19/DOC/001", rev: "3", date: "20.04.2020" }
+      return { ref: "HSEMS/8.2.1/REG/01", rev: "3", date: "20.04.2020" }
     case "water-cart-trailer-pressure-washer":
       return { ref: "HSEMS/8.1.19/REG/015", rev: "2", date: "23.03.2020" }
     default:
@@ -527,7 +653,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
 
   const doc = new jsPDF("p", "mm", "a4")
   const pageWidth = doc.internal.pageSize.getWidth()
-  
+
   // ----- LOGO -----
   const logoBase64 = await getLogoBase64();
   let yOffset = 15;
@@ -606,7 +732,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
   }
 
   if (fieldRows.length > 0) {
-    ;(doc as any).autoTable({
+    ; (doc as any).autoTable({
       startY: yOffset + 33,
       head: [["Information", ""]],
       body: fieldRows,
@@ -629,13 +755,23 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
   let y = (doc as any).lastAutoTable?.finalY ?? yOffset + 33
   y += 10
 
-  // Choose sections array based on form type (harvester or loader)
-  const formSections = sub.formType === 'excavator-harvester' ? sections : (sub.formType === 'excavator-loader' ? loaderSections : null)
+  // Choose sections array based on form type (harvester, loader, or skidder)
+  const formSections = sub.formType === 'excavator-harvester'
+    ? sections
+    : (sub.formType === 'excavator-loader'
+      ? loaderSections
+      : (sub.formType === 'skidder-pre-shift-inspection'
+        ? skidderSections
+        : (sub.formType === 'weekly-machinery-condition-assessment'
+          ? weeklyAssessmentSections
+          : (sub.formType === 'daily-machine-checklist'
+            ? dailyChecklistSections
+            : null))))
 
   if (formSections) {
     for (const section of formSections) {
       // Find which items of this section are present in the submission
-      const sectionItems = section.items.filter(item => sub.data.items && item in sub.data.items)
+      const sectionItems = section.items.filter(item => (sub.data as any).items && item in (sub.data as any).items)
       if (sectionItems.length === 0) continue
 
       // Check page break
@@ -659,11 +795,11 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       // First half items
       const firstHalfRows = firstHalf.map(item => [
         item,
-        statusLabel(sub.data.items[item] as CheckStatus)
+        statusLabel((sub.data as any).items[item] as CheckStatus)
       ])
 
       if (firstHalfRows.length > 0) {
-        ;(doc as any).autoTable({
+        ; (doc as any).autoTable({
           startY: y,
           body: firstHalfRows,
           theme: "grid",
@@ -696,19 +832,27 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
         y = (doc as any).lastAutoTable.finalY + 3
       }
 
-      // ----- Icon (centered, 40×40) -----
+      // ----- Icons (Danger + Main) -----
       const iconFilename = iconMap[section.title]
       if (iconFilename) {
         const iconBase64 = await getImageBase64(iconFilename)
         if (iconBase64) {
           try {
-            const iconWidth = 40
-            const iconHeight = 40
-            const iconX = (pageWidth - iconWidth) / 2
-            doc.addImage(iconBase64, 'PNG', iconX, y, iconWidth, iconHeight)
-            y += iconHeight + 5
+            const iconSize = 30
+            let currentX = pageWidth / 2 - (iconSize / 2)
+
+            // Render main icon (centered)
+            if (iconBase64 && iconBase64.length > 200) {
+              const iconSize = 60
+              const iconX = (pageWidth - iconSize) / 2
+              doc.addImage(iconBase64, 'PNG', iconX, y, iconSize, iconSize)
+              y += iconSize + 5
+            } else {
+              y += 5
+            }
+            y += iconSize + 5
           } catch (e) {
-            console.error(`Failed to add icon for ${section.title}`, e)
+            console.error(`Failed to add icons for ${section.title}`, e)
             y += 5
           }
         } else {
@@ -725,7 +869,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       ])
 
       if (secondHalfRows.length > 0) {
-        ;(doc as any).autoTable({
+        ; (doc as any).autoTable({
           startY: y,
           body: secondHalfRows,
           theme: "grid",
@@ -759,17 +903,38 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       }
     }
   } else {
-    // ----- Fallback for other form types: flat list -----
+    // ----- Fallback for other form types: list all data fields -----
     const itemRows: string[][] = []
+
+    // Helper to format keys (camelCase to Title Case)
+    const formatKey = (key: string) => {
+      const result = key.replace(/([A-Z])/g, " $1")
+      return result.charAt(0).toUpperCase() + result.slice(1)
+    }
+
     if (sub.data.items) {
       for (const [item, status] of Object.entries(sub.data.items)) {
         itemRows.push([item, statusLabel(status as CheckStatus)])
       }
+    } else {
+      // For non-checklist forms (Job Card, Shorthaul)
+      const ignoredKeys = [
+        "signature", "mechanicsSignature", "operatorsSignature",
+        "fleetEntries", "breakdownEntries", "items",
+        "documentNo", "id", "submittedAt", "submittedBy", "formType"
+      ]
+
+      for (const [key, value] of Object.entries(sub.data)) {
+        if (!ignoredKeys.includes(key) && value && typeof value === "string") {
+          itemRows.push([formatKey(key), value])
+        }
+      }
     }
+
     if (itemRows.length > 0) {
-      ;(doc as any).autoTable({
+      ; (doc as any).autoTable({
         startY: y,
-        head: [["Inspection Item", "Status"]],
+        head: [[sub.data.items ? "Inspection Item" : "Field", sub.data.items ? "Status" : "Value"]],
         body: itemRows,
         theme: "grid",
         headStyles: {
@@ -779,8 +944,12 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
           fontSize: 8,
         },
         bodyStyles: { fontSize: 8 },
+        columnStyles: {
+          0: { cellWidth: 50, fontStyle: "bold" },
+          1: { cellWidth: "auto" },
+        },
         didParseCell(data: any) {
-          if (data.section === "body" && data.column.index === 1) {
+          if ((sub.data as any).items && data.section === "body" && data.column.index === 1) {
             const val = data.row.raw[1]
             if (val === "Defect") {
               data.cell.styles.textColor = [220, 50, 50]
@@ -793,6 +962,78 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
         margin: { left: 14, right: 14 },
       })
       y = (doc as any).lastAutoTable.finalY + 8
+    }
+
+    // ----- Cintasign Shorthaul: Fleet & Breakdown Tables -----
+    if (sub.formType === "cintasign-shorthaul" && (sub.data as any).fleetEntries) {
+      const data = sub.data as any
+
+      // Fleet Entries Table
+      doc.setFontSize(10)
+      doc.setTextColor(34, 100, 54)
+      doc.text("Fleet Entries", 14, y)
+      y += 5
+
+      const fleetRows = data.fleetEntries.map((e: any, idx: number) => [
+        (idx + 1).toString(), e.fleetNo, e.operator, e.shift, e.noOfLoads, e.estTons, e.hoursWorked
+      ])
+
+        ; (doc as any).autoTable({
+          startY: y,
+          head: [["#", "Fleet No", "Operator", "Shift", "Loads", "Tons", "Hrs Worked"]],
+          body: fleetRows,
+          theme: "grid",
+          headStyles: { fillColor: [78, 140, 49], fontSize: 7 },
+          bodyStyles: { fontSize: 7 },
+        })
+      y = (doc as any).lastAutoTable.finalY + 8
+
+      // Breakdown Entries Table
+      doc.setFontSize(10)
+      doc.text("Break Down Hours And Details", 14, y)
+      y += 5
+
+      const breakdownRows = data.breakdownEntries.map((e: any) => [
+        e.machineId, e.operator, e.stop, e.start, e.details
+      ])
+
+        ; (doc as any).autoTable({
+          startY: y,
+          head: [["Machine ID", "Operator", "Stop", "Start", "Details"]],
+          body: breakdownRows,
+          theme: "grid",
+          headStyles: { fillColor: [78, 140, 49], fontSize: 7 },
+          bodyStyles: { fontSize: 7 },
+        })
+      y = (doc as any).lastAutoTable.finalY + 8
+    }
+  }
+
+  // ----- Brake Efficiency Test (Dezzi Specific) -----
+  if (sub.formType === "timber-truck-and-trailer-checklist" && (sub.data as any).brakeEfficiencyTestResult) {
+    if (y > 230) {
+      doc.addPage()
+      y = 15
+    }
+    doc.setFontSize(10)
+    doc.setTextColor(34, 100, 54)
+    doc.text("Brake Efficiency Test:", 14, y)
+    y += 5
+
+    doc.setFontSize(9)
+    doc.setTextColor(60)
+    doc.text(`Result: ${(sub.data as any).brakeEfficiencyTestResult}`, 14, y)
+    y += 5
+
+    try {
+      const brakeImg = await getImageBase64("brake-test-diagram.png")
+      if (brakeImg) {
+        doc.addImage(brakeImg, "PNG", 14, y, 100, 20)
+        y += 25
+      }
+    } catch (err) {
+      console.error("Error adding brake test diagram:", err)
+      y += 5
     }
   }
 
@@ -813,35 +1054,41 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
     y += lines.length * 4 + 6
   }
 
-  // ----- Signature -----
-  if (y > 270) {
-    doc.addPage()
-    y = 15
-  }
-  doc.setFontSize(10)
-  doc.setTextColor(60)
-  doc.text("Signature:", 14, y)
-  y += 5
+  // ----- Signatures -----
+  const signatures = []
+  if ((sub.data as any).signature) signatures.push({ label: "Signature", data: (sub.data as any).signature })
+  if ((sub.data as any).mechanicsSignature) signatures.push({ label: "Mechanics Signature", data: (sub.data as any).mechanicsSignature })
+  if ((sub.data as any).operatorsSignature) signatures.push({ label: "Operators Signature", data: (sub.data as any).operatorsSignature })
 
-  const signature = sub.data.signature
-  if (signature && typeof signature === 'string' && signature.startsWith('data:image')) {
-    try {
-      doc.addImage(signature, 'PNG', 14, y - 3, 50, 15)
-      y += 15
-    } catch (error) {
-      console.error('Failed to add signature image, falling back to text', error)
+  for (const sig of signatures) {
+    if (y > 250) {
+      doc.addPage()
+      y = 15
+    }
+    doc.setFontSize(10)
+    doc.setTextColor(60)
+    doc.text(`${sig.label}:`, 14, y)
+    y += 5
+
+    if (sig.data && typeof sig.data === "string" && sig.data.startsWith("data:image")) {
+      try {
+        doc.addImage(sig.data, "PNG", 14, y, 50, 20)
+        y += 25
+      } catch (err) {
+        console.error("Error adding signature image:", err)
+        doc.setFontSize(9)
+        doc.setFont("helvetica", "italic")
+        doc.text("[Signature image failed to load]", 14, y)
+        doc.setFont("helvetica", "normal")
+        y += 5
+      }
+    } else {
       doc.setFontSize(9)
       doc.setFont("helvetica", "italic")
-      doc.text("[Signature image failed to load]", 14, y)
+      doc.text(sig.data || "-", 14, y)
       doc.setFont("helvetica", "normal")
       y += 5
     }
-  } else {
-    doc.setFontSize(9)
-    doc.setFont("helvetica", "italic")
-    doc.text(signature || "-", 14, y)
-    doc.setFont("helvetica", "normal")
-    y += 5
   }
 
   // ----- Footer -----

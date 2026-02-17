@@ -4,11 +4,20 @@ import { Badge } from "@/components/ui/badge"
 type Status = "ok" | "def" | "na" | null
 
 interface ChecklistStatusBadgeProps {
-  status: Status
+  status?: Status
+  completion?: number
   className?: string
 }
 
-export function ChecklistStatusBadge({ status, className }: ChecklistStatusBadgeProps) {
+export function ChecklistStatusBadge({ status, completion, className }: ChecklistStatusBadgeProps) {
+  if (completion !== undefined) {
+    return (
+      <Badge className={cn("bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100", className)}>
+        {completion}% Complete
+      </Badge>
+    )
+  }
+
   if (!status) return null
 
   const statusConfig = {

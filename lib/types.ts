@@ -1,4 +1,3 @@
-// === NEW FORMS: Checklist Items ===
 export const skidderPreShiftItems = [
   "Walk Around Inspection",
   "Check Fluid Levels",
@@ -47,6 +46,45 @@ export const timberTruckAndTrailerItems = [
   "Check PTO",
   "Check Cab Cleanliness",
   "Check First Aid Kit"
+] as const;
+
+export const dezziTimberTruckItems = [
+  "License and Phepha",
+  "Protective Structure",
+  "Steps and Rails",
+  "Bonnet Shock Absorbers",
+  "Cab",
+  "Mirrors",
+  "Windscreen, Windows & Wipers",
+  "Air Conditioner",
+  "Seats",
+  "Safety Belt",
+  "Steering",
+  "Hydraulic Controls",
+  "Hooter and Reverse Alarm",
+  "Gauges",
+  "Working Lights",
+  "Rotating Light",
+  "Braking System (Foot Brake/Exhaust Brake)",
+  "Emergency Park Brake",
+  "Oil/Fluid/Air Levels",
+  "Fuel, Air and Oil leaks",
+  "Grease",
+  "Grill",
+  "Battery",
+  "Air Pre-Cleaner",
+  "V-Belt",
+  "Radiator",
+  "Air Tank Drain",
+  "Wiring",
+  "Visibility Triangle",
+  "Boom Structure",
+  "Hydraulic Cylinders",
+  "Hydraulic Hoses and Fittings",
+  "Communication",
+  "Chocks",
+  "Fire Extinguisher",
+  "Emergency Triangles"
 ] as const;
 
 export const trailerInspectionItems = [
@@ -114,6 +152,21 @@ export interface ChecklistItem {
 // ============================================
 // FORM DATA TYPES - EXACT FIELDS FROM YOUR FORMS
 // ============================================
+export interface SkidderPreShiftFormData {
+  operatorName: string
+  documentNo: string
+  shift: string
+  date: string
+  hourMeterStart: string
+  hourMeterStop: string
+  validTrainingCard: string
+  unitNumber: string
+  items: Record<string, CheckStatus>
+  hasDefects: boolean
+  defectDetails: string
+  signature: string
+}
+
 export interface LightDeliveryFormData {
   driverName: string
   documentNo: string
@@ -204,22 +257,138 @@ export interface MechanicLDVFormData {
   signature: string
 }
 
+// ✅ UPDATED: Weekly Machinery Condition Assessment Form Data
+export interface WeeklyMachineryConditionFormData {
+  vehicleEquipment: string
+  machineNumber: string
+  date: string
+  kilometersHours: string
+  week: string
+  items: Record<string, CheckStatus>
+  hasDefects: string // "Yes" | "No"
+  defectDetails: string
+  managerName: string
+  managerDate: string
+  signature: string
+}
+
+// ✅ UPDATED: Daily Machine Checklist Form Data (Matches Weekly Structure)
+export interface DailyMachineChecklistFormData {
+  vehicleEquipment: string
+  machineNumber: string
+  date: string
+  kilometersHours: string
+  week: string
+  items: Record<string, CheckStatus>
+  hasDefects: string // "Yes" | "No"
+  defectDetails: string
+  managerName: string
+  managerDate: string
+  signature: string
+}
+
+export interface FleetEntry {
+  fleetNo: string
+  operator: string
+  shift: string
+  compartment: string
+  noOfLoads: string
+  estTons: string
+  hoursOpen: string
+  hoursClose: string
+  hoursWorked: string
+  loadsPerHour: string
+  tonsPerHour: string
+}
+
+export interface BreakdownEntry {
+  machineId: string
+  operator: string
+  stop: string
+  start: string
+  details: string
+}
+
+// ✅ UPDATED: Cintasign Shorthaul Form Data
+export interface CintasignShorthaulFormData {
+  date: string
+  day: string
+  farm: string
+  automaticNumber: string
+  fleetEntries: FleetEntry[]
+  breakdownEntries: BreakdownEntry[]
+  signature?: string // Optional if not in screenshot
+}
+
+// ✅ ADDED: Vehicle Job Card Form Data (Redesigned)
+export interface VehicleJobCardFormData {
+  driversName: string
+  machineVehicle: string
+  date: string
+  hourMeterKmReading: string
+  jobCardNo: string
+  machineRegistrationNumber: string
+  categoryOfWork: string
+  descriptionOfWorkPerformed: string
+  testPerformedAndResulted: string
+  jobCompletedAndSafeToUse: string
+  mechanicsName: string
+  operatorsName: string
+  mechanicsSignature: string
+  operatorsSignature: string
+  timeOn: string
+  timeOff: string
+  normalTimeHours: string
+  overTimeHours: string
+  totalHours: string
+  normalTimeKilometers: string
+  overTimeKilometers: string
+  totalKilometers: string
+}
+
+export interface DezziTimberTruckFormData {
+  operatorName: string;
+  shift: string;
+  date: string;
+  hourMeterStart: string;
+  hourMeterStop: string;
+  trainingCardExpiry: string;
+  unitNumber: string;
+  licensePdpExpiry: string;
+  items: Record<string, CheckStatus>;
+  brakeEfficiencyTestResult: string;
+  areThereAnyDefects: string;
+  defectDetails: string;
+  signature: string;
+  documentRefNo: string;
+  author: string;
+  revision: string;
+  creationDate: string;
+  automaticNumber: string;
+}
+
 // Union type for all form data
-export type FormDataUnion = 
-  | LightDeliveryFormData 
-  | ExcavatorLoaderFormData 
+export type FormDataUnion =
+  | SkidderPreShiftFormData
+  | LightDeliveryFormData
+  | ExcavatorLoaderFormData
   | ExcavatorHarvesterFormData
   | DailyAttachmentFormData
   | LowbedTrailerFormData
   | MechanicLDVFormData
+  | WeeklyMachineryConditionFormData
+  | DailyMachineChecklistFormData
+  | CintasignShorthaulFormData
+  | VehicleJobCardFormData
+  | DezziTimberTruckFormData
   | Record<string, any> // fallback for new forms
 
 // ============================================
 // FORM TYPE CONSTANTS
 // ============================================
-export type FormType = 
-  | "light-delivery" 
-  | "excavator-loader" 
+export type FormType =
+  | "light-delivery"
+  | "excavator-loader"
   | "excavator-harvester"
   | "daily-attachment-checklist"
   | "lowbed-trailer"
@@ -229,6 +398,9 @@ export type FormType =
   | "trailer-inspection-checklist"
   | "vehicle-job-card"
   | "water-cart-trailer-pressure-washer"
+  | "weekly-machinery-condition-assessment"
+  | "daily-machine-checklist"
+  | "cintasign-shorthaul"
 
 // ============================================
 // SUBMISSION TYPE - WITH NOTIFICATION FIELDS
@@ -544,6 +716,9 @@ export type FormDataMap = {
   'daily-attachment-checklist': DailyAttachmentFormData  // ✅ ADDED
   'lowbed-trailer': LowbedTrailerFormData    // ✅ ADDED
   'mechanic-ldv': MechanicLDVFormData        // ✅ ADDED
+  'weekly-machinery-condition-assessment': WeeklyMachineryConditionFormData
+  'daily-machine-checklist': DailyMachineChecklistFormData
+  'cintasign-shorthaul': CintasignShorthaulFormData
 }
 
 // ============================================
@@ -625,6 +800,24 @@ export const formConfigs: Record<FormType, FormConfig> = {
     title: 'Water Cart Trailer & Pressure Washer Checklist',
     description: 'Complete the Water Cart Trailer & Pressure Washer inspection checklist.',
     items: waterCartTrailerPressureWasherItems
+  },
+  'weekly-machinery-condition-assessment': {
+    type: 'weekly-machinery-condition-assessment',
+    title: 'Weekly Machinery Condition Assessment',
+    description: 'Complete the weekly machinery condition assessment checklist.',
+    items: [] // Dynamic sections used in form
+  },
+  'daily-machine-checklist': {
+    type: 'daily-machine-checklist',
+    title: 'Daily Machine Checklist',
+    description: 'Complete the daily machine inspection checklist.',
+    items: [] // Dynamic sections used in form
+  },
+  'cintasign-shorthaul': {
+    type: 'cintasign-shorthaul',
+    title: 'Cintasign Shorthaul logistics form',
+    description: 'Complete the shorthaul logistics trip sheet.',
+    items: [] // Non-checklist form
   }
 }
 
@@ -636,13 +829,13 @@ export function isLightDeliveryFormData(data: FormDataUnion): data is LightDeliv
 }
 
 export function isExcavatorLoaderFormData(data: FormDataUnion): data is ExcavatorLoaderFormData {
-  return (data as ExcavatorLoaderFormData).unitNumber !== undefined && 
-         (data as ExcavatorLoaderFormData).hourMeterStart !== undefined
+  return (data as ExcavatorLoaderFormData).unitNumber !== undefined &&
+    (data as ExcavatorLoaderFormData).hourMeterStart !== undefined
 }
 
 export function isExcavatorHarvesterFormData(data: FormDataUnion): data is ExcavatorHarvesterFormData {
-  return (data as ExcavatorHarvesterFormData).unitNumber !== undefined && 
-         (data as ExcavatorHarvesterFormData).hourMeterStart !== undefined
+  return (data as ExcavatorHarvesterFormData).unitNumber !== undefined &&
+    (data as ExcavatorHarvesterFormData).hourMeterStart !== undefined
 }
 
 // ✅ ADDED: Type guard for Lowbed Trailer
@@ -652,8 +845,8 @@ export function isLowbedTrailerFormData(data: FormDataUnion): data is LowbedTrai
 
 // ✅ ADDED: Type guard for Mechanic LDV
 export function isMechanicLDVFormData(data: FormDataUnion): data is MechanicLDVFormData {
-  return (data as MechanicLDVFormData).vehicleRegistration !== undefined && 
-         (data as MechanicLDVFormData).odometerStart !== undefined
+  return (data as MechanicLDVFormData).vehicleRegistration !== undefined &&
+    (data as MechanicLDVFormData).odometerStart !== undefined
 }
 
 // Get form title from form type
@@ -680,7 +873,16 @@ export function getFormTypeLabel(type: FormType): string {
     'excavator-loader': 'Excavator Loader',
     'excavator-harvester': 'Excavator Harvester',
     'lowbed-trailer': 'Lowbed & Roll Back Trailer',
-    'mechanic-ldv': 'Mechanic LDV'
+    'mechanic-ldv': 'Mechanic LDV',
+    'skidder-pre-shift-inspection': 'Skidder (Grapple & Cable)',
+    'timber-truck-and-trailer-checklist': 'Timber Truck & Trailer',
+    'trailer-inspection-checklist': 'Trailer Checklist',
+    'vehicle-job-card': 'Vehicle Job Card',
+    'water-cart-trailer-pressure-washer': 'Water Cart & Pressure Washer',
+    'weekly-machinery-condition-assessment': 'Weekly Machinery Assessment',
+    'daily-machine-checklist': 'Daily Machine Checklist',
+    'cintasign-shorthaul': 'Cintasign Shorthaul',
+    'daily-attachment-checklist': 'Daily Attachment Checklist'
   }
   return labels[type]
 }

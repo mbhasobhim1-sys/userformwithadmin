@@ -334,6 +334,7 @@ async function getImageBase64(filename: string): Promise<string> {
 // ============================================================================
 // FORM LABEL HELPERS (unchanged)
 // ============================================================================
+// Extended for new forms
 function formTypeLabel(type: string) {
   switch (type) {
     case "daily-attachment-checklist":
@@ -348,11 +349,22 @@ function formTypeLabel(type: string) {
       return "Lowbed & Roll Back Trailer Pre-Shift Inspection"
     case "mechanic-ldv":
       return "Mechanic LDV Daily Checklist"
+    case "skidder-pre-shift-inspection":
+      return "Skidder (Grapple & Cable) Pre-Shift Inspection Checklist"
+    case "timber-truck-and-trailer-checklist":
+      return "Timber Truck And Trailer Checklist"
+    case "trailer-inspection-checklist":
+      return "Trailer (Excluding Labour) Inspection Checklist"
+    case "vehicle-job-card":
+      return "Motorized Equipment/Vehicle Job Card"
+    case "water-cart-trailer-pressure-washer":
+      return "Water Cart Trailer & Pressure Washer Checklist"
     default:
       return type
   }
 }
 
+// Extended for new forms
 function getDocumentDetails(type: string) {
   switch (type) {
     case "daily-attachment-checklist":
@@ -367,6 +379,16 @@ function getDocumentDetails(type: string) {
       return { ref: "HSEMS/8.1.19/REG/020", rev: "2", date: "27.03.2024" }
     case "mechanic-ldv":
       return { ref: "HSEMS/8.1.19/REG/017", rev: "2", date: "27.03.2020" }
+    case "skidder-pre-shift-inspection":
+      return { ref: "HSEMS/8.1.19/REG/006", rev: "2", date: "27.03.2020" }
+    case "timber-truck-and-trailer-checklist":
+      return { ref: "HSEMS/8.1.19/REG/010", rev: "2", date: "20.04.2020" }
+    case "trailer-inspection-checklist":
+      return { ref: "HSEMS/4.4.6.19/REG/013", rev: "2", date: "27.03.2020" }
+    case "vehicle-job-card":
+      return { ref: "HSEMS/8.1.19/DOC/001", rev: "3", date: "20.04.2020" }
+    case "water-cart-trailer-pressure-washer":
+      return { ref: "HSEMS/8.1.19/REG/015", rev: "2", date: "23.03.2020" }
     default:
       return { ref: "HSEMS/8.1.19/REG/000", rev: "0", date: "01.01.2020" }
   }

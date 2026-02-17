@@ -1,7 +1,7 @@
 // Use global fetch (Node 18+). If your Node doesn't support fetch, run this from browser or install node-fetch.
 
 (async () => {
-  const base = 'http://localhost:3002';
+  const base = 'http://localhost:3000';
 
   function saveCookies(r, jar) {
     const set = r.headers.get('set-cookie');

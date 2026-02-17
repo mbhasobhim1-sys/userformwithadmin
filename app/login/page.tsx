@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn, getSession } from 'next-auth/react'
 import Image from 'next/image'
@@ -13,48 +13,55 @@ import { AlertCircle, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function LoginPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="animate-spin h-8 w-8 text-gray-500" /></div>}>
+      <LoginPageInner />
+    </Suspense>
+  );
+}
+
+function LoginPageInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
   // Show NextAuth error from querystring (e.g. ?error=Configuration)
   useEffect(() => {
-    const err = searchParams.get('error')
+    const err = searchParams.get('error');
     if (err) {
-      // normalize error casing
-      setError(err)
-      toast.error(err)
+      setError(err);
+      toast.error(err);
     }
-  }, [searchParams])
+  }, [searchParams]);
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setIsLoading(true)
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
 
     try {
       const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
-      })
+      });
 
       if (result?.error) {
-        setError(result.error)
-        toast.error(result.error)
+        setError(result.error);
+        toast.error(result.error);
       } else if (result?.ok) {
-        toast.success('Login successful!')
-        
+        toast.success('Login successful!');
+
         // Poll for session (role may not be immediately available). Wait up to 3s.
-        const start = Date.now()
-        let session = await getSession()
+        const start = Date.now();
+        let session = await getSession();
         while ((!session || !session.user?.role) && Date.now() - start < 3000) {
-          await new Promise((r) => setTimeout(r, 200))
-          session = await getSession()
+          await new Promise((r) => setTimeout(r, 200));
+          session = await getSession();
         }
 
         // Default redirect

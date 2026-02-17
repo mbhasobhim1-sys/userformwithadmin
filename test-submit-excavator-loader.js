@@ -1,6 +1,6 @@
 (async () => {
   async function detectBase() {
-    const ports = [3000,3001,3002,3003,3004,3005];
+    const ports = [3000, 3001, 3000, 3003, 3004, 3005];
     for (const p of ports) {
       try {
         const r = await fetch(`http://localhost:${p}/api/auth/csrf`)
@@ -27,7 +27,7 @@
       jar[k.trim()] = v;
     });
   }
-  function cookieHeader(jar) { return Object.entries(jar).map(([k,v]) => `${k}=${v}`).join('; '); }
+  function cookieHeader(jar) { return Object.entries(jar).map(([k, v]) => `${k}=${v}`).join('; '); }
 
   try {
     const userJar = {};
@@ -48,7 +48,7 @@
       data: {
         operatorName: 'User One',
         unitNumber: 'EL-001',
-        date: new Date().toISOString().slice(0,10),
+        date: new Date().toISOString().slice(0, 10),
         items: {},
         hasDefects: false,
         defectDetails: '',
@@ -58,7 +58,14 @@
 
     const r3 = await fetch(base + '/api/submissions', { method: 'POST', headers: { 'Content-Type': 'application/json', cookie: cookieHeader(userJar) }, body: JSON.stringify(payload) });
     console.log('Submission POST ->', r3.status);
-    const body3 = await r3.json().catch(() => null);
+    const text3 = await r3.text();
+    console.log('Submission response text:', text3);
+    let body3;
+    try {
+      body3 = JSON.parse(text3);
+    } catch (e) {
+      console.error('Failed to parse JSON:', e);
+    }
     console.log('Submission response', body3);
 
     if (r3.status !== 201) process.exit(1);
@@ -84,7 +91,7 @@
     const checks = [
       { k: 'operatorName', exp: expected.operatorName, got: found.data.operatorName },
       { k: 'unitNumber', exp: expected.unitNumber, got: found.data.unitNumber },
-      { k: 'date', exp: expected.date, got: (found.data.date || '').slice(0,10) },
+      { k: 'date', exp: expected.date, got: (found.data.date || '').slice(0, 10) },
       { k: 'hasDefects', exp: payload.hasDefects, got: found.hasDefects },
       { k: 'defectDetails', exp: expected.defectDetails || '', got: found.data.defectDetails || '' },
       { k: 'signature', exp: 'TESTSIG', got: (found.data.signature || '') }

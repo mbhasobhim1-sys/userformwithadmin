@@ -1,3 +1,105 @@
+// === NEW FORMS: Checklist Items ===
+export const skidderPreShiftItems = [
+  "Walk Around Inspection",
+  "Check Fluid Levels",
+  "Check for Leaks",
+  "Check Tyres/Tracks",
+  "Check Lights & Horn",
+  "Check Controls & Gauges",
+  "Check Seatbelt",
+  "Check Fire Extinguisher",
+  "Check Safety Decals",
+  "Check for Damage",
+  "Check Grease Points",
+  "Check Hydraulic Hoses",
+  "Check Battery",
+  "Check Air Filter",
+  "Check Radiator",
+  "Check Fan Belts",
+  "Check Brakes",
+  "Check Steering",
+  "Check Transmission",
+  "Check PTO/Winch",
+  "Check Cab Cleanliness",
+  "Check First Aid Kit"
+] as const;
+
+export const timberTruckAndTrailerItems = [
+  "Walk Around Inspection",
+  "Check Fluid Levels",
+  "Check for Leaks",
+  "Check Tyres",
+  "Check Lights & Horn",
+  "Check Controls & Gauges",
+  "Check Seatbelt",
+  "Check Fire Extinguisher",
+  "Check Safety Decals",
+  "Check for Damage",
+  "Check Grease Points",
+  "Check Hydraulic Hoses",
+  "Check Battery",
+  "Check Air Filter",
+  "Check Radiator",
+  "Check Fan Belts",
+  "Check Brakes",
+  "Check Steering",
+  "Check Transmission",
+  "Check PTO",
+  "Check Cab Cleanliness",
+  "Check First Aid Kit"
+] as const;
+
+export const trailerInspectionItems = [
+  "Walk Around Inspection",
+  "Check Fluid Levels",
+  "Check for Leaks",
+  "Check Tyres",
+  "Check Lights & Reflectors",
+  "Check Brakes",
+  "Check Coupling & Safety Chains",
+  "Check Load Security",
+  "Check Safety Decals",
+  "Check for Damage",
+  "Check Grease Points",
+  "Check Hydraulic Hoses",
+  "Check Battery",
+  "Check Air Filter",
+  "Check Radiator",
+  "Check Fan Belts",
+  "Check Suspension",
+  "Check Axles",
+  "Check Floor & Deck",
+  "Check First Aid Kit"
+] as const;
+
+export const vehicleJobCardItems = [
+  "Description of Work Performed",
+  "Test Performed and Resulted",
+  "Job completed and safe to use"
+] as const;
+
+export const waterCartTrailerPressureWasherItems = [
+  "Walk Around Inspection",
+  "Check Fluid Levels",
+  "Check for Leaks",
+  "Check Tyres",
+  "Check Lights & Reflectors",
+  "Check Brakes",
+  "Check Coupling & Safety Chains",
+  "Check Load Security",
+  "Check Safety Decals",
+  "Check for Damage",
+  "Check Grease Points",
+  "Check Hydraulic Hoses",
+  "Check Battery",
+  "Check Air Filter",
+  "Check Radiator",
+  "Check Fan Belts",
+  "Check Suspension",
+  "Check Axles",
+  "Check Floor & Deck",
+  "Check First Aid Kit"
+] as const;
 // ============================================
 // CHECK STATUS TYPES
 // ============================================
@@ -107,9 +209,10 @@ export type FormDataUnion =
   | LightDeliveryFormData 
   | ExcavatorLoaderFormData 
   | ExcavatorHarvesterFormData
-  | DailyAttachmentFormData       // ✅ ADDED
-  | LowbedTrailerFormData      // ✅ ADDED
-  | MechanicLDVFormData        // ✅ ADDED
+  | DailyAttachmentFormData
+  | LowbedTrailerFormData
+  | MechanicLDVFormData
+  | Record<string, any> // fallback for new forms
 
 // ============================================
 // FORM TYPE CONSTANTS
@@ -118,9 +221,14 @@ export type FormType =
   | "light-delivery" 
   | "excavator-loader" 
   | "excavator-harvester"
-  | "daily-attachment-checklist"  // ✅ ADDED
-  | "lowbed-trailer"          // ✅ ADDED
-  | "mechanic-ldv"            // ✅ ADDED
+  | "daily-attachment-checklist"
+  | "lowbed-trailer"
+  | "mechanic-ldv"
+  | "skidder-pre-shift-inspection"
+  | "timber-truck-and-trailer-checklist"
+  | "trailer-inspection-checklist"
+  | "vehicle-job-card"
+  | "water-cart-trailer-pressure-washer"
 
 // ============================================
 // SUBMISSION TYPE - WITH NOTIFICATION FIELDS
@@ -487,6 +595,36 @@ export const formConfigs: Record<FormType, FormConfig> = {
     title: 'Mechanic LDV Daily Checklist',
     description: 'Complete the mechanic light delivery vehicle daily inspection checklist.',
     items: mechanicLDVItems
+  },
+  'skidder-pre-shift-inspection': {
+    type: 'skidder-pre-shift-inspection',
+    title: 'Skidder (Grapple & Cable) Pre-Shift Inspection Checklist',
+    description: 'Complete the Skidder pre-shift inspection checklist.',
+    items: skidderPreShiftItems
+  },
+  'timber-truck-and-trailer-checklist': {
+    type: 'timber-truck-and-trailer-checklist',
+    title: 'Timber Truck And Trailer Checklist',
+    description: 'Complete the Timber Truck and Trailer inspection checklist.',
+    items: timberTruckAndTrailerItems
+  },
+  'trailer-inspection-checklist': {
+    type: 'trailer-inspection-checklist',
+    title: 'Trailer (Excluding Labour) Inspection Checklist',
+    description: 'Complete the Trailer (Excluding Labour) inspection checklist.',
+    items: trailerInspectionItems
+  },
+  'vehicle-job-card': {
+    type: 'vehicle-job-card',
+    title: 'Motorized Equipment/Vehicle Job Card',
+    description: 'Complete the Motorized Equipment/Vehicle Job Card.',
+    items: vehicleJobCardItems
+  },
+  'water-cart-trailer-pressure-washer': {
+    type: 'water-cart-trailer-pressure-washer',
+    title: 'Water Cart Trailer & Pressure Washer Checklist',
+    description: 'Complete the Water Cart Trailer & Pressure Washer inspection checklist.',
+    items: waterCartTrailerPressureWasherItems
   }
 }
 

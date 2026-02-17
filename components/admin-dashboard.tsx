@@ -211,13 +211,12 @@ function SubmissionPreview({ submission }: { submission: Submission }) {
             Object.entries(submission.data.items).map(([item, status], idx) => (
               <div
                 key={item}
-                className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${
-                  status === "def"
+                className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${status === "def"
                     ? "bg-destructive/5"
                     : idx % 2 === 0
                       ? "bg-muted/30"
                       : "bg-card"
-                }`}
+                  }`}
               >
                 <span className="text-foreground">{item}</span>
                 <StatusBadge status={status as CheckStatus} />
@@ -299,7 +298,7 @@ export function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [router])
 
   // Fetch users for admin management
   const fetchUsers = useCallback(async () => {
@@ -322,7 +321,7 @@ export function AdminDashboard() {
     } finally {
       setLoadingUsers(false)
     }
-  }, [])
+  }, [router])
 
   // ✅ ADDED: Fetch notifications
   const fetchNotifications = useCallback(async () => {
@@ -339,7 +338,7 @@ export function AdminDashboard() {
     } catch (error) {
       console.error("Failed to fetch notifications:", error)
     }
-  }, [])
+  }, [router])
 
   // Delete a submission (admin only)
   const handleDelete = async (id: string) => {
@@ -383,16 +382,16 @@ export function AdminDashboard() {
         router.push(`/login?callbackUrl=/admin`)
         return
       }
-      
+
       setNotifications(prev => prev.filter(n => n.id !== submissionId))
       setUnreadCount(prev => Math.max(0, prev - 1))
-      
+
       setSubmissions(prev =>
         prev.map(sub =>
           sub.id === submissionId ? { ...sub, isRead: true } : sub
         )
       )
-      
+
       toast.success("Marked as read")
     } catch (error) {
       toast.error("Failed to mark as read")
@@ -462,22 +461,22 @@ export function AdminDashboard() {
       defectFilter === "all" ||
       (defectFilter === "defects" && s.hasDefects) ||
       (defectFilter === "clean" && !s.hasDefects)
-      // Date range filter
-      let matchesDate = true
-      if (startDate) {
-        const start = new Date(startDate)
-        const subDate = new Date(s.submittedAt)
-        if (subDate < start) matchesDate = false
-      }
-      if (endDate) {
-        // include entire end day
-        const end = new Date(endDate)
-        end.setHours(23, 59, 59, 999)
-        const subDate = new Date(s.submittedAt)
-        if (subDate > end) matchesDate = false
-      }
+    // Date range filter
+    let matchesDate = true
+    if (startDate) {
+      const start = new Date(startDate)
+      const subDate = new Date(s.submittedAt)
+      if (subDate < start) matchesDate = false
+    }
+    if (endDate) {
+      // include entire end day
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999)
+      const subDate = new Date(s.submittedAt)
+      if (subDate > end) matchesDate = false
+    }
 
-      return matchesSearch && matchesType && matchesDefect && matchesDate
+    return matchesSearch && matchesType && matchesDefect && matchesDate
   })
 
   const totalSubmissions = submissions.length
@@ -547,8 +546,8 @@ export function AdminDashboard() {
                     <div className="flex flex-col gap-1">
                       <p className="font-semibold">{first.title}</p>
                       <p className="text-sm">{first.message}</p>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         className="mt-2 w-full"
                         onClick={() => {
                           markAsRead(first.id)
@@ -577,7 +576,7 @@ export function AdminDashboard() {
               <span className="hidden sm:inline">Notifications</span>
             </Button>
           </div>
-          
+
           <Button
             variant="outline"
             size="sm"
@@ -852,7 +851,7 @@ export function AdminDashboard() {
                             <Eye className="h-4 w-4" />
                             <span className="hidden sm:inline">View</span>
                           </Button>
-                          
+
                           {/* ✅ ADDED: Mark as read button for unread submissions */}
                           {!sub.isRead && (
                             <Button
@@ -877,7 +876,7 @@ export function AdminDashboard() {
                             <Trash className="h-4 w-4" />
                             <span className="hidden sm:inline">Delete</span>
                           </Button>
-                          
+
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -1066,11 +1065,10 @@ export function AdminDashboard() {
                             ([item, status]) => (
                               <div
                                 key={item}
-                                className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${
-                                  status === "def"
+                                className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${status === "def"
                                     ? "bg-destructive/5"
                                     : "bg-muted/50"
-                                }`}
+                                  }`}
                               >
                                 <span className="text-foreground">{item}</span>
                                 <StatusBadge status={status as CheckStatus} />

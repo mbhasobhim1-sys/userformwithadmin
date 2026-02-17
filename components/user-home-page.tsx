@@ -165,7 +165,7 @@ const forms = [
     icon: Truck,
     href: "/dezzi-timber-truck",
     docRef: "HSEMS/8.2.3/REG/01",
-    itemCount: 36,
+    itemCount: 41,
   },
 ]
 
@@ -173,16 +173,18 @@ export function UserHomePage() {
   return (
     <main className="mx-auto max-w-7xl p-4 lg:p-8">
       {/* Hero Section */}
-      <div className="mb-8 flex flex-col items-center text-center">
-        <div className="mb-4">
+      <div className="mb-8 flex items-center gap-6">
+        <div className="flex-shrink-0">
           <Image src="/images/ringomode-logo.png" alt="Ringomode DSP logo" width={180} height={60} className="object-contain" />
         </div>
-        <h1 className="text-balance text-2xl font-bold text-foreground lg:text-3xl">
-          HSE Inspection Checklists
-        </h1>
-        <p className="mt-2 max-w-xl text-pretty text-muted-foreground">
-          Select a checklist below to begin your pre-shift or daily inspection. All submissions are recorded and reviewed by the HSE team.
-        </p>
+        <div className="flex-1">
+          <h1 className="text-balance text-2xl font-bold text-foreground lg:text-3xl">
+            HSE Inspection Checklists
+          </h1>
+          <p className="mt-2 max-w-xl text-pretty text-muted-foreground">
+            Select a checklist below to begin your pre-shift or daily inspection. All submissions are recorded and reviewed by the HSE team.
+          </p>
+        </div>
       </div>
 
       {/* Stats - Single card: Available Forms */}

@@ -327,6 +327,11 @@ const dezziTimberTruckSections = [
   { title: "Radiator", items: ["Secure.", "Water level correct.", "No signs of leaking."] },
   { title: "Air Tank Drain", items: ["Good condition.", "Drained daily."] },
   { title: "Wiring", items: ["No loose, damaged or exposed wires.", "No loose broken plugs."] },
+  { title: "Prop-Shaft/Universals/Carrier Bearings", items: ["Check mounting, carrier bearings & universal joints.", "No oil leaks."] },
+  { title: "Drive Train", items: ["No oil leaks."] },
+  { title: "Tyres", items: ["Condition of tyres (no cuts/bulges).", "Wheel nuts secure.", "Tyre pressure (visual)."] },
+  { title: "Headboard and Uprights", items: ["No cracks / loose / missing bolts / missing uprights.", "Tail board secure & pins in place."] },
+  { title: "Chevron, Reflectors and Tape", items: ["Chevron clean & not damaged.", "Reflectors & tape clean and not damaged."] },
   { title: "Visibility Triangle", items: ["On the back of the machine.", "Secure.", "Clean and visible."] },
   { title: "Boom Structure", items: ["Not bent/cracked.", "Pins all secured.", "No loose/missing bolts."] },
   { title: "Hydraulic Cylinders", items: ["Good condition – no damage.", "No loose fittings.", "No oil leaks.", "No missing bolts/nuts."] },
@@ -382,10 +387,16 @@ const iconMap: Record<string, string> = {
   "Braking System (Foot Brake/Exhaust Brake)": "excavator-loader-brakes-steering.png",
   "Emergency Park Brake": "excavator-loader-brakes-steering.png",
   "Air Tank Drain": "air-tank-drain.png",
+  "Prop-Shaft/Universals/Carrier Bearings": "prop-shaft.png",
+  "Drive Train": "drive-train.png",
+  "Headboard and Uprights": "headboard-uprights.png",
+  "Chevron, Reflectors and Tape": "chevron-reflectors.png",
   "Visibility Triangle": "visibility-triangle.png",
   "Chocks": "chocks.png",
   "Emergency Triangles": "emergency-triangles.png",
-  "Tackle": "hydraulic-hoses.png"
+  "Tackle": "hydraulic-hoses.png",
+  "Foot Brake": "excavator-loader-brakes-steering.png",
+  "Tyres": "excavator-loader-wheels-tyres.png"
 }
 
 // Maps Dezzi section titles to high-risk danger icons
@@ -401,7 +412,11 @@ const dezziDangerTypeMap: Record<string, "skull" | "warning"> = {
   "Wiring": "skull",
   "Boom Structure": "skull",
   "Fire Extinguisher": "skull",
-  "Emergency Triangles": "skull"
+  "Emergency Triangles": "skull",
+  "Prop-Shaft/Universals/Carrier Bearings": "skull",
+  "Headboard and Uprights": "skull",
+  "Chevron, Reflectors and Tape": "skull",
+  "Tyres": "skull"
 }
 
 // Maps Skidder section titles to high-risk danger icons (matches web form)

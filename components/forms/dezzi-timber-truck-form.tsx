@@ -37,7 +37,7 @@ const sections = [
         title: "Bonnet Shock Absorbers",
         items: ["In place.", "In good condition."],
         icon: "bonnet-shocks.png",
-        danger: true
+        danger: false
     },
     {
         title: "Cab",
@@ -49,7 +49,7 @@ const sections = [
         title: "Mirrors",
         items: ["Mirrors in good condition.", "Not damaged.", "Adequately secured – not loose."],
         icon: "mirrors.png",
-        danger: true
+        danger: false
     },
     {
         title: "Windscreen, Windows & Wipers",
@@ -175,19 +175,49 @@ const sections = [
         title: "Air Tank Drain",
         items: ["Good condition.", "Drained daily."],
         icon: "air-tank-drain.png",
-        danger: true
+        danger: false
     },
     {
         title: "Wiring",
-        items: ["Condition of wiring.", "Battery terminals secure.", "No loose/exposed wires."],
+        items: ["No loose, damaged or exposed wires.", "No loose broken plugs."],
         icon: "wiring.png",
+        danger: true
+    },
+    {
+        title: "Prop-Shaft/Universals/Carrier Bearings",
+        items: ["Check mounting, carrier bearings & universal joints.", "No oil leaks."],
+        icon: "prop-shaft.png",
+        danger: true
+    },
+    {
+        title: "Drive Train",
+        items: ["No oil leaks."],
+        icon: "drive-train.png",
+        danger: false
+    },
+    {
+        title: "Tyres",
+        items: ["Condition of tyres (no cuts/bulges).", "Wheel nuts secure.", "Tyre pressure (visual)."],
+        icon: "excavator-loader-wheels-tyres.png",
+        danger: true
+    },
+    {
+        title: "Headboard and Uprights",
+        items: ["No cracks / loose / missing bolts / missing uprights.", "Tail board secure & pins in place."],
+        icon: "headboard-uprights.png",
+        danger: true
+    },
+    {
+        title: "Chevron, Reflectors and Tape",
+        items: ["Chevron clean & not damaged.", "Reflectors & tape clean and not damaged."],
+        icon: "chevron-reflectors.png",
         danger: true
     },
     {
         title: "Visibility Triangle",
         items: ["On the back of the machine.", "Secure.", "Clean and visible."],
         icon: "visibility-triangle.png",
-        danger: true
+        danger: false
     },
     {
         title: "Boom Structure",
@@ -217,7 +247,7 @@ const sections = [
         title: "Chocks",
         items: ["2 x chocks available.", "In good condition."],
         icon: "chocks.png",
-        danger: true
+        danger: false
     },
     {
         title: "Fire Extinguisher",
@@ -469,7 +499,7 @@ export default function DezziTimberTruckForm() {
                 <div className="space-y-0 border-t border-gray-200">
                     {sections.map((section) => (
                         <div key={section.title} className="py-10 border-b border-gray-200 hover:bg-gray-50/30 transition-colors">
-                            <div className="grid grid-cols-1 lg:grid-cols-[2fr_120px_120px_200px] items-start lg:items-center gap-6 md:gap-10">
+                            <div className="grid grid-cols-1 lg:grid-cols-[2fr_120px_200px] items-start lg:items-center gap-6 md:gap-10">
                                 <div className="space-y-2">
                                     <h4 className="text-lg font-bold text-gray-900 border-l-4 border-[#4e8c31] pl-4">{section.title}:</h4>
                                     <ul className="ml-8 list-disc text-sm text-gray-600 font-medium">
@@ -477,9 +507,6 @@ export default function DezziTimberTruckForm() {
                                     </ul>
                                 </div>
                                 {/* Icons */}
-                                <div className="flex justify-center">
-                                    {section.danger ? <Skull className="h-14 w-14 text-red-600 opacity-60" /> : <AlertTriangle className="h-14 w-14 text-[#fbb016] opacity-60" />}
-                                </div>
                                 <div className="flex justify-center">
                                     <div className="w-24 h-24 relative p-1 border rounded-lg bg-white shadow-sm flex items-center justify-center">
                                         <Image src={`/images/${section.icon}`} alt="" width={80} height={80} className="object-contain" />

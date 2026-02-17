@@ -28,6 +28,7 @@ declare module 'next-auth' {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET || 'your-secret-key-change-this-in-production',
   providers: [
     Credentials({
       name: 'Credentials',

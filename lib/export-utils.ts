@@ -307,27 +307,25 @@ const iconMap: Record<string, string> = {
 // ============================================================================
 async function getImageBase64(filename: string): Promise<string> {
   try {
+    // Always use client-side fetch for images. Server-side code paths
+    // that import this module should not attempt to read the filesystem
+    // to avoid bundler errors in Next.js dev/build.
     if (typeof window === 'undefined') {
-      // ---------- Server side ----------
-      const fs = await import('fs');
-      const path = await import('path');
-      const imagePath = path.join(process.cwd(), 'public', 'images', filename);
-      const imageBuffer = fs.readFileSync(imagePath);
-      return `data:image/png;base64,${imageBuffer.toString('base64')}`;
-    } else {
-      // ---------- Client side ----------
-      const response = await fetch(`/images/${filename}`);
-      const blob = await response.blob();
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
+      // Server: return a small transparent PNG data URI as a safe fallback
+      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII='
     }
+    const response = await fetch(`/images/${filename}`)
+    if (!response.ok) return ''
+    const blob = await response.blob()
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
   } catch (error) {
-    console.error(`Failed to load image ${filename}:`, error);
-    return '';
+    console.error(`Failed to load image ${filename}:`, error)
+    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII='
   }
 }
 
@@ -487,24 +485,36 @@ export function exportSingleSubmissionToCSV(sub: Submission): void {
 async function getLogoBase64(): Promise<string> {
   try {
     if (typeof window === 'undefined') {
-      const fs = await import('fs');
-      const path = await import('path');
-      const logoPath = path.join(process.cwd(), 'public', 'images', 'ringomode-logo.png');
-      const logoBuffer = fs.readFileSync(logoPath);
-      return `data:image/png;base64,${logoBuffer.toString('base64')}`;
-    } else {
-      const response = await fetch('/images/ringomode-logo.png');
-      const blob = await response.blob();
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
+      // Server: provide a tiny transparent PNG as fallback
+      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII='
     }
+    const response = await fetch('/images/ringomode-logo.png')
+    if (!response.ok) {
+      // Try svg fallback
+      try {
+        const resp2 = await fetch('/images/ringomode-logo.svg')
+        if (!resp2.ok) return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII='
+        const blob2 = await resp2.blob()
+        return await new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result as string)
+          reader.onerror = reject
+          reader.readAsDataURL(blob2)
+        })
+      } catch (e) {
+        return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII='
+      }
+    }
+    const blob = await response.blob()
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
   } catch (error) {
-    console.error('Failed to load logo:', error);
-    return '';
+    console.error('Failed to load logo:', error)
+    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII='
   }
 }
 

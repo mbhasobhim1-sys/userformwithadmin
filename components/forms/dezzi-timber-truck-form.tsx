@@ -290,7 +290,14 @@ export default function DezziTimberTruckForm() {
         automaticNumber: ""
     })
 
-    const [automaticNumber, setAutomaticNumber] = useState("")
+    // Generate auto-number once on mount
+    const [autoNumber] = useState(() => {
+        const date = new Date()
+        const yy = date.getFullYear().toString().slice(-2)
+        const mm = String(date.getMonth() + 1).padStart(2, '0')
+        const rand = Math.floor(1000 + Math.random() * 9000)
+        return `DT-${yy}${mm}-${rand}`
+    })
 
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [isDrawing, setIsDrawing] = useState(false)
@@ -371,10 +378,6 @@ export default function DezziTimberTruckForm() {
 
         setIsSubmitting(true)
 
-        // Generate Auto Number
-        const autoNum = Math.floor(2000 + Math.random() * 9000).toString()
-        setAutomaticNumber(autoNum)
-
         const submission = {
             id: Math.random().toString(36).substr(2, 9),
             formType: "timber-truck-and-trailer-checklist",
@@ -383,7 +386,7 @@ export default function DezziTimberTruckForm() {
             formTitle: "Dezzi Timber Truck Pre-Shift Checklist",
             data: {
                 ...formData,
-                automaticNumber: autoNum
+                automaticNumber: autoNumber
             },
             hasDefects: formData.areThereAnyDefects === "Yes" || Object.values(formData.items).some(v => v === "def")
         }
@@ -406,7 +409,7 @@ export default function DezziTimberTruckForm() {
                 <div className="space-y-2">
                     <h2 className="text-3xl font-bold text-gray-900">Submission Successful!</h2>
                     <p className="text-lg text-gray-500">The Dezzi Timber Truck Pre-Shift Checklist has been recorded.</p>
-                    <p className="text-xl font-bold text-[#4e8c31] mt-2">Automatic Number: {automaticNumber}</p>
+                    <p className="text-xl font-bold text-[#4e8c31] mt-2">Automatic Number: {submissionData.data.automaticNumber}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Button
@@ -516,8 +519,8 @@ export default function DezziTimberTruckForm() {
                                 </div>
                                 {/* Icons */}
                                 <div className="flex justify-center">
-                                    <div className="w-24 h-24 relative p-1 border rounded-none bg-white shadow-sm flex items-center justify-center">
-                                        <Image src={`/images/${section.icon}`} alt="" width={80} height={80} className="object-contain" />
+                                    <div className="w-[208px] h-[151px] relative p-1 border rounded-none bg-white shadow-sm flex items-center justify-center">
+                                        <Image src={`/images/${section.icon}`} alt="" width={196} height={139} className="object-contain" />
                                     </div>
                                 </div>
                                 {/* Select */}
@@ -597,12 +600,13 @@ export default function DezziTimberTruckForm() {
                             <Button type="button" variant="outline" size="sm">Undo</Button>
                         </div>
                     </div>
-                    <div className="rounded-none border-2 border-gray-200 bg-white p-2">
+                    <div className="rounded-none border-2 border-gray-200 bg-white p-2" style={{ maxWidth: 378 }}>
                         <canvas
                             ref={canvasRef}
-                            width={800}
-                            height={300}
-                            className="w-full h-48 cursor-crosshair touch-none"
+                            width={756}
+                            height={378}
+                            className="cursor-crosshair touch-none block"
+                            style={{ width: 378, height: 189 }}
                             onMouseDown={startDrawing}
                             onMouseMove={draw}
                             onMouseUp={stopDrawing}
@@ -630,7 +634,7 @@ export default function DezziTimberTruckForm() {
                 </div>
                 <div className="flex items-center justify-between py-4 border-t border-gray-100 mt-8 pt-8">
                     <div className="text-sm font-bold text-gray-900">
-                        Automatic Number: <span className="text-gray-400 italic">Generated on Submit</span>
+                        Automatic Number: <span className="text-[#4e8c31] font-mono tracking-wider">{autoNumber}</span>
                     </div>
                     <div className="flex gap-4">
                         <Button

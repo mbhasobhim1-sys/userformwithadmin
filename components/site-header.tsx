@@ -57,24 +57,6 @@ export function SiteHeader({ role }: SiteHeaderProps) {
           </Link>
 
           <div className="flex items-center gap-2">
-            {/* Checklists / User View Link */}
-            <Button
-              variant="ghost"
-              size="lg"
-              asChild
-              className={cn(
-                "gap-3 text-lg text-muted-foreground",
-                pathname === "/" && "bg-primary/10 text-primary"
-              )}
-            >
-              <Link href="/">
-                <ClipboardList className="h-6 w-6" />
-                <span className="hidden sm:inline">
-                  {actualRole === "admin" ? "User View" : "Checklists"}
-                </span>
-              </Link>
-            </Button>
-
             {/* Admin Dashboard Link */}
             {actualRole === "admin" && (
               <Button
@@ -92,6 +74,24 @@ export function SiteHeader({ role }: SiteHeaderProps) {
                 </Link>
               </Button>
             )}
+
+            {/* Checklists / User View Link */}
+            <Button
+              variant="ghost"
+              size="lg"
+              asChild
+              className={cn(
+                "gap-3 text-lg text-muted-foreground",
+                (pathname === "/" || pathname === "") && "bg-primary/10 text-primary"
+              )}
+            >
+              <Link href="/">
+                <ClipboardList className="h-6 w-6" />
+                <span className="hidden sm:inline">
+                  {actualRole === "admin" ? "User View" : "Checklists"}
+                </span>
+              </Link>
+            </Button>
           </div>
         </div>
 

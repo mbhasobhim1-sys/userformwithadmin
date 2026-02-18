@@ -931,6 +931,45 @@ const serviceDieselTruckSections = [
   }
 ]
 
+const lowbedStepDeckSections = [
+  { title: "License and Phepha", items: ["Phepha valid.", "Displayed and visible."] },
+  { title: "Body of Cab/Trailer", items: ["Condition of body.", "No damage/rust."] },
+  { title: "Exhaust", items: ["Secure.", "No leaks."] },
+  { title: "Steps and Rails", items: ["Steps in good condition.", "Not loose/broken."] },
+  { title: "Cab", items: ["Cab neat and tidy.", "Door and mechanism working.", "Door rubber in good condition.", "Door handles functional."] },
+  { title: "Mirrors", items: ["Mirrors in good condition.", "Not damaged.", "Adequately secured – not loose."] },
+  { title: "Windscreen, Windows & Wipers", items: ["Clean/secure.", "No cracks or damages to windscreen.", "Window visibility not obscured by cracks.", "Wipers are working."] },
+  { title: "Air Conditioner", items: ["In working condition."] },
+  { title: "Seats", items: ["Condition of seat.", "Seat secured.", "Rotating lock functional.", "Seat adjuster functional."] },
+  { title: "Safety Belt", items: ["Safety belts bolted/secured.", "No damage/not extremely dirty/bleached or dyed.", "Retractor clip in order and clicks into place."] },
+  { title: "Steering Column", items: ["Not loose/responsive.", "No steering play – Not > than 15 degrees.", "Power steering in order/no leaks."] },
+  { title: "Hooter and Reverse Alarm", items: ["Hooter working and in good condition.", "Reverse alarm working."] },
+  { title: "Gauges", items: ["In working order.", "Any warning symbols/lights."] },
+  { title: "Clutch", items: ["Clutch taking correctly – not slipping.", "In working order."] },
+  { title: "Lamps", items: ["Dim/bright working.", "No fused or damaged bulbs.", "Indicators and hazards working.", "Brake light in working order."] },
+  { title: "Brakes", items: ["In working order.", "Sufficient air build up."] },
+  { title: "Handbrake/ Brake Cable", items: ["Working."] },
+  { title: "Battery", items: ["Secure.", "Sufficient water.", "Terminals clean/tight & covers on.", "No exposed wiring."] },
+  { title: "Radiator", items: ["Secure.", "Water level correct.", "No signs of leaking."] },
+  { title: "Air Tank Drain", items: ["Good condition.", "Drained daily."] },
+  { title: "Oil/Fluid/Air Levels", items: ["Check all oil levels/brake fluid levels/clutch fluid levels are correct.", "Check air gauge in order."] },
+  { title: "Fuel, Air and Oil leaks", items: ["No more than 4 drops of oil per minute."] },
+  { title: "Differentials", items: ["No oil leaks."] },
+  { title: "Tyres", items: ["Condition of tyres (no cuts/bulges).", "Wheel nuts secure.", "Tyre pressure (visual)."] },
+  { title: "Mud Flaps", items: ["Secure.", "In good condition."] },
+  { title: "Hoses & Fittings (Air & Hydraulics)", items: ["No leaks.", "Not loose or damaged."] },
+  { title: "Hydraulic Controls", items: ["Working order."] },
+  { title: "Trailer Deck", items: ["Ensure trailer deck/floor is in good condition.", "Not rusted."] },
+  { title: "Tow Bar & Hitch/King Pin", items: ["Secure.", "No damage."] },
+  { title: "Landing Gear", items: ["Working order."] },
+  { title: "Anchor Points, Chains & Binders", items: ["Ensure anchor points are safe enough to use.", "Chains and binders to be used are in good condition."] },
+  { title: "Chevron, Reflectors and Tape", items: ["Chevron clean & not damaged.", "Reflectors & tape clean and not damaged."] },
+  { title: "Slow Moving Vehicle Signage", items: ["Visible.", "In good condition."] },
+  { title: "Chocks", items: ["2 x chocks available.", "In good condition."] },
+  { title: "Emergency Triangles", items: ["2 x available as per legal requirements.", "In good condition."] },
+  { title: "Fire Extinguisher", items: ["Mounted and secured.", "Serviced.", "Gauge in order.", "Seal in place."] },
+]
+
 // ============================================================================
 // ICON MAPPING – maps section titles to image filenames
 // ============================================================================
@@ -941,7 +980,6 @@ const iconMap: Record<string, string> = {
   "Steps and Rails": "steps-and-rails.png",
   "Cab": "cabs.png",
   "Windscreen, Windows & Wipers": "wipes.png",
-  "Mirrors": "mirrors.png",
   "Air Conditioner": "air-conditioner.png",
   "Seats": "seats.png",
   "Safety Belt": "safety-belt.png",
@@ -975,24 +1013,15 @@ const iconMap: Record<string, string> = {
   "Working Lights": "led.png",
   "Braking System (Foot Brake/Exhaust Brake)": "excavator-loader-brakes-steering.png",
   "Emergency Park Brake": "excavator-loader-brakes-steering.png",
-  "Air Tank Drain": "air-tank-drain.png",
   "Prop-Shaft/Universals/Carrier Bearings": "prop-shaft.png",
   "Drive Train": "drive-train.png",
   "Headboard and Uprights": "headboard-uprights.png",
-  "Chevron, Reflectors and Tape": "chevron-reflectors.png",
-  "Visibility Triangle": "visibility-triangle.png",
-  "Chocks": "chocks.png",
-  "Emergency Triangles": "emergency-triangles.png",
-  "Tackle": "hydraulic-hoses.png",
   "Foot Brake": "excavator-loader-brakes-steering.png",
-  "Tyres": "excavator-loader-wheels-tyres.png",
-  // Diesel Cart Trailer icons
   "Number Plate": "number-plate.png",
   "Trailer Body": "trailer-body.png",
   "Diesel Tank": "diesel-tank.png",
   "Hose Pipe & Nozzle": "fuel-nozzle.png",
   "Trailer Plug & Electric Wiring": "trailer-plug.png",
-  "Hand Brake/ Brake Cable": "brake-cable.png",
   "U-Bolts": "trailer-u-bolts.png",
   "Wheel Rims": "wheel-rim.png",
   "Wheel Nuts": "wheel-nuts.png",
@@ -1001,27 +1030,21 @@ const iconMap: Record<string, string> = {
   "Safety Chain": "safety-chain.png",
   "Jockey Wheel": "trailer-jockey-wheel.png",
   "Land Gear, Wooden Stands Not Permitted": "trailer-land-gear.png",
-  "Hazchem Signage": "hazchem-signage.png",
-  "Fire Extinguisher (1 x 1.5kg extinguisher)": "fire-system.png",
-  // Ponsse Bison icons
-  "Grab": "harvester-head.png",
+  "Grab": "grab.png",
   "Safety/Emergency Cut Out System": "emergency-triangles.png",
   "Park Brake": "bail-lever.png",
   "Dafo Fire Suppression & 1 x 6kg Fire Extinguisher": "excavator-loader-fire-safety.png",
   "Safety/Emergency Cut Out System (Emergency Button)": "bail-lever.png",
   "Escape Hatch": "escape-hatch.png",
-  // Service Diesel Truck specific/new icons (not in main block)
   "Vehicle License and Phepha": "license2.png",
   "Body of Cab / Tank": "service-truck-body.png",
-  "Clutch": "clutch-pedal.png",
-  "Lamps": "led.png",
   "Differential": "differential.png",
   "Differentials": "differential.png",
   "Storage Lockers (Doors)": "storage-lockers.png",
   "Tool kit (In Compartment)": "excavator-loader-loader-quick-hitch.png",
   "Spill Kit (Monthly Checklist in Place and Completed)": "spill-kit.png",
+  "Fire Extinguisher": "fire-system.png",
   "Fire Extinguisher (2 x 9Kg DCP) & (1 x 9Kg CO2) Outside": "fire-extinguisher-bottle.png",
-  // Water Cart Trailer icons
   "Water Tank": "trailer-body.png",
   "Straps & Ratchets": "trailer-safety-chain.png",
   "Signage": "hazchem-signage.png",
@@ -1038,7 +1061,24 @@ const iconMap: Record<string, string> = {
   "Hose Couplings / Quick Coupler": "hydraulic-hoses.png",
   "Pressure Gun": "hydraulic-hoses.png",
   "Lance (Wand)": "hydraulic-hoses.png",
-  "Trailer Doors/Opening Flaps": "trailer-doors.png"
+  "Trailer Doors/Opening Flaps": "trailer-doors.png",
+  "Body of Cab/Trailer": "trailer-body.png",
+  "Steering Column": "excavator-loader-brakes-steering.png",
+  "Clutch": "clutch_pedal.png",
+  "Brakes": "brakes_pedal.png",
+  "Lamps": "led.png",
+  "Trailer Deck": "trailer_deck.png",
+  "Tow Bar & Hitch/King Pin": "trailer-drawbar.png",
+  "Landing Gear": "trailer-land-gear.png",
+  "Anchor Points, Chains & Binders": "trailer-safety-chain.png",
+  "Tyres": "excavator-loader-wheels-tyres.png",
+  "Chevron, Reflectors and Tape": "chevron-reflectors.png",
+  "Handbrake/ Brake Cable": "brakes_pedal.png",
+  "Mirrors": "mirrors.png",
+  "Chocks": "chocks.png",
+  "Emergency Triangles": "emergency-triangles.png",
+  "Air Tank Drain": "air-tank-drain.png",
+  "Slow Moving Vehicle Signage": "visibility-triangle.png"
 }
 
 const trailerExclLabourSections = [
@@ -1159,6 +1199,24 @@ const serviceDieselTruckDangerTypeMap: Record<string, "skull" | "warning"> = {
   "Chocks": "warning",
   "Emergency Triangles": "skull",
   "Fire Extinguisher (2 x 9Kg DCP) & (1 x 9Kg CO2) Outside": "skull"
+}
+
+const lowbedStepDeckDangerTypeMap: Record<string, "skull" | "warning"> = {
+  "License and Phepha": "skull",
+  "Body of Cab/Trailer": "skull",
+  "Safety Belt": "skull",
+  "Lamps": "skull",
+  "Brakes": "skull",
+  "Handbrake/ Brake Cable": "skull",
+  "Fuel, Air and Oil leaks": "skull",
+  "Tyres": "skull",
+  "Hoses & Fittings (Air & Hydraulics)": "skull",
+  "Trailer Deck": "skull",
+  "Tow Bar & Hitch/King Pin": "skull",
+  "Anchor Points, Chains & Binders": "skull",
+  "Chevron, Reflectors and Tape": "skull",
+  "Emergency Triangles": "skull",
+  "Fire Extinguisher": "skull",
 }
 
 // ============================================================================
@@ -1695,8 +1753,10 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
                         ? waterCartInspectionSections
                         : (sub.formType === 'pressure-washer-checklist'
                           ? pressureWasherChecklistSections
-                          : null
-                        )))))))))))
+                          : (sub.formType === 'lowbed-step-deck'
+                            ? lowbedStepDeckSections
+                            : null
+                          ))))))))))))
 
   if (formSections) {
     for (const section of formSections) {
@@ -1736,6 +1796,8 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
         if (skullItems.includes(section.title)) {
           dangerType = "skull";
         }
+      } else if (sub.formType === 'lowbed-step-deck') {
+        dangerType = lowbedStepDeckDangerTypeMap[section.title]
       }
 
       // Check for page break
@@ -1744,7 +1806,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
         y = 20
       }
       // Find which items of this section are present in the submission
-      const sectionItems = section.items.filter(item => (sub.data as any).items && item in (sub.data as any).items)
+      const sectionItems = (section as any).items.filter((item: string) => (sub.data as any).items && item in (sub.data as any).items)
       if (sectionItems.length === 0) continue
 
       // Check page break
@@ -1757,7 +1819,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       doc.setFontSize(10)
       doc.setFont('helvetica', 'bold')
       doc.setTextColor(34, 100, 54)
-      doc.text(section.title, 14, y)
+      doc.text((section as any).title, 14, y)
       y += 5
 
       // Split items into two halves
@@ -1766,7 +1828,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       const secondHalf = sectionItems.slice(splitIndex)
 
       // First half items
-      const firstHalfRows = firstHalf.map(item => [
+      const firstHalfRows = firstHalf.map((item: string) => [
         item,
         statusLabel((sub.data as any).items[item] as CheckStatus)
       ])
@@ -1837,7 +1899,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       }
 
       // ----- Second half items -----
-      const secondHalfRows = secondHalf.map(item => [
+      const secondHalfRows = secondHalf.map((item: string) => [
         item,
         statusLabel((sub.data as any).items[item] as CheckStatus)
       ])

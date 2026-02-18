@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChecklistRadioGroup } from "@/components/checklist-radio-group"
 import { ChecklistStatusBadge } from "@/components/checklist-status-badge"
 import { excavatorLoaderItems, type CheckStatus } from "@/lib/types"
-import { AlertTriangle, CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser, FileText, Skull } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser, FileText, Skull, Triangle } from "lucide-react"
 import { exportSubmissionToPDF } from "@/lib/export-utils"
 import Link from "next/link"
 import Image from "next/image"
@@ -551,7 +551,6 @@ export function ExcavatorLoaderForm() {
         data: {
           ...formData,
           ...docRefData,
-          documentNo,
           items,
           hasDefects,
           defectDetails,
@@ -636,123 +635,115 @@ export function ExcavatorLoaderForm() {
             <Image
               src="/images/ringomode-logo.png"
               alt="Ringomode Logo"
-              width={200}
-              height={60}
+              width={220}
+              height={70}
               className="object-contain"
             />
             <div className="flex-1 text-center">
-              <h1 className="text-2xl font-bold text-[#4e8c31] uppercase tracking-tight">HSE Management System</h1>
-              <h2 className="text-2xl font-bold text-[#4e8c31] underline decoration-[#4e8c31] underline-offset-8 mt-1">
+              <h1 className="text-3xl font-extrabold text-[#4e8c31] uppercase tracking-tight">HSE Management System</h1>
+              <h2 className="text-3xl font-extrabold text-[#4e8c31] underline decoration-[#4e8c31] underline-offset-8 mt-2">
                 Excavator Loader Pre-Shift Inspection Checklist
               </h2>
             </div>
-            <div className="w-[200px]" /> {/* Spacer for balance */}
+            <div className="w-[220px]" /> {/* Spacer for balance */}
           </div>
         </div>
 
         {/* ===== GENERAL INSTRUCTIONS ===== */}
-        <div className="text-center space-y-2 mb-10">
-          <h3 className="text-lg font-bold text-[#4e8c31] underline decoration-[#4e8c31] underline-offset-4 mb-4">
+        <div className="text-center space-y-3 mb-12">
+          <h3 className="text-xl font-extrabold text-[#4e8c31] underline decoration-[#4e8c31] underline-offset-4 mb-6">
             General Instructions for Checklist:
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-bold text-gray-800">
-            <div className="underline decoration-blue-400">1. Select "Ok" if in order.</div>
-            <div className="underline decoration-blue-400">2. Select "Def" for any defect.</div>
-            <div className="underline decoration-blue-400">3. Select "N/A" if not applicable.</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-base font-extrabold text-gray-900 px-10">
+            <div className="underline decoration-blue-500 decoration-2 underline-offset-4">1. Select "Ok" if in order.</div>
+            <div className="underline decoration-blue-500 decoration-2 underline-offset-4">2. Select "Def" for any defect.</div>
+            <div className="underline decoration-blue-500 decoration-2 underline-offset-4">3. Select "N/A" if not applicable.</div>
           </div>
         </div>
 
         {/* ===== METADATA GRID ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6 mb-12">
-          {/* Row 1 */}
-          <div className="space-y-1">
-            <Label htmlFor="operatorName" className="text-sm font-bold text-gray-900">Operators Name & Surname</Label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white p-6 border-b border-gray-100">
+          <div className="space-y-2">
+            <Label htmlFor="operatorName" className="text-base font-bold text-gray-900">Operators Name & Surname</Label>
             <Select
               value={formData.operatorName}
               onValueChange={(val) => setFormData((p) => ({ ...p, operatorName: val }))}
             >
-              <SelectTrigger id="operatorName" className="rounded-none border-gray-300">
+              <SelectTrigger id="operatorName" className="h-12 rounded-none border-gray-300 text-base">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Operator A">Operator A</SelectItem>
-                <SelectItem value="Operator B">Operator B</SelectItem>
+                <SelectItem value="John Smith" className="text-base">John Smith</SelectItem>
+                <SelectItem value="Jane Doe" className="text-base">Jane Doe</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="shift" className="text-sm font-bold text-gray-900">Select Shift</Label>
+          <div className="space-y-2">
+            <Label htmlFor="shift" className="text-base font-bold text-gray-900">Select Shift</Label>
             <Select
               value={formData.shift}
               onValueChange={(val) => setFormData((p) => ({ ...p, shift: val }))}
             >
-              <SelectTrigger id="shift" className="rounded-none border-gray-300">
+              <SelectTrigger id="shift" className="h-12 rounded-none border-gray-300 text-base">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="day">Day Shift</SelectItem>
-                <SelectItem value="night">Night Shift</SelectItem>
+                <SelectItem value="Day Shift" className="text-base">Day Shift</SelectItem>
+                <SelectItem value="Night Shift" className="text-base">Night Shift</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="date" className="text-sm font-bold text-gray-900">Date</Label>
-            <div className="relative">
-              <Input
-                id="date"
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData((p) => ({ ...p, date: e.target.value }))}
-                className="rounded-none border-gray-300 pr-10"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="date" className="text-base font-bold text-gray-900">Date</Label>
+            <Input
+              id="date"
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData((p) => ({ ...p, date: e.target.value }))}
+              className="h-12 rounded-none border-gray-300 text-base"
+            />
           </div>
 
-          {/* Row 2 */}
-          <div className="space-y-1">
-            <Label htmlFor="hourMeterStart" className="text-sm font-bold text-gray-900">Hour Meter Start</Label>
+          <div className="space-y-2">
+            <Label htmlFor="hourMeterStart" className="text-base font-bold text-gray-900">Hour Meter Start</Label>
             <Input
               id="hourMeterStart"
               value={formData.hourMeterStart}
               onChange={(e) => setFormData((p) => ({ ...p, hourMeterStart: e.target.value }))}
-              placeholder=""
-              className="rounded-none border-gray-300"
+              className="h-12 rounded-none border-gray-300 text-base"
             />
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="hourMeterStop" className="text-sm font-bold text-gray-900">Hour Meter Stop</Label>
+          <div className="space-y-2">
+            <Label htmlFor="hourMeterStop" className="text-base font-bold text-gray-900">Hour Meter Stop</Label>
             <Input
               id="hourMeterStop"
               value={formData.hourMeterStop}
               onChange={(e) => setFormData((p) => ({ ...p, hourMeterStop: e.target.value }))}
-              placeholder=""
-              className="rounded-none border-gray-300"
+              className="h-12 rounded-none border-gray-300 text-base"
             />
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="validTrainingCard" className="text-sm font-bold text-gray-900">Valid Training Card (Exp Date)</Label>
+          <div className="space-y-2">
+            <Label htmlFor="validTrainingCard" className="text-base font-bold text-gray-900">Valid Training Card (Exp Date)</Label>
             <Input
               id="validTrainingCard"
               type="date"
               value={formData.validTrainingCard}
               onChange={(e) => setFormData((p) => ({ ...p, validTrainingCard: e.target.value }))}
-              className="rounded-none border-gray-300"
+              className="h-12 rounded-none border-gray-300 text-base"
             />
           </div>
 
-          {/* Row 3 */}
-          <div className="space-y-1">
-            <Label htmlFor="unitNumber" className="text-sm font-bold text-gray-900">Unit Number</Label>
+          <div className="space-y-2">
+            <Label htmlFor="unitNumber" className="text-base font-bold text-gray-900">Unit Number</Label>
             <Input
               id="unitNumber"
               value={formData.unitNumber}
               onChange={(e) => setFormData((p) => ({ ...p, unitNumber: e.target.value }))}
-              placeholder=""
-              className="rounded-none border-gray-300"
+              className="h-12 rounded-none border-gray-300 text-base"
             />
           </div>
         </div>
@@ -764,47 +755,65 @@ export function ExcavatorLoaderForm() {
           <CardHeader>
             <CardTitle className="text-base text-foreground">Inspection Items</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-12">
+          <div className="space-y-0 border-t border-gray-200">
             {sections.map((section: any, sectionIdx: number) => (
-              <div key={sectionIdx} className="space-y-6 border-b pb-12 last:border-b-0">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                  <h4 className="text-lg font-bold text-gray-900 uppercase tracking-tight">{section.title}:</h4>
-                  <div className="flex gap-6 items-center">
-                    {section.type === "critical" && <Skull className="h-14 w-14 text-black" strokeWidth={1} />}
-                    {section.type === "warning" && <AlertTriangle className="h-14 w-14 text-black" strokeWidth={1} />}
-                    {section.image && (
-                      <div className="relative">
-                        <Image
-                          src={`/images/${section.image}`}
-                          alt=""
-                          width={100}
-                          height={100}
-                          className="object-contain"
-                        />
-                        {section.title === "License and Phepha" && (
-                          <div className="absolute -right-2 -top-2 flex h-14 w-14 items-center justify-center rounded-full border-2 border-black bg-white p-1 text-center text-[9px] font-bold leading-tight">
-                            Phepha<br />Valid
-                          </div>
-                        )}
-                      </div>
-                    )}
+              <div key={section.title} className="py-8 border-b border-gray-200 hover:bg-gray-50/30 transition-colors">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_210px_180px] gap-8 items-center px-4">
+                  <div className="space-y-3">
+                    <h4 className="text-xl font-bold text-gray-900">
+                      {section.title}:
+                    </h4>
+                    <ul className="space-y-2 list-disc pl-5">
+                      {section.items.map((item: string, idx: number) => (
+                        <li key={idx} className="text-base text-gray-700 font-medium">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </div>
 
-                <div className="space-y-4 max-w-2xl">
-                  {section.items.map((item: string, itemIdx: number) => (
-                    <ChecklistRadioGroup
-                      key={`${sectionIdx}-${itemIdx}`}
-                      label={item}
-                      value={items[item]}
-                      onChange={(val) => handleItemChange(item, val)}
-                      index={itemIdx}
-                    />
-                  ))}
+                  <div className="flex items-center justify-center">
+                    <div className="relative w-[208px] h-[151px] border border-gray-100 rounded-none bg-white p-2 shadow-sm flex items-center justify-center overflow-hidden">
+                      {section.image && (
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={`/images/${section.image}`}
+                            alt={section.title}
+                            fill
+                            className="object-contain"
+                          />
+                          {section.title === "License and Phepha" && (
+                            <div className="absolute -right-2 -top-2 flex h-14 w-14 items-center justify-center rounded-full border border-black bg-white p-1 text-center text-[9px] font-bold leading-tight shadow-md z-10 transition-transform hover:scale-110">
+                              Phepha<br />Valid
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 flex flex-col items-center md:items-start">
+                    <Label className="text-sm font-bold text-[#4e8c31] uppercase">Select Status</Label>
+                    <Select
+                      onValueChange={(val) => {
+                        // Update all items in this section to the selected value
+                        section.items.forEach((item: string) => handleItemChange(item, val as CheckStatus))
+                      }}
+                    >
+                      <SelectTrigger className="h-12 w-full rounded-none border-gray-200 bg-white text-base">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ok" className="text-base">Ok</SelectItem>
+                        <SelectItem value="def" className="text-base">Def</SelectItem>
+                        <SelectItem value="na" className="text-base">N/A</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             ))}
-          </CardContent>
+          </div>
         </Card>
 
         {/* ===== DEFECTS SECTION ===== */}
@@ -844,12 +853,12 @@ export function ExcavatorLoaderForm() {
         </div>
 
         {/* ===== SIGNATURE SECTION ===== */}
-        <div className="space-y-4">
+        <div className="space-y-4 pt-10 border-t border-gray-200">
           <Label className="text-sm font-bold text-gray-900">Signature</Label>
-          <div className="border border-gray-300 p-1 w-fit">
+          <div className="border border-gray-300 p-1 w-full max-w-[400px] bg-white">
             <canvas
               ref={canvasRef}
-              className="w-[400px] h-[120px] touch-none cursor-crosshair bg-white"
+              className="w-full h-[120px] touch-none cursor-crosshair"
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
@@ -861,73 +870,27 @@ export function ExcavatorLoaderForm() {
             />
           </div>
           <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={clearSignature}
-              className="rounded-none border-gray-400 text-xs h-7 px-4 hover:bg-gray-100"
-            >
-              Clear
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                // Simple undo could be implemented if needed, but for now clear is standard
-                clearSignature();
-              }}
-              className="rounded-none border-gray-400 text-xs h-7 px-4 hover:bg-gray-100"
-            >
-              Undo
-            </Button>
+            <Button type="button" variant="outline" size="sm" onClick={clearSignature} className="rounded-none">Clear</Button>
+            <Button type="button" variant="outline" size="sm" className="rounded-none">Undo</Button>
           </div>
         </div>
 
-        {/* ===== FOOTER DOCUMENT DETAILS ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 pt-8 border-t border-gray-200 items-end">
-          <div className="space-y-1">
-            <Label className="text-[10px] font-bold text-gray-900">Document Reference No.</Label>
-            <Input
-              value={docRefData.documentRefNo}
-              readOnly
-              className="rounded-none border-gray-300 bg-gray-100 text-xs h-9"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[10px] font-bold text-gray-900">Author</Label>
-            <Input
-              value={docRefData.author}
-              readOnly
-              className="rounded-none border-gray-300 bg-gray-100 text-xs h-9"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[10px] font-bold text-gray-900">Revision</Label>
-            <Input
-              value={docRefData.revision}
-              readOnly
-              className="rounded-none border-gray-300 bg-gray-100 text-xs h-9"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[10px] font-bold text-gray-900">Creation Date</Label>
-            <div className="relative">
-              <Input
-                type="date"
-                value={docRefData.creationDate}
-                readOnly
-                className="rounded-none border-gray-300 bg-gray-100 text-xs h-9 pr-8"
-              />
+        {/* ===== Standard Metadata Footer ===== */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-0 border border-gray-200 bg-gray-50/50 mt-12">
+          {[
+            { label: "Document Reference No.", value: docRefData.documentRefNo },
+            { label: "Author", value: docRefData.author },
+            { label: "Revision", value: docRefData.revision },
+            { label: "Creation Date", value: docRefData.creationDate },
+            { label: "Automatic Number", value: automaticNumber, isAuto: true },
+          ].map(meta => (
+            <div key={meta.label} className="p-4 border-r border-gray-200 last:border-r-0">
+              <Label className="text-[10px] font-bold text-gray-500 uppercase">{meta.label}</Label>
+              <div className={`text-xs font-medium mt-1 ${meta.isAuto ? "text-gray-900 font-bold" : "text-gray-600"}`}>
+                {meta.isAuto && !automaticNumber ? <span className="text-gray-400 italic">Generated on Submit</span> : meta.value}
+              </div>
             </div>
-          </div>
-          <div className="pb-2">
-            <div className="text-xs font-bold text-gray-900">
-              Automatic Number<br />
-              <span className="text-sm">{automaticNumber || "2095"}</span>
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="flex justify-end pt-8">

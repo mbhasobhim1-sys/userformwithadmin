@@ -303,6 +303,45 @@ export const selfLoadingForwarderItems = [
   "Escape Hatch"
 ] as const;
 
+export const lowbedStepDeckItems = [
+  "License and Phepha",
+  "Body of Cab/Trailer",
+  "Exhaust",
+  "Steps and Rails",
+  "Cab",
+  "Mirrors",
+  "Windscreen, Windows & Wipers",
+  "Air Conditioner",
+  "Seats",
+  "Safety Belt",
+  "Steering Column",
+  "Hooter and Reverse Alarm",
+  "Gauges",
+  "Clutch",
+  "Lamps",
+  "Brakes",
+  "Handbrake/ Brake Cable",
+  "Battery",
+  "Radiator",
+  "Air Tank Drain",
+  "Oil/Fluid/Air Levels",
+  "Fuel, Air and Oil leaks",
+  "Differentials",
+  "Tyres",
+  "Mud Flaps",
+  "Hoses & Fittings (Air & Hydraulics)",
+  "Hydraulic Controls",
+  "Trailer Deck",
+  "Tow Bar & Hitch/King Pin",
+  "Landing Gear",
+  "Anchor Points, Chains & Binders",
+  "Chevron, Reflectors and Tape",
+  "Slow Moving Vehicle Signage",
+  "Chocks",
+  "Emergency Triangles",
+  "Fire Extinguisher"
+] as const;
+
 export const trailerExclLabourItems = [
   "License and Phepha",
   "Number Plate",
@@ -404,6 +443,23 @@ export interface LowbedTrailerFormData extends BaseFormData {
   hourMeterStop: string
   validTrainingCard: string
   hasDefects: boolean
+}
+
+// ✅ ADDED: Lowbed & Step Deck Trailer Form Data
+export interface LowbedStepDeckFormData extends BaseFormData {
+  driversName: string
+  truckRegistrationNumber: string
+  date: string
+  odometerStart: string
+  hourMeterStart: string
+  validTrainingCard: string
+  validPdpLicense: string
+  dangerousGoodsTrainingCard: string
+  hasDefects: string
+  documentRefNo: string
+  author: string
+  revision: string
+  creationDate: string
 }
 
 // ✅ ADDED: Mechanic LDV Form Data
@@ -637,6 +693,8 @@ export type FormDataUnion =
   | SelfLoadingForwarderFormData
   | ServiceDieselTruckFormData
   | TrailerExclLabourFormData
+  | LowbedTrailerFormData
+  | LowbedStepDeckFormData
   | Record<string, any> // fallback for new forms
 
 // ============================================
@@ -663,7 +721,8 @@ export type FormType =
   | "daily-machine-checklist"
   | "cintasign-shorthaul"
   | "service-diesel-truck-pre-shift-inspection"
-  | "trailer-excl-labour";
+  | "trailer-excl-labour"
+  | "lowbed-step-deck";
 
 // ============================================
 // SUBMISSION TYPE - WITH NOTIFICATION FIELDS
@@ -1037,6 +1096,7 @@ export type FormItemsMap = {
   'pressure-washer-checklist': PressureWasherItem
   'diesel-cart-trailer-inspection-checklist': DieselCartTrailerItem
   'ponsse-bison-pre-shift-inspection': PonsseBisonItem
+  'lowbed-step-deck': typeof lowbedStepDeckItems[number]
 }
 
 // Map form type to its data type
@@ -1062,6 +1122,7 @@ export type FormDataMap = {
   'self-loading-forwarder-pre-shift-inspection': SelfLoadingForwarderFormData
   'service-diesel-truck-pre-shift-inspection': ServiceDieselTruckFormData
   'trailer-excl-labour': TrailerExclLabourFormData
+  'lowbed-step-deck': LowbedStepDeckFormData
 }
 
 // ============================================
@@ -1209,6 +1270,12 @@ export const formConfigs: Record<FormType, FormConfig> = {
     title: 'Trailer (Excluding Labour) Inspection Checklist',
     description: 'Complete the trailer (excluding labour) inspection checklist.',
     items: trailerExclLabourItems
+  },
+  'lowbed-step-deck': {
+    type: 'lowbed-step-deck',
+    title: 'Lowbed And Step Deck Trailer Pre-Use Inspection Checklist',
+    description: 'Complete the lowbed and step deck trailer pre-use inspection checklist.',
+    items: lowbedStepDeckItems
   }
 }
 
@@ -1229,9 +1296,9 @@ export function isExcavatorHarvesterFormData(data: FormDataUnion): data is Excav
     (data as ExcavatorHarvesterFormData).hourMeterStart !== undefined
 }
 
-// ✅ ADDED: Type guard for Lowbed Trailer
-export function isLowbedTrailerFormData(data: FormDataUnion): data is LowbedTrailerFormData {
-  return (data as LowbedTrailerFormData).trailerReg !== undefined
+// ✅ ADDED: Type guard for Lowbed & Step Deck
+export function isLowbedStepDeckFormData(data: FormDataUnion): data is LowbedStepDeckFormData {
+  return (data as LowbedStepDeckFormData).truckRegistrationNumber !== undefined
 }
 
 // ✅ ADDED: Type guard for Mechanic LDV
@@ -1284,7 +1351,8 @@ export function getFormTypeLabel(type: FormType): string {
     'ponsse-bison-pre-shift-inspection': 'Ponsse Bison',
     'self-loading-forwarder-pre-shift-inspection': 'Self Loading Forwarder',
     'service-diesel-truck-pre-shift-inspection': 'Service/Diesel Truck',
-    'trailer-excl-labour': 'Trailer (Excl. Labour)'
+    'trailer-excl-labour': 'Trailer (Excl. Labour)',
+    'lowbed-step-deck': 'Lowbed & Step Deck Trailer'
   }
   return labels[type]
 }
@@ -1332,6 +1400,23 @@ export function getInitialFormData(formType: FormType): Partial<FormDataUnion> {
         dangerousGoodsTrainingCard: '',
         defectDetails: '',
         signature: ''
+      }
+    case 'lowbed-step-deck':
+      return {
+        driversName: '',
+        truckRegistrationNumber: '',
+        date: new Date().toISOString().split('T')[0],
+        odometerStart: '',
+        hourMeterStart: '',
+        validTrainingCard: '',
+        validPdpLicense: '',
+        dangerousGoodsTrainingCard: '',
+        defectDetails: '',
+        signature: '',
+        documentRefNo: 'HSEMS / 8.1.19 / REG / 025',
+        author: 'HSE MANAGER',
+        revision: '2',
+        creationDate: '04/10/2026'
       }
     default:
       return {}

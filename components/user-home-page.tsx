@@ -24,7 +24,6 @@ const forms = [
     icon: Wrench,
     href: "/daily-attachment-checklist",
     docRef: "HSEMS/8.1.19/REG/025",
-    itemCount: 23,
   },
   {
     id: "light-delivery",
@@ -34,7 +33,6 @@ const forms = [
     icon: Truck,
     href: "/light-delivery",
     docRef: "HSEMS/8.1.19/REG/012",
-    itemCount: 26,
   },
   {
     id: "excavator-loader",
@@ -44,7 +42,6 @@ const forms = [
     icon: Tractor,
     href: "/excavator-loader",
     docRef: "HSEMS/8.1.19/REG/002",
-    itemCount: 33,
   },
   {
     id: "excavator-harvester",
@@ -54,7 +51,6 @@ const forms = [
     icon: TreePine,
     href: "/excavator-harvester",
     docRef: "HSEMS/8.1.19/REG/001",
-    itemCount: 36,
   },
   {
     id: "lowbed-trailer",
@@ -64,7 +60,15 @@ const forms = [
     icon: Container,
     href: "/lowbed-trailer",
     docRef: "HSEMS/8.1.19/REG/020",
-    itemCount: 29,
+  },
+  {
+    id: "lowbed-step-deck",
+    title: "Lowbed & Step Deck Trailer",
+    subtitle: "Pre-Use Inspection",
+    description: "Comprehensive pre-use inspection for lowbed and step deck trailers, including steering, brakes, deck condition, and safety equipment.",
+    icon: Container,
+    href: "/lowbed-step-deck",
+    docRef: "HSEMS/8.1.19/REG/025",
   },
   {
     id: "mechanic-ldv",
@@ -74,18 +78,16 @@ const forms = [
     icon: Wrench,
     href: "/mechanic-ldv",
     docRef: "HSEMS/8.1.19/REG/017",
-    itemCount: 24,
   },
   // NEW FORMS BELOW
   {
     id: "trailer-inspection-checklist",
-    title: "Trailer (Excluding Labour)",
-    subtitle: "Checklist",
+    title: "Trailer (Excl. Labour)",
+    subtitle: "Inspection Checklist",
     description: "Inspection for trailers including number plate, lights, tyres, and safety equipment.",
     icon: Container,
     href: "/trailer-inspection-checklist",
     docRef: "HSEMS/4.4.6.19/REG/013",
-    itemCount: 22,
   },
   {
     id: "skidder-pre-shift-inspection",
@@ -95,7 +97,6 @@ const forms = [
     icon: Tractor,
     href: "/skidder-pre-shift-inspection",
     docRef: "HSEMS/8.1.19/REG/006",
-    itemCount: 28,
   },
   {
     id: "timber-truck-and-trailer-checklist",
@@ -105,17 +106,6 @@ const forms = [
     icon: Truck,
     href: "/timber-truck-and-trailer-checklist",
     docRef: "HSEMS/8.1.19/REG/010",
-    itemCount: 27,
-  },
-  {
-    id: "trailer-inspection-checklist",
-    title: "Trailer (Excl. Labour)",
-    subtitle: "Inspection Checklist",
-    description: "Inspection for trailers (excluding labour) including tyres, brakes, lights, and frame.",
-    icon: Container,
-    href: "/trailer-inspection-checklist",
-    docRef: "HSEMS/4.4.6.19/REG/013",
-    itemCount: 22,
   },
   {
     id: "vehicle-job-card",
@@ -125,7 +115,6 @@ const forms = [
     icon: Wrench,
     href: "/vehicle-job-card",
     docRef: "HSEMS/8.2.1/REG/01",
-    itemCount: 12,
   },
   {
     id: "weekly-machinery-condition-assessment",
@@ -135,7 +124,6 @@ const forms = [
     icon: ClipboardList,
     href: "/weekly-machinery-condition-assessment",
     docRef: "HSEMS/8.2.2/REG/01",
-    itemCount: 28,
   },
   {
     id: "daily-machine-checklist",
@@ -145,7 +133,6 @@ const forms = [
     icon: CheckCircle2,
     href: "/daily-machine-checklist",
     docRef: "HSEMS/8.2.3/REG/01",
-    itemCount: 17,
   },
   {
     id: "cintasign-shorthaul",
@@ -155,7 +142,6 @@ const forms = [
     icon: Truck,
     href: "/cintasign-shorthaul",
     docRef: "HSEMS/8.2.4/REG/01",
-    itemCount: 12,
   },
   {
     id: "water-cart-trailer-inspection",
@@ -165,7 +151,6 @@ const forms = [
     icon: Container,
     href: "/water-cart-trailer-inspection",
     docRef: "HSEMS/8.1.19/REG/015A",
-    itemCount: 22,
   },
   {
     id: "pressure-washer-checklist",
@@ -175,7 +160,6 @@ const forms = [
     icon: Wrench,
     href: "/pressure-washer-checklist",
     docRef: "HSEMS/8.1.19/REG/015B",
-    itemCount: 12,
   },
   {
     id: "dezzi-timber-truck",
@@ -185,7 +169,6 @@ const forms = [
     icon: Truck,
     href: "/dezzi-timber-truck",
     docRef: "HSEMS/8.2.3/REG/01",
-    itemCount: 41,
   },
   {
     id: "diesel-cart-trailer",
@@ -195,7 +178,6 @@ const forms = [
     icon: Truck,
     href: "/diesel-cart-trailer",
     docRef: "HSEMS/8.1.9/REG/014",
-    itemCount: 24,
   },
   {
     id: "ponsse-bison-pre-shift-inspection",
@@ -205,7 +187,6 @@ const forms = [
     icon: Tractor,
     href: "/ponsse-bison",
     docRef: "HSEMS/8.1.9/REG/014",
-    itemCount: 34,
   },
   {
     id: "self-loading-forwarder-pre-shift-inspection",
@@ -215,7 +196,6 @@ const forms = [
     icon: Tractor,
     href: "/self-loading-forwarder",
     docRef: "HSEMS/8.1.9/REG/014",
-    itemCount: 32,
   },
   {
     id: "service-diesel-truck-pre-shift-inspection",
@@ -225,17 +205,6 @@ const forms = [
     icon: Truck,
     href: "/service-diesel-truck",
     docRef: "HSEMS/8.1.9/REG/014",
-    itemCount: 35,
-  },
-  {
-    id: "water-cart-trailer-pressure-washer",
-    title: "Water Cart Trailer",
-    subtitle: "Pressure Washer Checklist",
-    description: "Inspection for water cart trailers and pressure washers including tank, pump, and safety equipment.",
-    icon: Container,
-    href: "/water-cart-trailer-pressure-washer",
-    docRef: "HSEMS/8.1.19/REG/015",
-    itemCount: 34,
   },
 ]
 
@@ -289,9 +258,8 @@ export function UserHomePage() {
               <CardContent className="space-y-4 flex-grow flex flex-col">
                 <p className="text-sm text-muted-foreground flex-grow">{form.description}</p>
 
-                {/* Document Reference & Item Count */}
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{form.itemCount} inspection items</span>
+                {/* Document Reference */}
+                <div className="flex items-center justify-end text-xs text-muted-foreground">
                   <span className="font-mono">{form.docRef}</span>
                 </div>
 
@@ -306,30 +274,6 @@ export function UserHomePage() {
             </Card>
           )
         })}
-      </div>
-
-      {/* Quick Stats Row */}
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
-        <div className="rounded-lg bg-blue-50 p-3 text-center">
-          <p className="text-xs font-medium text-blue-700">Light Delivery</p>
-          <p className="text-lg font-bold text-blue-800">26 items</p>
-        </div>
-        <div className="rounded-lg bg-orange-50 p-3 text-center">
-          <p className="text-xs font-medium text-orange-700">Excavator Loader</p>
-          <p className="text-lg font-bold text-orange-800">33 items</p>
-        </div>
-        <div className="rounded-lg bg-green-50 p-3 text-center">
-          <p className="text-xs font-medium text-green-700">Excavator Harvester</p>
-          <p className="text-lg font-bold text-green-800">36 items</p>
-        </div>
-        <div className="rounded-lg bg-purple-50 p-3 text-center">
-          <p className="text-xs font-medium text-purple-700">Lowbed Trailer</p>
-          <p className="text-lg font-bold text-purple-800">29 items</p>
-        </div>
-        <div className="rounded-lg bg-red-50 p-3 text-center">
-          <p className="text-xs font-medium text-red-700">Mechanic LDV</p>
-          <p className="text-lg font-bold text-red-800">24 items</p>
-        </div>
       </div>
 
       {/* Footer */}

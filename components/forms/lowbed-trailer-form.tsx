@@ -319,7 +319,6 @@ export function LowbedTrailerForm() {
             {/* Right: completion */}
             <div className="flex flex-col items-end">
               <ChecklistStatusBadge completion={Math.round((checkedCount / lowbedTrailerItems.length) * 100)} />
-              <span className="text-sm text-gray-600 mt-1">{Math.round((checkedCount / lowbedTrailerItems.length) * 100)}% Complete</span>
             </div>
           </div>
         </Card>

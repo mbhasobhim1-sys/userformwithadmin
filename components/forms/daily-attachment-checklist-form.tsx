@@ -235,7 +235,6 @@ export function DailyAttachmentChecklistForm() {
             {/* Right: completion */}
             <div className="flex flex-col items-end">
               <ChecklistStatusBadge completion={completion} />
-              <span className="text-sm text-gray-600 mt-1">{completion}% Complete</span>
             </div>
           </div>
         </Card>

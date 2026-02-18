@@ -200,6 +200,15 @@ export default function WeeklyMachineryConditionForm() {
     const [isDrawing, setIsDrawing] = useState(false)
     const [history, setHistory] = useState<string[]>([])
 
+    // Generate auto-number once on mount
+    const [autoNumber] = useState(() => {
+        const date = new Date()
+        const yy = date.getFullYear().toString().slice(-2)
+        const mm = String(date.getMonth() + 1).padStart(2, '0')
+        const rand = Math.floor(1000 + Math.random() * 9000)
+        return `WMCA-${yy}${mm}-${rand}`
+    })
+
     useEffect(() => {
         const canvas = canvasRef.current
         if (canvas) {
@@ -299,7 +308,8 @@ export default function WeeklyMachineryConditionForm() {
             submittedBy: formData.managerName || "Operator",
             data: {
                 ...formData,
-                hasDefects: formData.hasDefects === "Yes"
+                hasDefects: formData.hasDefects === "Yes",
+                automaticNumber: autoNumber
             },
             hasDefects: formData.hasDefects === "Yes"
         }
@@ -325,6 +335,9 @@ export default function WeeklyMachineryConditionForm() {
                     <CardContent className="space-y-4">
                         <p className="text-muted-foreground">
                             Your Weekly Machinery Condition Assessment has been recorded.
+                        </p>
+                        <p className="text-xl font-bold text-[#4e8c31]">
+                            Automatic Number: {submissionData.data.automaticNumber}
                         </p>
                         <div className="flex flex-col gap-2">
                             <Button
@@ -494,13 +507,14 @@ export default function WeeklyMachineryConditionForm() {
                     </div>
                     <div className="space-y-2">
                         <Label className="text-sm font-bold text-gray-700">Signature</Label>
-                        <Card className="overflow-hidden border-gray-300">
+                        <Card className="overflow-hidden border-gray-300" style={{ maxWidth: 378 }}>
                             <CardContent className="p-0">
                                 <canvas
                                     ref={canvasRef}
-                                    width={400}
-                                    height={150}
-                                    className="h-32 w-full cursor-crosshair touch-none bg-white"
+                                    width={756}
+                                    height={378}
+                                    className="cursor-crosshair touch-none bg-white block"
+                                    style={{ width: 378, height: 189 }}
                                     onMouseDown={startDrawing}
                                     onMouseUp={stopDrawing}
                                     onMouseOut={stopDrawing}
@@ -537,7 +551,7 @@ export default function WeeklyMachineryConditionForm() {
                     ))}
                     <div className="bg-white p-3 border-none flex flex-col justify-center">
                         <Label className="text-[10px] font-bold text-gray-900 uppercase">Automatic Number</Label>
-                        <div className="text-sm font-bold text-gray-900 mt-1">2066</div>
+                        <div className="text-sm font-bold text-gray-900 mt-1">{autoNumber}</div>
                     </div>
                 </div>
 

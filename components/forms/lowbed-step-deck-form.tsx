@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { type CheckStatus } from "@/lib/types"
-import { CheckCircle2, Calendar, Skull, AlertTriangle, FileText, Send, ArrowLeft } from "lucide-react"
+import { CheckCircle2, AlertTriangle, FileText } from "lucide-react"
 import Image from "next/image"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { exportSubmissionToPDF } from "@/lib/export-utils"
@@ -17,20 +17,20 @@ const sections = [
     {
         title: "License and Phepha",
         items: ["Phepha valid.", "Displayed and visible."],
-        icon: "phepha-valid.png",
+        icon: "license2.png",
         danger: true
     },
     {
-        title: "Protective Structure",
-        items: ["No cracks/damages.", "No bolts missing/loose.", "Guards not damaged and intact."],
-        icon: "protective-structure.png",
+        title: "Body of Cab/Trailer",
+        items: ["Condition of body.", "No damage/rust."],
+        icon: "trailer-body.png",
         danger: true
     },
     {
         title: "Exhaust",
-        items: ["Clamps secure.", "No excessive smoking/blowing."],
+        items: ["Secure.", "No leaks."],
         icon: "exhaust.png",
-        danger: true
+        danger: false
     },
     {
         title: "Steps and Rails",
@@ -42,6 +42,12 @@ const sections = [
         title: "Cab",
         items: ["Cab neat and tidy.", "Door and mechanism working.", "Door rubber in good condition.", "Door handles functional."],
         icon: "cabs.png",
+        danger: false
+    },
+    {
+        title: "Mirrors",
+        items: ["Mirrors in good condition.", "Not damaged.", "Adequately secured – not loose."],
+        icon: "mirrors.png",
         danger: false
     },
     {
@@ -69,6 +75,12 @@ const sections = [
         danger: true
     },
     {
+        title: "Steering Column",
+        items: ["Not loose/responsive.", "No steering play – Not > than 15 degrees.", "Power steering in order/no leaks."],
+        icon: "excavator-loader-brakes-steering.png",
+        danger: false
+    },
+    {
         title: "Hooter and Reverse Alarm",
         items: ["Hooter working and in good condition.", "Reverse alarm working."],
         icon: "hooters.png",
@@ -81,33 +93,27 @@ const sections = [
         danger: false
     },
     {
-        title: "Hydraulic Controls",
-        items: ["Not loose/responsive.", "No steering play.", "Rear steering.", "Pivot/steering ram pins not loose."],
-        icon: "hydraulic-controls.png",
-        danger: false
-    },
-    {
-        title: "Safety/Emergency Cut Out System",
-        items: ["Fitted.", "Functional."],
-        icon: "emergency-cut-out.png",
+        title: "Clutch",
+        items: ["Clutch taking correctly – not slipping.", "In working order."],
+        icon: "clutch_pedal.png",
         danger: true
     },
     {
-        title: "Working Lights (LED)",
-        items: ["In working order (if LED's, 2 thirds must be working) ie. (If 9 LED's, 6 must be working)."],
+        title: "Lamps",
+        items: ["Dim/bright working.", "No fused or damaged bulbs.", "Indicators and hazards working.", "Brake light in working order."],
         icon: "led.png",
         danger: true
     },
     {
-        title: "Rotating Light",
-        items: ["Flashing/rotating beacon light in working condition."],
-        icon: "rotating-light.png",
-        danger: false
+        title: "Brakes",
+        items: ["In working order.", "Sufficient air build up."],
+        icon: "brakes_pedal.png",
+        danger: true
     },
     {
-        title: "Park Brake",
-        items: ["In working order.", "No damages."],
-        icon: "park-brake.png",
+        title: "Handbrake/ Brake Cable",
+        items: ["Working."],
+        icon: "brakes_pedal.png",
         danger: true
     },
     {
@@ -123,16 +129,10 @@ const sections = [
         danger: false
     },
     {
-        title: "Fan Belt",
-        items: ["No squeaking.", "No signs of damage."],
-        icon: "fan-belt.png",
+        title: "Air Tank Drain",
+        items: ["Good condition.", "Drained daily."],
+        icon: "air-tank-drain.png",
         danger: false
-    },
-    {
-        title: "Wiring",
-        items: ["No loose, damaged or exposed wires.", "No loose broken plugs."],
-        icon: "wiring.png",
-        danger: true
     },
     {
         title: "Oil/Fluid/Air Levels",
@@ -141,114 +141,122 @@ const sections = [
         danger: false
     },
     {
-        title: "Fuel & Oil Leaks",
-        items: ["Fuel and oil pipes secure.", "No worn or damaged pipes.", "No visible fuel and oil leaks."],
+        title: "Fuel, Air and Oil leaks",
+        items: ["No more than 4 drops of oil per minute."],
         icon: "fuel-leaks.png",
-        danger: false
+        danger: true
     },
     {
-        title: "Grease",
-        items: ["Adequately greased chassis.", "No missing or damaged grease nipples."],
-        icon: "grease.png",
+        title: "Differentials",
+        items: ["No oil leaks."],
+        icon: "drive-train.png",
         danger: false
     },
     {
         title: "Tyres",
-        items: ["No excessive wear and tear.", "No loose/missing/damaged nuts.", "Wheel nuts secure."],
+        items: ["Condition of tyres (no cuts/bulges).", "Wheel nuts secure.", "Tyre pressure (visual)."],
         icon: "excavator-loader-wheels-tyres.png",
         danger: true
     },
     {
-        title: "Headboard and Uprights",
-        items: ["Uprights secure.", "No cracks."],
-        icon: "headboard-uprights.png",
-        danger: true
-    },
-    {
-        title: "Boom Structure",
-        items: ["Not bent/cracked.", "Pins all secured.", "No loose/missing bolts."],
-        icon: "boom-structure.png",
-        danger: true
-    },
-    {
-        title: "Hydraulic Cylinders",
-        items: ["Good condition – no damage.", "No loose fittings.", "No oil leaks.", "No missing bolts/nuts."],
-        icon: "hydraulic-cylinders.png",
+        title: "Mud Flaps",
+        items: ["Secure.", "In good condition."],
+        icon: "trailer-mud-flaps.png",
         danger: false
     },
     {
-        title: "Hydraulic Hoses and Fittings",
-        items: ["No excessive rubbing.", "No loose brackets/bolts/nuts.", "Smooth operation.", "Jaws not cracked or broken."],
+        title: "Hoses & Fittings (Air & Hydraulics)",
+        items: ["No leaks.", "Not loose or damaged."],
         icon: "hydraulic-hoses.png",
+        danger: true
+    },
+    {
+        title: "Hydraulic Controls",
+        items: ["Working order."],
+        icon: "hydraulic-controls.png",
         danger: false
     },
     {
-        title: "Grab",
-        items: ["No leaking/rubbing pipes.", "No loose brackets/bolts/nuts.", "Smooth operation.", "Jaws not cracked."],
-        icon: "harvester-head.png",
+        title: "Trailer Deck",
+        items: ["Ensure trailer deck/floor is in good condition.", "Not rusted."],
+        icon: "trailer_deck.png",
+        danger: true
+    },
+    {
+        title: "Tow Bar & Hitch/King Pin",
+        items: ["Secure.", "No damage."],
+        icon: "trailer-drawbar.png",
+        danger: true
+    },
+    {
+        title: "Landing Gear",
+        items: ["Working order."],
+        icon: "trailer-land-gear.png",
         danger: false
     },
     {
-        title: "All Excess Loose Debris Removed Pre-Shift",
-        items: ["Battery are/exhaust area.", "Behind the boom/hydraulic cooler.", "Engine bay."],
-        icon: "all-excess-loose-debris.png",
-        danger: false
+        title: "Anchor Points, Chains & Binders",
+        items: ["Ensure anchor points are safe enough to use.", "Chains and binders to be used are in good condition."],
+        icon: "trailer-safety-chain.png",
+        danger: true
     },
     {
-        title: "Visibility Triangle",
-        items: ["On the back of the machine.", "Secure.", "Clean and visible."],
+        title: "Chevron, Reflectors and Tape",
+        items: ["Chevron clean & not damaged.", "Reflectors & tape clean and not damaged."],
+        icon: "chevron-reflectors.png",
+        danger: true
+    },
+    {
+        title: "Slow Moving Vehicle Signage",
+        items: ["Visible.", "In good condition."],
         icon: "visibility-triangle.png",
         danger: false
     },
     {
-        title: "Communication",
-        items: ["Radio or cell phone in working condition.", "Handheld panic alarm functional."],
-        icon: "communication.png",
+        title: "Chocks",
+        items: ["2 x chocks available.", "In good condition."],
+        icon: "chocks.png",
         danger: false
     },
     {
-        title: "Dafo Fire Suppression & 1 x 6kg Fire Extinguisher",
-        items: ["Gauge light working to confirm power.", "No warning lights showing.", "No damaged hoses.", "Test system on internal panel and fire extinguisher.", "Secured/service/seal in place.", "Gauges in order."],
-        icon: "excavator-loader-fire-safety.png",
+        title: "Emergency Triangles",
+        items: ["2 x available as per legal requirements.", "In good condition."],
+        icon: "emergency-triangles.png",
         danger: true
     },
     {
-        title: "Escape Hatch & Hammer",
-        items: ["Test the escape hatch opening.", "Escape hammer is easily accessible."],
-        icon: "escape-hatch.png",
+        title: "Fire Extinguisher",
+        items: ["Mounted and secured.", "Serviced.", "Gauge in order.", "Seal in place."],
+        icon: "fire-system.png",
         danger: true
     }
 ]
 
-export default function PonsseBisonForm() {
+export default function LowbedStepDeckForm() {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submissionSuccess, setSubmissionSuccess] = useState(false)
     const [submissionData, setSubmissionData] = useState<any>(null)
-    const [automaticNumber] = useState(() => {
-        const date = new Date()
-        const yy = date.getFullYear().toString().slice(-2)
-        const mm = String(date.getMonth() + 1).padStart(2, '0')
-        const rand = Math.floor(1000 + Math.random() * 9000)
-        return `PB-${yy}${mm}-${rand}`
-    })
+
+    const [automaticNumber, setAutomaticNumber] = useState("")
 
     const [formData, setFormData] = useState({
-        operatorName: "",
-        shift: "",
+        driversName: "",
+        truckRegistrationNumber: "",
         date: new Date().toISOString().split('T')[0],
+        odometerStart: "",
         hourMeterStart: "",
-        hourMeterStop: "",
-        validTrainingCard: "", // Date
-        unitNumber: "",
+        validTrainingCard: "",
+        validPdpLicense: "",
+        dangerousGoodsTrainingCard: "",
         items: {} as Record<string, CheckStatus>,
-        areThereAnyDefects: "",
+        hasDefects: "",
         defectDetails: "",
         signature: "",
-        documentRefNo: "HSEMS / 8.1.9 / REG /014", // Need to verify if this is correct reference, using same for now or TBD
+        documentRefNo: "HSEMS / 8.1.19 / REG / 025",
         author: "HSE MANAGER",
-        revision: "3", // From screenshot
-        creationDate: "03/27/20", // From screenshot
+        revision: "2",
+        creationDate: "04/10/2026",
         automaticNumber: ""
     })
 
@@ -331,50 +339,34 @@ export default function PonsseBisonForm() {
 
         setIsSubmitting(true)
 
-        try {
-            const hasDefects = formData.areThereAnyDefects === "Yes" || Object.values(formData.items).some(v => v === "def")
-            const submission = {
-                formType: "ponsse-bison-pre-shift-inspection",
-                formTitle: "Ponsse Bison Pre-Shift Inspection Checklist",
-                submittedBy: formData.operatorName || "System User",
-                submittedAt: new Date().toISOString(),
-                hasDefects,
-                data: {
-                    ...formData,
-                    automaticNumber,
-                    hasDefects
-                },
-            }
+        // Generate Auto Number on submission
+        const date = new Date()
+        const yy = date.getFullYear().toString().slice(-2)
+        const mm = String(date.getMonth() + 1).padStart(2, '0')
+        const rand = Math.floor(1000 + Math.random() * 9000)
+        const autoNum = `LSD-${yy}${mm}-${rand}`
+        setAutomaticNumber(autoNum)
 
-            const response = await fetch("/api/submissions", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(submission),
-            })
-
-            if (response.status === 401) {
-                toast.error("Session expired — please sign in")
-                // router.push(`/login?callbackUrl=${pathname}`) // pathname not imported, skipping for now or adding it
-                return
-            }
-
-            if (response.ok) {
-                const result = await response.json()
-                setSubmissionData({ ...submission, id: result.id })
-                toast.success("Checklist submitted successfully!")
-                setSubmissionSuccess(true)
-                window.scrollTo({ top: 0, behavior: "smooth" })
-            } else if (response.status === 403) {
-                toast.error("Forbidden — you do not have permission to submit this form")
-            } else {
-                const body = await response.json().catch(() => null)
-                toast.error(body?.error || "Failed to submit checklist")
-            }
-        } catch {
-            toast.error("An error occurred. Please try again.")
-        } finally {
-            setIsSubmitting(false)
+        const submission = {
+            id: Math.random().toString(36).substr(2, 9),
+            formType: "lowbed-step-deck",
+            submittedAt: new Date().toISOString(),
+            submittedBy: formData.driversName || "System User",
+            formTitle: "Lowbed And Step Deck Trailer Pre-Use Checklist",
+            data: {
+                ...formData,
+                automaticNumber: autoNum
+            },
+            hasDefects: formData.hasDefects === "Yes" || Object.values(formData.items).some(v => v === "def")
         }
+
+        const existing = JSON.parse(localStorage.getItem("form_submissions") || "[]")
+        localStorage.setItem("form_submissions", JSON.stringify([submission, ...existing]))
+
+        setSubmissionData(submission)
+        setIsSubmitting(false)
+        setSubmissionSuccess(true)
+        toast.success("Checklist submitted successfully!")
     }
 
     if (submissionSuccess && submissionData) {
@@ -385,7 +377,7 @@ export default function PonsseBisonForm() {
                 </div>
                 <div className="space-y-2">
                     <h2 className="text-3xl font-bold text-gray-900">Submission Successful!</h2>
-                    <p className="text-lg text-gray-500">The Ponsse Bison Inspection Checklist has been recorded.</p>
+                    <p className="text-lg text-gray-500">The Lowbed And Step Deck Trailer Pre-Use Checklist has been recorded.</p>
                     <p className="text-xl font-bold text-[#4e8c31] mt-2">Automatic Number: {automaticNumber}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -408,17 +400,16 @@ export default function PonsseBisonForm() {
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-8 border-b border-gray-100 pb-10">
                 <div className="flex flex-col items-center md:items-start gap-4">
-                    {/* Increased logo size as per 2nd screenshot */}
-                    <div className="relative h-32 w-80">
+                    <div className="relative h-24 w-64">
                         <Image src="/images/ringomode-logo.png" alt="Ringomode Logo" fill className="object-contain" priority />
                     </div>
                 </div>
-                <div className="text-center md:text-left space-y-2 flex-1 md:pl-10">
-                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[#4e8c31] underline decoration-2 underline-offset-8 decoration-[#8cc63f]">
+                <div className="text-center md:text-right space-y-1">
+                    <h1 className="text-2xl font-bold tracking-tight text-[#4e8c31] lg:text-3xl underline decoration-2 underline-offset-8 decoration-[#8cc63f] mb-4">
                         HSE Management System
                     </h1>
-                    <h2 className="text-2xl md:text-3xl font-bold text-[#4e8c31] underline decoration-2 underline-offset-8 decoration-[#8cc63f]">
-                        Ponsse Bison Pre-Shift Inspection Checklist
+                    <h2 className="text-xl font-bold text-[#4e8c31] lg:text-2xl italic">
+                        Lowbed And Step Deck Trailer Pre-Use Checklist
                     </h2>
                 </div>
             </div>
@@ -426,7 +417,7 @@ export default function PonsseBisonForm() {
             <form onSubmit={handleSubmit} className="space-y-12 px-4 md:px-0">
                 {/* Instructions */}
                 <div className="rounded-none border-2 border-[#8cc63f]/20 bg-[#f8faf6] p-8 space-y-4">
-                    <h3 className="text-lg font-bold text-[#4e8c31] border-b border-[#8cc63f]/30 pb-2 flex items-center gap-2 text-center md:text-left">
+                    <h3 className="text-lg font-bold text-[#4e8c31] border-b border-[#8cc63f]/30 pb-2 flex items-center gap-2">
                         General Instructions for Checklist:
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm font-bold text-gray-700">
@@ -443,77 +434,92 @@ export default function PonsseBisonForm() {
                 </div>
 
                 {/* Metadata */}
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 bg-white p-8 rounded-none shadow-sm border border-gray-100">
+                <div className="grid gap-6 md:grid-cols-3 bg-white p-8 rounded-none shadow-sm border border-gray-100">
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Operators Name & Surname</Label>
-                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, operatorName: v }))}>
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Drivers Name & Surname</Label>
+                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, driversName: v }))}>
                             <SelectTrigger className="h-12 rounded-none bg-gray-50 border-gray-200"><SelectValue placeholder="Select" /></SelectTrigger>
-                            <SelectContent><SelectItem value="John Doe">John Doe</SelectItem></SelectContent>
+                            <SelectContent>
+                                <SelectItem value="John Smith">John Smith</SelectItem>
+                                <SelectItem value="Jane Doe">Jane Doe</SelectItem>
+                            </SelectContent>
                         </Select>
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Select Shift</Label>
-                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, shift: v }))}>
-                            <SelectTrigger className="h-12 rounded-none bg-gray-50 border-gray-200"><SelectValue placeholder="Select" /></SelectTrigger>
-                            <SelectContent><SelectItem value="Day">Day</SelectItem><SelectItem value="Night">Night</SelectItem></SelectContent>
-                        </Select>
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Truck Registration Number</Label>
+                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, truckRegistrationNumber: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
                         <Label className="text-xs font-bold text-gray-500 uppercase">Date</Label>
-                        <div className="relative">
-                            <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200 pl-10" value={formData.date} onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))} />
-                            <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                        </div>
+                        <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200" value={formData.date} onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Odometer Start</Label>
+                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, odometerStart: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
                         <Label className="text-xs font-bold text-gray-500 uppercase">Hour Meter Start</Label>
                         <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, hourMeterStart: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Hour Meter Stop</Label>
-                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, hourMeterStop: e.target.value }))} />
-                    </div>
-                    <div className="space-y-2">
                         <Label className="text-xs font-bold text-gray-500 uppercase">Valid Training Card (Exp Date)</Label>
-                        <div className="relative">
-                            <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200 pl-10" onChange={(e) => setFormData(prev => ({ ...prev, validTrainingCard: e.target.value }))} />
-                            <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                        </div>
+                        <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, validTrainingCard: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Unit Number</Label>
-                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, unitNumber: e.target.value }))} />
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Valid PDP License (Exp Date)</Label>
+                        <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, validPdpLicense: e.target.value }))} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Dangerous Goods Card (Exp Date)</Label>
+                        <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, dangerousGoodsTrainingCard: e.target.value }))} />
                     </div>
                 </div>
 
                 {/* Sections */}
                 <div className="space-y-0 border-t border-gray-200">
-                    {sections.map((section, idx) => (
+                    {sections.map((section) => (
                         <div key={section.title} className="py-10 border-b border-gray-200 hover:bg-gray-50/30 transition-colors">
-                            <div className="grid grid-cols-1 lg:grid-cols-[2fr_180px_200px] items-start lg:items-center gap-6 md:gap-10">
-                                <div className="space-y-2">
-                                    <h4 className="text-2xl font-bold text-gray-900 border-l-4 border-[#4e8c31] pl-4">{section.title}:</h4>
-                                    <ul className="ml-8 list-disc text-xl text-gray-600 font-medium">
-                                        {section.items.map(it => <li key={it}>{it}</li>)}
+                            <div className="grid grid-cols-1 md:grid-cols-[2fr_210px_180px] gap-8 items-start">
+                                <div className="space-y-4">
+                                    <h4 className="text-lg font-bold text-gray-900 flex items-center gap-3">
+                                        {section.title}
+                                        {section.danger && (
+                                            <span className="bg-red-100 p-1 rounded-full">
+                                                <AlertTriangle className="h-4 w-4 text-red-600" />
+                                            </span>
+                                        )}
+                                    </h4>
+                                    <ul className="space-y-2">
+                                        {section.items.map((item, idx) => (
+                                            <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+                                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#8cc63f] shrink-0" />
+                                                {item}
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
-                                {/* Icons - Resized to 5.5cm x 4cm (approx 208px x 151px) */}
+
                                 <div className="flex justify-center">
-                                    <div className="w-[208px] h-[151px] relative p-1 border-2 rounded-none bg-white shadow-md flex items-center justify-center overflow-hidden">
-                                        <Image src={`/images/${section.icon}`} alt="" width={200} height={145} className="object-contain w-full h-full" />
+                                    <div className="relative w-[208px] h-[151px] border border-gray-100 rounded-none bg-white p-1 shadow-sm">
+                                        <Image
+                                            src={`/images/${section.icon}`}
+                                            alt={section.title}
+                                            fill
+                                            className="object-contain"
+                                        />
                                     </div>
                                 </div>
-                                {/* Select */}
+                                {/* Select Status */}
                                 <div className="space-y-2">
-                                    <Label className="text-sm font-bold text-[#4e8c31] uppercase block">Select</Label>
+                                    <Label className="text-sm font-bold text-[#4e8c31] uppercase block text-center lg:text-left">Select Status</Label>
                                     <Select onValueChange={(v) => handleItemChange(section.title, v as CheckStatus)}>
-                                        <SelectTrigger className="h-14 rounded-none border-gray-200 bg-white text-lg">
+                                        <SelectTrigger className="h-14 rounded-none border-gray-200 bg-white text-base">
                                             <SelectValue placeholder="Select" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="ok">Ok</SelectItem>
-                                            <SelectItem value="def">Def</SelectItem>
-                                            <SelectItem value="na">N/A</SelectItem>
+                                            <SelectItem value="ok" className="text-base">Ok</SelectItem>
+                                            <SelectItem value="def" className="text-base">Def</SelectItem>
+                                            <SelectItem value="na" className="text-base">N/A</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -526,7 +532,7 @@ export default function PonsseBisonForm() {
                 <div className="grid gap-8 md:grid-cols-2 pt-10 border-t border-gray-200">
                     <div className="space-y-2">
                         <Label className="text-lg font-bold">Are There Any Defects Selected</Label>
-                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, areThereAnyDefects: v }))}>
+                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, hasDefects: v }))}>
                             <SelectTrigger className="h-12 rounded-none border-gray-200 bg-white"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent><SelectItem value="Yes">Yes</SelectItem><SelectItem value="No">No</SelectItem></SelectContent>
                         </Select>
@@ -534,29 +540,26 @@ export default function PonsseBisonForm() {
                 </div>
 
                 <div className="space-y-4">
-                    <Label className="text-lg font-bold">Details of Defects (If "Def" is selected, please specify defects here)</Label>
+                    <Label className="text-lg font-bold">Details of Defects (If "Def" is selected, please specify here)</Label>
                     <Textarea
                         className="min-h-[120px] rounded-none border-gray-200 shadow-inner"
                         onChange={(e) => setFormData(prev => ({ ...prev, defectDetails: e.target.value }))}
                     />
                 </div>
 
-                {/* Signature */}
+                {/* Signature — 10cm × 5cm at 96dpi ≈ 378px × 189px */}
                 <div className="space-y-4">
-                    <div className="flex items-center justify-between max-w-[378px]">
-                        <Label className="text-lg font-bold">Signature</Label>
-                        <div className="flex gap-2">
-                            <Button type="button" variant="outline" size="sm" onClick={clearSignature}>Clear</Button>
-                            <Button type="button" variant="outline" size="sm">Undo</Button>
-                        </div>
+                    <div className="flex items-center justify-between">
+                        <Label className="text-xl font-bold">Signature</Label>
+                        <Button type="button" variant="outline" size="sm" onClick={clearSignature}>Clear</Button>
                     </div>
-                    {/* Resized to 10cm x 5cm (approx 378px x 189px) */}
-                    <div className="rounded-none border-2 border-gray-200 bg-white p-1 inline-block">
+                    <div className="rounded-none border-2 border-gray-200 bg-white p-2" style={{ maxWidth: 378 }}>
                         <canvas
                             ref={canvasRef}
-                            width={378}
-                            height={189}
-                            className="w-[378px] h-[189px] cursor-crosshair touch-none bg-white"
+                            width={756}
+                            height={378}
+                            className="cursor-crosshair touch-none block"
+                            style={{ width: 378, height: 189 }}
                             onMouseDown={startDrawing}
                             onMouseMove={draw}
                             onMouseUp={stopDrawing}
@@ -582,16 +585,17 @@ export default function PonsseBisonForm() {
                         </div>
                     ))}
                 </div>
-                <div className="flex items-center justify-between py-4">
-                    <div className="text-sm font-bold text-gray-900">
-                        Automatic Number: <span className="text-[#4e8c31] font-mono tracking-wider">{automaticNumber}</span>
+
+                <div className="flex items-center justify-between py-4 border-t border-gray-100 mt-8 pt-8">
+                    <div className="text-base font-bold text-gray-900">
+                        Automatic Number: <span className="text-gray-400 italic">Generated on Submit</span>
                     </div>
                     <div className="flex gap-4">
                         <Button
                             type="button"
                             variant="outline"
                             onClick={() => router.push('/')}
-                            className="border-gray-300 text-gray-700 hover:bg-gray-50 font-bold h-12 px-12 rounded-none"
+                            className="h-12 px-8 font-bold rounded-none"
                         >
                             Cancel
                         </Button>

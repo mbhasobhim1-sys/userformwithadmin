@@ -90,6 +90,8 @@ function formTypeLabel(type: string) {
       return "Excavator Harvester"
     case "lowbed-trailer":
       return "Lowbed & Roll Back Trailer"
+    case "lowbed-step-deck":
+      return "Lowbed & Step Deck Trailer"
     case "mechanic-ldv":
       return "Mechanic LDV"
     case "diesel-cart-trailer-inspection-checklist":
@@ -755,7 +757,8 @@ export function AdminDashboard() {
                 <SelectItem value="excavator-loader">Excavator Loader</SelectItem>
                 <SelectItem value="excavator-harvester">Excavator Harvester</SelectItem>
                 {/* ✅ ADDED: New form types */}
-                <SelectItem value="lowbed-trailer">Lowbed & Roll Back</SelectItem>
+                <SelectItem value="lowbed-trailer">Lowbed &amp; Roll Back</SelectItem>
+                <SelectItem value="lowbed-step-deck">Lowbed &amp; Step Deck</SelectItem>
                 <SelectItem value="mechanic-ldv">Mechanic LDV</SelectItem>
                 <SelectItem value="service-diesel-truck-pre-shift-inspection">Service/Diesel Truck</SelectItem>
                 <SelectItem value="water-cart-trailer-pressure-washer">Water Cart Trailer</SelectItem>
@@ -792,9 +795,13 @@ export function AdminDashboard() {
               />
             </div>
             <Button
+              type="button"
               variant="outline"
               size="sm"
-              onClick={fetchSubmissions}
+              onClick={(e) => {
+                e.preventDefault()
+                fetchSubmissions()
+              }}
               disabled={loading}
               className="gap-2 bg-transparent"
             >

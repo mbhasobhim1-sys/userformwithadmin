@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, CheckCircle2, AlertTriangle, Info, User, Truck, PenTool, PenLine, ClipboardCheck } from "lucide-react"
+import { Calendar, CheckCircle2, AlertTriangle, Info, User, Truck, PenTool, PenLine, ClipboardCheck, FileText } from "lucide-react"
 import Image from "next/image"
 import { toast } from "sonner"
 import { exportSubmissionToPDF } from "@/lib/export-utils"
@@ -194,6 +194,8 @@ export default function DailyMachineChecklistForm() {
         signature: ""
     })
 
+    const [automaticNumber, setAutomaticNumber] = useState("")
+
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [submissionData, setSubmissionData] = useState<Submission | null>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -291,15 +293,22 @@ export default function DailyMachineChecklistForm() {
             return
         }
 
+
+        const autoNum = Math.floor(2000 + Math.random() * 9000).toString()
+        setAutomaticNumber(autoNum)
+
         const submission: Submission = {
             id: Math.random().toString(36).substring(2, 9),
             formType: "daily-machine-checklist",
+            formTitle: "Daily Machine Checklist",
             submittedAt: new Date().toISOString(),
             submittedBy: formData.managerName || "Operator",
             data: {
                 ...formData,
-                hasDefects: formData.hasDefects === "Yes"
-            }
+                hasDefects: formData.hasDefects === "Yes",
+                automaticNumber: autoNum
+            },
+            hasDefects: formData.hasDefects === "Yes"
         }
 
         const existing = JSON.parse(localStorage.getItem("form_submissions") || "[]")
@@ -312,38 +321,32 @@ export default function DailyMachineChecklistForm() {
 
     if (isSubmitted && submissionData) {
         return (
-            <div className="flex min-h-[80vh] items-center justify-center p-4">
-                <Card className="w-full max-w-md text-center">
-                    <CardHeader>
-                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                            <CheckCircle2 className="h-10 w-10 text-green-600" />
-                        </div>
-                        <CardTitle className="text-2xl">Submission Successful!</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <p className="text-muted-foreground">
-                            Your Daily Machine Checklist has been recorded.
-                        </p>
-                        <div className="flex flex-col gap-2">
-                            <Button
-                                onClick={() => exportSubmissionToPDF(submissionData)}
-                                className="w-full gap-2 bg-primary hover:bg-primary/90"
-                            >
-                                <Image src="/images/pdf-icon.png" alt="PDF" width={20} height={20} className="invert brightness-0" />
-                                Download PDF
-                            </Button>
-                            <Button variant="outline" onClick={() => window.location.href = "/"} className="w-full">
-                                Back to Dashboard
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in duration-500">
+                <div className="rounded-full bg-green-100 p-6">
+                    <CheckCircle2 className="h-16 w-16 text-green-600" />
+                </div>
+                <div className="space-y-2">
+                    <h2 className="text-3xl font-bold text-gray-900">Submission Successful!</h2>
+                    <p className="text-lg text-gray-500">The Daily Machine Checklist has been recorded.</p>
+                    <p className="text-xl font-bold text-[#4e8c31] mt-2">Automatic Number: {automaticNumber}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                    <Button
+                        className="bg-[#fbb016] hover:bg-[#e5a014] text-black font-bold gap-2 h-12 px-8"
+                        onClick={() => exportSubmissionToPDF(submissionData)}
+                    >
+                        <FileText className="h-5 w-5" /> Download PDF
+                    </Button>
+                    <Button variant="outline" className="h-12 px-8 font-bold" onClick={() => window.location.href = "/"}>
+                        Back to Dashboard
+                    </Button>
+                </div>
             </div>
         )
     }
 
     return (
-        <div className="mx-auto max-w-5xl p-4 lg:p-8">
+        <div className="mx-auto max-w-5xl space-y-10 pb-20 p-6 md:p-10 bg-white shadow-xl rounded-none my-8">
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Header Section */}
                 <div className="flex flex-col items-center justify-between gap-6 border-b border-gray-100 pb-8 md:flex-row">
@@ -520,30 +523,17 @@ export default function DailyMachineChecklistForm() {
                     </div>
                 </div>
 
-                {/* Metadata Footer */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2 pt-8">
-                    {[
-                        { label: "Document Reference No.", value: "HSEMS / 8.1.19 / DOC / 0" },
-                        { label: "Author", value: "HSE MANAGER" },
-                        { label: "Revision", value: "1" },
-                        { label: "Creation Date", value: "05/01/20" },
-                    ].map(meta => (
-                        <div key={meta.label} className="bg-gray-50 p-3 border border-gray-200">
-                            <Label className="text-[10px] font-bold text-gray-900 uppercase">{meta.label}</Label>
-                            <div className="text-xs text-gray-500 mt-1">{meta.value}</div>
-                        </div>
-                    ))}
-                    <div className="bg-white p-3 border-none flex flex-col justify-center">
-                        <Label className="text-[10px] font-bold text-gray-900 uppercase">Automatic Number</Label>
-                        <div className="text-sm font-bold text-gray-900 mt-1">2063</div>
+                {/* Footer - document metadata */}
+                <div className="flex items-center justify-between py-4 border-t border-gray-100 mt-8 pt-8">
+                    <div className="text-sm font-bold text-gray-900">
+                        Automatic Number: <span className="text-gray-400 italic">Generated on Submit</span>
                     </div>
-                </div>
-
-                {/* Submit Button */}
-                <div className="flex justify-end pt-4">
-                    <Button type="submit" size="lg" className="h-12 w-48 bg-[#fbb016] hover:bg-[#e5a014] text-black font-bold text-lg rounded-none">
-                        Submit
-                    </Button>
+                    <div className="flex gap-4">
+                        <Button type="button" variant="outline" className="h-12 px-8 font-bold rounded-none" onClick={() => (window.location.href = "/")}>Cancel</Button>
+                        <Button type="submit" className="bg-[#fbb016] hover:bg-[#e5a014] text-black font-extrabold h-12 px-12 rounded-none">
+                            Submit
+                        </Button>
+                    </div>
                 </div>
             </form>
         </div>

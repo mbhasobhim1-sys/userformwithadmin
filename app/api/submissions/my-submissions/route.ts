@@ -12,10 +12,11 @@ export async function GET() {
     const email = session.user?.email || ''
     if (!name && !email) return false
 
+    const data = s.data as any
     if (s.submittedBy && s.submittedBy === name) return true
-    if (s.data?.operatorName && s.data.operatorName === name) return true
-    if (s.data?.email && s.data.email === email) return true
-    if (s.data?.operatorEmail && s.data.operatorEmail === email) return true
+    if (data?.operatorName && data.operatorName === name) return true
+    if (data?.email && data.email === email) return true
+    if (data?.operatorEmail && data.operatorEmail === email) return true
 
     return false
   })

@@ -294,12 +294,14 @@ export default function WeeklyMachineryConditionForm() {
         const submission: Submission = {
             id: Math.random().toString(36).substring(2, 9),
             formType: "weekly-machinery-condition-assessment",
+            formTitle: "Weekly Machinery Condition Assessment",
             submittedAt: new Date().toISOString(),
             submittedBy: formData.managerName || "Operator",
             data: {
                 ...formData,
                 hasDefects: formData.hasDefects === "Yes"
-            }
+            },
+            hasDefects: formData.hasDefects === "Yes"
         }
 
         const existing = JSON.parse(localStorage.getItem("form_submissions") || "[]")

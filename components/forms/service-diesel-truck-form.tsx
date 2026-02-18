@@ -7,36 +7,35 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { type CheckStatus } from "@/lib/types"
-import { CheckCircle2, Send, AlertCircle, Eraser, Info, Skull, AlertTriangle, FileText } from "lucide-react"
+import { CheckCircle2, Calendar, Skull as SkullIcon, AlertTriangle, Truck, FileText, Send, ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { exportSubmissionToPDF } from "@/lib/export-utils"
 
 const sections = [
     {
-        title: "License and Phepha",
-        items: ["Phepha valid.", "Displayed and visible."],
+        title: "Vehicle License and Phepha",
+        items: ["Vehicle license valid.", "PHEPHA valid.", "Displayed and visible.", "Number plates secure."],
         icon: "license2.png",
         danger: true
     },
     {
-        title: "Protective Structure",
-        items: ["No cracks/damages.", "No bolts missing/loose.", "Guards not damaged and intact."],
-        icon: "protective-structure.png",
+        title: "Body of Cab / Tank",
+        items: ["Body work not damaged.", "No new dents or scratches."],
+        icon: "service-truck-body.png",
+        danger: false
+    },
+    {
+        title: "Exhaust",
+        items: ["Clamps secure.", "No excessive smoking/blowing."],
+        icon: "exhaust.png",
         danger: true
     },
     {
         title: "Steps and Rails",
         items: ["Steps in good condition.", "Not loose/broken."],
         icon: "steps-and-rails.png",
-        danger: false
-    },
-    {
-        title: "Bonnet Shock Absorbers",
-        items: ["In place.", "In good condition."],
-        icon: "bonnet-shocks.png",
         danger: false
     },
     {
@@ -82,12 +81,6 @@ const sections = [
         danger: false
     },
     {
-        title: "Hydraulic Controls",
-        items: ["Not loose/responsive.", "No steering play.", "Rear steering.", "Pivot/steering ram pins not loose."],
-        icon: "hydraulic-controls.png",
-        danger: false
-    },
-    {
         title: "Hooter and Reverse Alarm",
         items: ["Hooter working and in good condition.", "Reverse alarm working."],
         icon: "hooters.png",
@@ -100,69 +93,33 @@ const sections = [
         danger: false
     },
     {
-        title: "Working Lights",
-        items: ["Dim/bright working.", "No fused or damaged bulbs.", "Indicators and hazards working.", "Brake light in working order."],
+        title: "Clutch",
+        items: ["Clutch taking correctly – not slipping.", "In working order."],
+        icon: "clutch-pedal.png",
+        danger: true
+    },
+    {
+        title: "Lamps",
+        items: ["Dim/bright lights/brake lights/indicators/hazards/reflector in working order."],
         icon: "led.png",
         danger: true
     },
     {
-        title: "Rotating Light",
-        items: ["Flashing/rotating beacon light in working condition."],
-        icon: "rotating-light.png",
-        danger: false
-    },
-    {
-        title: "Braking System (Foot Brake/Exhaust Brake)",
-        items: ["Working.", "Retarder working (check lights on dash)."],
-        icon: "excavator-loader-brakes-steering.png",
+        title: "Foot Brake",
+        items: ["In working order.", "Check brake fluid levels in order."],
+        icon: "brake-pedal.png",
         danger: true
     },
     {
-        title: "Emergency Park Brake",
-        items: ["Working."],
-        icon: "excavator-loader-brakes-steering.png",
+        title: "Hand Brake/ Brake Cable",
+        items: ["In working order.", "No damage."],
+        icon: "hand-brake.png",
         danger: true
-    },
-    {
-        title: "Oil/Fluid/Air Levels",
-        items: ["Check all oil levels/brake fluid levels/clutch fluid levels are correct.", "Check air gauge in order."],
-        icon: "fuel-oil-levels.png",
-        danger: false
-    },
-    {
-        title: "Fuel, Air and Oil leaks",
-        items: ["No more than 4 drops of oil per minute."],
-        icon: "fuel-leaks.png",
-        danger: true
-    },
-    {
-        title: "Grease",
-        items: ["Adequately greased chassis.", "No missing or damaged grease nipples."],
-        icon: "grease.png",
-        danger: false
-    },
-    {
-        title: "Grill",
-        items: ["Good condition – no damage.", "Not clogged/air is moving freely."],
-        icon: "grill.png",
-        danger: false
     },
     {
         title: "Battery",
         items: ["Secure.", "Sufficient water.", "Terminals clean/tight & covers on.", "No exposed wiring."],
         icon: "battery.png",
-        danger: false
-    },
-    {
-        title: "Air Pre-Cleaner",
-        items: ["Good condition – no damage/no sucking of air.", "Clean and secure.", "No dust in pre-cleaner bowl."],
-        icon: "air-pre-cleaner.png",
-        danger: false
-    },
-    {
-        title: "V-Belt",
-        items: ["Not squeaking.", "No signs of damage.", "Tension in order."],
-        icon: "fan-belt.png",
         danger: false
     },
     {
@@ -178,63 +135,69 @@ const sections = [
         danger: false
     },
     {
-        title: "Wiring",
-        items: ["No loose, damaged or exposed wires.", "No loose broken plugs."],
-        icon: "wiring.png",
+        title: "Oil/Fluid/Air Levels",
+        items: ["Check all oil levels/brake fluid levels/clutch fluid levels are correct.", "Check air gauge in order."],
+        icon: "fuel-oil-levels.png",
+        danger: false
+    },
+    {
+        title: "Fuel, Air and Oil leaks",
+        items: ["No more than 4 drops of oil per minute."],
+        icon: "fuel-leaks.png",
         danger: true
     },
     {
-        title: "Prop-Shaft/Universals/Carrier Bearings",
-        items: ["Check mounting, carrier bearings & universal joints.", "No oil leaks."],
-        icon: "prop-shaft.png",
-        danger: true
-    },
-    {
-        title: "Drive Train",
-        items: ["No oil leaks."],
-        icon: "drive-train.png",
+        title: "Differentials",
+        items: ["No Leaks.", "No Damages."],
+        icon: "differential.png",
         danger: false
     },
     {
         title: "Tyres",
-        items: ["Condition of tyres (no cuts/bulges).", "Wheel nuts secure.", "Tyre pressure (visual)."],
-        icon: "excavator-loader-wheels-tyres.png",
+        items: ["No external damage.", "No foreign objects in tyre thread or between the tyres.", "No cracks or bulges.", "No uneven tread wear or excessive wear or tear.", "No loose/missing/damaged nuts.", "Wheel nuts secure."],
+        icon: "three-tyres.png",
         danger: true
     },
     {
-        title: "Headboard and Uprights",
-        items: ["No cracks / loose / missing bolts / missing uprights.", "Tail board secure & pins in place."],
-        icon: "headboard-uprights.png",
-        danger: true
+        title: "Mud Flaps",
+        items: ["Available as per legal requirements.", "In good condition – not damaged."],
+        icon: "mud-flaps.png",
+        danger: false
+    },
+    {
+        title: "All Excess Loose Debris Removed Pre-Shift",
+        items: ["Battery are/exhaust area.", "Behind the boom/hydraulic cooler.", "Engine bay."],
+        icon: "all-excess-loose-debris.png",
+        danger: false
+    },
+    {
+        title: "Storage Lockers (Doors)",
+        items: ["Doors are closed and secure before moving.", "Hinges of doors in good condition.", "No damage to storage lockers.", "Containers adequately stored (no leaking)."],
+        icon: "storage-lockers.png",
+        danger: false
+    },
+    {
+        title: "Tool kit (In Compartment)",
+        items: ["1 x flat screwdriver.", "1 x 10/12 inch spanner.", "1 x 14/17 inch spanner."],
+        icon: "excavator-loader-loader-quick-hitch.png",
+        danger: false
     },
     {
         title: "Chevron, Reflectors and Tape",
-        items: ["Chevron clean & not damaged.", "Reflectors & tape clean and not damaged."],
+        items: ["Securely mounted.", "In good condition."],
         icon: "chevron-reflectors.png",
         danger: true
     },
     {
-        title: "Visibility Triangle",
-        items: ["On the back of the machine.", "Secure.", "Clean and visible."],
-        icon: "visibility-triangle.png",
-        danger: false
-    },
-    {
-        title: "Boom Structure",
-        items: ["Not bent/cracked.", "Pins all secured.", "No loose/missing bolts."],
-        icon: "boom-structure.png",
+        title: "Hazchem Signage",
+        items: ["In place and clearly visible – not faded.", "Clean."],
+        icon: "hazchem-sign.png",
         danger: true
     },
     {
-        title: "Hydraulic Cylinders",
-        items: ["Good condition – no damage.", "No loose fittings.", "No oil leaks.", "No missing bolts/nuts."],
-        icon: "hydraulic-cylinders.png",
-        danger: false
-    },
-    {
-        title: "Hydraulic Hoses and Fittings",
-        items: ["No excessive rubbing.", "No loose brackets/bolts/nuts.", "Smooth operation.", "Jaws not cracked or broken."],
-        icon: "hydraulic-hoses.png",
+        title: "Spill Kit (Monthly Checklist in Place and Completed)",
+        items: ["Service truck spill kit in place.", "Spill kit contents in order (monthly checklist)."],
+        icon: "spill-kit.png",
         danger: false
     },
     {
@@ -250,47 +213,47 @@ const sections = [
         danger: false
     },
     {
-        title: "Fire Extinguisher",
-        items: ["Mounted and secured.", "Serviced.", "Gauge in order.", "Seal in place."],
-        icon: "fire-system.png",
-        danger: true
-    },
-    {
         title: "Emergency Triangles",
         items: ["2 x available as per legal requirements.", "In good condition."],
         icon: "emergency-triangles.png",
         danger: true
+    },
+    {
+        title: "Fire Extinguisher (2 x 9Kg DCP) & (1 x 9Kg CO2) Outside",
+        items: ["Secure – brackets not broken.", "Secured/seal in place.", "Gauges in order.", "Fire equipment signage in place (not faded)."],
+        icon: "fire-extinguisher-bottle.png",
+        danger: true
     }
 ]
 
-export default function DezziTimberTruckForm() {
+export function ServiceDieselTruckForm() {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submissionSuccess, setSubmissionSuccess] = useState(false)
     const [submissionData, setSubmissionData] = useState<any>(null)
+    const [automaticNumber, setAutomaticNumber] = useState("")
 
     const [formData, setFormData] = useState({
-        operatorName: "",
-        shift: "",
+        driversName: "",
+        truckRegistration: "",
         date: new Date().toISOString().split('T')[0],
-        hourMeterStart: "",
-        hourMeterStop: "",
-        trainingCardExpiry: "",
-        unitNumber: "",
-        licensePdpExpiry: "",
+        odometerStartHours: "",
+        odometerStopHours: "",
+        odometerStartKilometres: "",
+        odometerStopKilometres: "",
+        validTrainingCard: "", // Date
+        validPDPLicense: "", // Date
+        dangerousGoodsTrainingCard: "", // Date
         items: {} as Record<string, CheckStatus>,
-        brakeEfficiencyTestResult: "",
         areThereAnyDefects: "",
         defectDetails: "",
         signature: "",
-        documentRefNo: "HSEMS / 8.1.19 / REG / 01",
+        documentRefNo: "HSEMS / 8.1.19 / REG / 014",
         author: "HSE MANAGER",
         revision: "4",
-        creationDate: "03/27/2020",
+        creationDate: "04/10/24",
         automaticNumber: ""
     })
-
-    const [automaticNumber, setAutomaticNumber] = useState("")
 
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [isDrawing, setIsDrawing] = useState(false)
@@ -375,26 +338,49 @@ export default function DezziTimberTruckForm() {
         const autoNum = Math.floor(2000 + Math.random() * 9000).toString()
         setAutomaticNumber(autoNum)
 
-        const submission = {
-            id: Math.random().toString(36).substr(2, 9),
-            formType: "timber-truck-and-trailer-checklist",
-            submittedAt: new Date().toISOString(),
-            submittedBy: formData.operatorName || "System User",
-            formTitle: "Dezzi Timber Truck Pre-Shift Checklist",
-            data: {
-                ...formData,
-                automaticNumber: autoNum
-            },
-            hasDefects: formData.areThereAnyDefects === "Yes" || Object.values(formData.items).some(v => v === "def")
+        try {
+            const hasDefects = formData.areThereAnyDefects === "Yes" || Object.values(formData.items).some(v => v === "def")
+            const submission = {
+                formType: "service-diesel-truck-pre-shift-inspection",
+                formTitle: "Service/Diesel Truck Pre-Shift Inspection Checklist",
+                submittedBy: formData.driversName || "System User",
+                submittedAt: new Date().toISOString(),
+                hasDefects,
+                data: {
+                    ...formData,
+                    automaticNumber: autoNum,
+                    hasDefects
+                },
+            }
+
+            const response = await fetch("/api/submissions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(submission),
+            })
+
+            if (response.status === 401) {
+                toast.error("Session expired — please sign in")
+                return
+            }
+
+            if (response.ok) {
+                const result = await response.json()
+                setSubmissionData({ ...submission, id: result.id })
+                toast.success("Checklist submitted successfully!")
+                setSubmissionSuccess(true)
+                window.scrollTo({ top: 0, behavior: "smooth" })
+            } else if (response.status === 403) {
+                toast.error("Forbidden — you do not have permission to submit this form")
+            } else {
+                const body = await response.json().catch(() => null)
+                toast.error(body?.error || "Failed to submit checklist")
+            }
+        } catch {
+            toast.error("An error occurred. Please try again.")
+        } finally {
+            setIsSubmitting(false)
         }
-
-        const existing = JSON.parse(localStorage.getItem("form_submissions") || "[]")
-        localStorage.setItem("form_submissions", JSON.stringify([submission, ...existing]))
-
-        setSubmissionData(submission)
-        setIsSubmitting(false)
-        setSubmissionSuccess(true)
-        toast.success("Checklist submitted successfully!")
     }
 
     if (submissionSuccess && submissionData) {
@@ -405,17 +391,17 @@ export default function DezziTimberTruckForm() {
                 </div>
                 <div className="space-y-2">
                     <h2 className="text-3xl font-bold text-gray-900">Submission Successful!</h2>
-                    <p className="text-lg text-gray-500">The Dezzi Timber Truck Pre-Shift Checklist has been recorded.</p>
+                    <p className="text-lg text-gray-500">The Service/Diesel Truck Inspection Checklist has been recorded.</p>
                     <p className="text-xl font-bold text-[#4e8c31] mt-2">Automatic Number: {automaticNumber}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Button
-                        className="bg-[#fbb016] hover:bg-[#e5a014] text-black font-bold gap-2 h-12 px-8"
+                        className="bg-[#fbb016] hover:bg-[#e5a014] text-black font-bold gap-2 h-12 px-8 rounded-none"
                         onClick={() => exportSubmissionToPDF(submissionData)}
                     >
                         <FileText className="h-5 w-5" /> Download PDF
                     </Button>
-                    <Button variant="outline" className="h-12 px-8 font-bold" onClick={() => router.push("/")}>
+                    <Button variant="outline" className="h-12 px-8 font-bold rounded-none" onClick={() => router.push("/")}>
                         Back to Dashboard
                     </Button>
                 </div>
@@ -424,20 +410,20 @@ export default function DezziTimberTruckForm() {
     }
 
     return (
-        <div className="mx-auto max-w-5xl space-y-10 pb-20 p-6 md:p-10 bg-white shadow-xl rounded-none my-8">
+        <div className="mx-auto max-w-5xl space-y-10 pb-20 p-6 md:p-10 bg-white shadow-xl rounded-none my-8 border border-white">
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-8 border-b border-gray-100 pb-10">
                 <div className="flex flex-col items-center md:items-start gap-4">
-                    <div className="relative h-24 w-64">
+                    <div className="relative h-32 w-80">
                         <Image src="/images/ringomode-logo.png" alt="Ringomode Logo" fill className="object-contain" priority />
                     </div>
                 </div>
-                <div className="text-center md:text-right space-y-1">
-                    <h1 className="text-2xl font-bold tracking-tight text-[#4e8c31] lg:text-3xl underline decoration-2 underline-offset-8 decoration-[#8cc63f] mb-4">
+                <div className="text-center md:text-left space-y-2 flex-1 md:pl-10">
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[#4e8c31] underline decoration-2 underline-offset-8 decoration-[#8cc63f]">
                         HSE Management System
                     </h1>
-                    <h2 className="text-xl font-bold text-[#4e8c31] lg:text-2xl italic">
-                        Dezzi Timber Truck Pre-Shift Checklist
+                    <h2 className="text-2xl md:text-3xl font-bold text-[#4e8c31] underline decoration-2 underline-offset-8 decoration-[#8cc63f]">
+                        Service/Diesel Truck Pre-Shift Inspection Checklist
                     </h2>
                 </div>
             </div>
@@ -462,69 +448,113 @@ export default function DezziTimberTruckForm() {
                 </div>
 
                 {/* Metadata */}
-                <div className="grid gap-6 md:grid-cols-3 bg-white p-8 rounded-none shadow-sm border border-gray-100">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 bg-white p-8 rounded-none shadow-sm border border-gray-100">
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Operators Name & Surname</Label>
-                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, operatorName: v }))}>
-                            <SelectTrigger className="h-12 rounded-none bg-gray-50 border-gray-200"><SelectValue placeholder="Select" /></SelectTrigger>
-                            <SelectContent><SelectItem value="John Doe">John Doe</SelectItem></SelectContent>
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Drivers Name</Label>
+                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, driversName: v }))}>
+                            <SelectTrigger className="h-12 rounded-none bg-gray-50 border-gray-200">
+                                <SelectValue placeholder="Select Driver" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="M. Khumalo">M. Khumalo</SelectItem>
+                                <SelectItem value="S. Ndlovu">S. Ndlovu</SelectItem>
+                                <SelectItem value="P. Molefe">P. Molefe</SelectItem>
+                                <SelectItem value="J. Sibanda">J. Sibanda</SelectItem>
+                                <SelectItem value="T. Nkosi">T. Nkosi</SelectItem>
+                            </SelectContent>
                         </Select>
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Select Shift</Label>
-                        <Select onValueChange={(v) => setFormData(prev => ({ ...prev, shift: v }))}>
-                            <SelectTrigger className="h-12 rounded-none bg-gray-50 border-gray-200"><SelectValue placeholder="Select" /></SelectTrigger>
-                            <SelectContent><SelectItem value="Day">Day</SelectItem><SelectItem value="Night">Night</SelectItem></SelectContent>
-                        </Select>
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Truck Registration</Label>
+                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, truckRegistration: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
                         <Label className="text-xs font-bold text-gray-500 uppercase">Date</Label>
-                        <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200" value={formData.date} onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))} />
+                        <div className="relative">
+                            <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200 pl-10" value={formData.date} onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))} />
+                            <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                        </div>
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Hour Meter Start</Label>
-                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, hourMeterStart: e.target.value }))} />
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Odometer Start Hours</Label>
+                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, odometerStartHours: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Hour Meter Stop</Label>
-                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, hourMeterStop: e.target.value }))} />
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Odometer Stop Hours</Label>
+                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, odometerStopHours: e.target.value }))} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Odometer Start Kilometres</Label>
+                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, odometerStartKilometres: e.target.value }))} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Odometer Stop Kilometres</Label>
+                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, odometerStopKilometres: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
                         <Label className="text-xs font-bold text-gray-500 uppercase">Valid Training Card (Exp Date)</Label>
-                        <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, trainingCardExpiry: e.target.value }))} />
+                        <div className="relative">
+                            <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200 pl-10" onChange={(e) => setFormData(prev => ({ ...prev, validTrainingCard: e.target.value }))} />
+                            <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                        </div>
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Unit Number</Label>
-                        <Input className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, unitNumber: e.target.value }))} />
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Valid PDP License (Exp Date)</Label>
+                        <div className="relative">
+                            <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200 pl-10" onChange={(e) => setFormData(prev => ({ ...prev, validPDPLicense: e.target.value }))} />
+                            <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                        </div>
                     </div>
-                    <div className="space-y-2 md:col-span-1">
-                        <Label className="text-xs font-bold text-gray-500 uppercase">Valid License & PDP (Exp Date)</Label>
-                        <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200" onChange={(e) => setFormData(prev => ({ ...prev, licensePdpExpiry: e.target.value }))} />
+                    <div className="space-y-2">
+                        <Label className="text-xs font-bold text-gray-500 uppercase">Dangerous Goods Training Card</Label>
+                        <div className="relative">
+                            <Input type="date" className="h-12 rounded-none bg-gray-50 border-gray-200 pl-10" onChange={(e) => setFormData(prev => ({ ...prev, dangerousGoodsTrainingCard: e.target.value }))} />
+                            <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                        </div>
                     </div>
                 </div>
 
                 {/* Sections */}
                 <div className="space-y-0 border-t border-gray-200">
-                    {sections.map((section) => (
+                    {sections.map((section, idx) => (
                         <div key={section.title} className="py-10 border-b border-gray-200 hover:bg-gray-50/30 transition-colors">
-                            <div className="grid grid-cols-1 lg:grid-cols-[2fr_120px_200px] items-start lg:items-center gap-6 md:gap-10">
+                            <div className="grid grid-cols-1 lg:grid-cols-[2fr_120px_208px_200px] items-start lg:items-center gap-6 md:gap-10">
                                 <div className="space-y-2">
-                                    <h4 className="text-lg font-bold text-gray-900 border-l-4 border-[#4e8c31] pl-4">{section.title}:</h4>
-                                    <ul className="ml-8 list-disc text-sm text-gray-600 font-medium">
+                                    <h4 className="text-2xl font-bold text-gray-900 border-l-4 border-[#4e8c31] pl-4">{section.title}:</h4>
+                                    <ul className="ml-8 list-disc text-xl text-gray-600 font-medium font-serif">
                                         {section.items.map(it => <li key={it}>{it}</li>)}
                                     </ul>
                                 </div>
-                                {/* Icons */}
+                                {/* Danger Icon */}
                                 <div className="flex justify-center">
-                                    <div className="w-24 h-24 relative p-1 border rounded-none bg-white shadow-sm flex items-center justify-center">
-                                        <Image src={`/images/${section.icon}`} alt="" width={80} height={80} className="object-contain" />
+                                    {section.danger ? (
+                                        <SkullIcon className="h-24 w-24 text-black stroke-[1.5]" />
+                                    ) : (
+                                        <AlertTriangle className="h-24 w-24 text-black stroke-[1.5]" />
+                                    )}
+                                </div>
+                                {/* Icons - Resized to 5.5cm x 4cm (approx 208px x 151px) */}
+                                <div className="flex justify-center">
+                                    <div className="w-[208px] h-[151px] relative p-1 border-2 rounded-none bg-white shadow-md flex items-center justify-center overflow-hidden">
+                                        {/* Use placeholder if icon is not yet uploaded */}
+                                        <Image
+                                            src={`/images/${section.icon}`}
+                                            alt=""
+                                            width={200}
+                                            height={145}
+                                            className="object-contain w-full h-full"
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.src = "https://placehold.co/200x145?text=Missing+Icon";
+                                            }}
+                                        />
                                     </div>
                                 </div>
                                 {/* Select */}
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-bold text-[#4e8c31] uppercase block">Select Status</Label>
+                                    <Label className="text-sm font-bold text-[#4e8c31] uppercase block">Select</Label>
                                     <Select onValueChange={(v) => handleItemChange(section.title, v as CheckStatus)}>
-                                        <SelectTrigger className="h-12 rounded-none border-gray-200 bg-white">
+                                        <SelectTrigger className="h-14 rounded-none border-gray-200 bg-white text-lg">
                                             <SelectValue placeholder="Select" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -539,36 +569,6 @@ export default function DezziTimberTruckForm() {
                     ))}
                 </div>
 
-                {/* Brake Efficiency Test */}
-                <div className="space-y-6 pt-10 border-t border-gray-200">
-                    <h3 className="text-xl font-bold flex items-center gap-3">
-                        <AlertTriangle className="h-6 w-6 text-[#fbb016]" />
-                        Brake Efficiency Test
-                    </h3>
-                    <div className="bg-white p-8 rounded-none border-2 border-dashed border-gray-200">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-                            <div className="flex-1 space-y-4 text-center">
-                                <div className="flex items-center justify-center gap-4">
-                                    <div className="w-4 h-4 rounded-full bg-orange-500" />
-                                    <div className="h-0.5 w-40 bg-gray-300 relative">
-                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-[10px] font-bold">5m</div>
-                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 border-y-[6px] border-y-transparent border-l-[10px] border-l-gray-400" />
-                                    </div>
-                                    <div className="w-4 h-4 rounded-full bg-orange-500" />
-                                </div>
-                            </div>
-                            <div className="w-full md:w-64 space-y-2">
-                                <Label className="font-bold text-gray-700">Result</Label>
-                                <Input
-                                    placeholder="Enter result..."
-                                    className="h-12 rounded-none"
-                                    onChange={(e) => setFormData(prev => ({ ...prev, brakeEfficiencyTestResult: e.target.value }))}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {/* Footer Selects/Details */}
                 <div className="grid gap-8 md:grid-cols-2 pt-10 border-t border-gray-200">
                     <div className="space-y-2">
@@ -581,7 +581,7 @@ export default function DezziTimberTruckForm() {
                 </div>
 
                 <div className="space-y-4">
-                    <Label className="text-lg font-bold">Details of Defects (If "Def" is selected, please specify here)</Label>
+                    <Label className="text-lg font-bold">Details of Defects (If "Def" is selected, please specify defects here)</Label>
                     <Textarea
                         className="min-h-[120px] rounded-none border-gray-200 shadow-inner"
                         onChange={(e) => setFormData(prev => ({ ...prev, defectDetails: e.target.value }))}
@@ -590,19 +590,20 @@ export default function DezziTimberTruckForm() {
 
                 {/* Signature */}
                 <div className="space-y-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between max-w-[378px]">
                         <Label className="text-lg font-bold">Signature</Label>
                         <div className="flex gap-2">
                             <Button type="button" variant="outline" size="sm" onClick={clearSignature}>Clear</Button>
                             <Button type="button" variant="outline" size="sm">Undo</Button>
                         </div>
                     </div>
-                    <div className="rounded-none border-2 border-gray-200 bg-white p-2">
+                    {/* Resized to 10cm x 5cm (approx 378px x 189px) */}
+                    <div className="rounded-none border-2 border-gray-200 bg-white p-1 inline-block">
                         <canvas
                             ref={canvasRef}
-                            width={800}
-                            height={300}
-                            className="w-full h-48 cursor-crosshair touch-none"
+                            width={378}
+                            height={189}
+                            className="w-[378px] h-[189px] cursor-crosshair touch-none bg-white font-rounded-none"
                             onMouseDown={startDrawing}
                             onMouseMove={draw}
                             onMouseUp={stopDrawing}
@@ -628,16 +629,16 @@ export default function DezziTimberTruckForm() {
                         </div>
                     ))}
                 </div>
-                <div className="flex items-center justify-between py-4 border-t border-gray-100 mt-8 pt-8">
+                <div className="flex items-center justify-between py-4">
                     <div className="text-sm font-bold text-gray-900">
-                        Automatic Number: <span className="text-gray-400 italic">Generated on Submit</span>
+                        Automatic Number: {formData.automaticNumber || <span className="text-gray-400 italic">Generated on Submit</span>}
                     </div>
                     <div className="flex gap-4">
                         <Button
                             type="button"
                             variant="outline"
                             onClick={() => router.push('/')}
-                            className="h-12 px-8 font-bold rounded-none"
+                            className="border-gray-300 text-gray-700 hover:bg-gray-50 font-bold h-12 px-12 rounded-none"
                         >
                             Cancel
                         </Button>

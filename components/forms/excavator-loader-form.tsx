@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import React, { useRef, useState, useMemo, useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,93 +13,334 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChecklistRadioGroup } from "@/components/checklist-radio-group"
 import { ChecklistStatusBadge } from "@/components/checklist-status-badge"
 import { excavatorLoaderItems, type CheckStatus } from "@/lib/types"
-import { AlertTriangle, CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser, FileText, Skull } from "lucide-react"
+import { exportSubmissionToPDF } from "@/lib/export-utils"
 import Link from "next/link"
 import Image from "next/image"
 
 // ---- SECTION DEFINITIONS for Excavator Loader (grouped logically) ----
+// ---- SECTION DEFINITIONS for Excavator Loader (Detailed breakdown from screenshots) ----
 const sections = [
   {
-    title: "Fire & Safety Equipment",
+    title: "License and Phepha",
+    type: "critical",
+    image: "license2.png",
     items: [
-      "Fire extinguisher (serviced/sealed)",
-      "First aid kit"
+      "Phepha valid.",
+      "Displayed and visible."
     ]
   },
   {
-    title: "Operator Environment",
+    title: "Protective Structure",
+    type: "critical",
+    image: "protective-structure.png",
     items: [
-      "Seat belt",
-      "Mirrors",
-      "Lights (head/tail/work)",
-      "Horn / reverse alarm",
-      "Windscreen / wipers",
-      "Steps / handrails",
-      "Guards / covers in place",
-      "Cabin (clean/undamaged)"
+      "No cracks/damages.",
+      "No bolts missing/loose.",
+      "Guards not damaged and intact."
     ]
   },
   {
-    title: "Fluids & Filters",
+    title: "Exhaust",
+    type: "critical",
+    image: "exhaust.png",
     items: [
-      "Engine oil level",
-      "Hydraulic oil level",
-      "Coolant level",
-      "Fuel level",
-      "Air filter indicator"
+      "Clamps secure.",
+      "No excessive smoking/blowing."
     ]
   },
   {
-    title: "Electrical",
+    title: "Steps and Rails",
+    type: "warning",
+    image: "steps-and-rails.png",
     items: [
-      "Battery (condition/terminals)"
+      "Steps in good condition.",
+      "Not loose/broken."
     ]
   },
   {
-    title: "Undercarriage & Attachments",
+    title: "Cab",
+    type: "warning",
+    image: "cabs.png",
     items: [
-      "Tracks / undercarriage",
-      "Bucket (teeth/cutting edge)",
-      "Boom / stick / linkage pins",
-      "Hydraulic hoses / fittings",
-      "Slew ring / bearing",
-      "Swing mechanism"
+      "Cab neat and tidy.",
+      "Door and mechanism working.",
+      "Door rubber in good condition.",
+      "Door handles functional."
     ]
   },
   {
-    title: "Exhaust & Instruments",
+    title: "Windscreen, Windows & Wipers",
+    type: "warning",
+    image: "wipes.png",
     items: [
-      "Exhaust system",
-      "Instruments / gauges",
-      "Controls (levers/pedals)"
+      "Clean/secure.",
+      "No cracks or damages to windscreen.",
+      "Window visibility not obscured by cracks.",
+      "Wipers are working."
     ]
   },
   {
-    title: "Brakes & Steering",
+    title: "Air Conditioner",
+    type: "warning",
+    image: "air-conditioner.png",
     items: [
-      "Brakes (service/park)",
-      "Steering"
+      "In working condition."
     ]
   },
   {
-    title: "Wheels & Tyres",
+    title: "Seats",
+    type: "warning",
+    image: "seats.png",
     items: [
-      "Tyres / wheels (if applicable)"
+      "Condition of seat.",
+      "Seat secured.",
+      "Rotating lock functional.",
+      "Seat adjuster functional."
     ]
   },
   {
-    title: "Lubrication & Leaks",
+    title: "Safety Belt",
+    type: "critical",
+    image: "safety-belt.png",
     items: [
-      "Grease points",
-      "No leaks (oil/fuel/coolant)"
+      "Safety belts bolted/secured.",
+      "No damage/not extremely dirty/bleached or dyed.",
+      "Retractor clip in order and clicks into place."
     ]
   },
   {
-    title: "Loader & Quick Hitch",
+    title: "Hooter and Reverse Alarm",
+    type: "warning",
+    image: "hooters.png",
     items: [
-      "Loader arms / linkage",
-      "Quick hitch (if fitted)",
-      "Attachments secure"
+      "Hooter working and in good condition.",
+      "Reverse alarm working."
+    ]
+  },
+  {
+    title: "Gauges",
+    type: "warning",
+    image: "gauges.png",
+    items: [
+      "In working order.",
+      "Any warning symbols/lights."
+    ]
+  },
+  {
+    title: "Hydraulic Controls",
+    type: "warning",
+    image: "hydraulic-controls.png",
+    items: [
+      "Not loose/responsive.",
+      "No steering play.",
+      "Rear steering.",
+      "Pivot/steering ram pins not loose."
+    ]
+  },
+  {
+    title: "Hydraulic Head Cut Off (Bail Lever)",
+    type: "critical",
+    image: "bail-lever.png",
+    items: [
+      "Operational (when it is disengaged, the hydraulics do not operate)."
+    ]
+  },
+  {
+    title: "Working Lights (LED)",
+    type: "critical",
+    image: "led.png",
+    items: [
+      "In working order (if LED's, 2 thirds must be working) ie. (If 9 LED's, 6 must be working)."
+    ]
+  },
+  {
+    title: "Rotating Light",
+    type: "warning",
+    image: "rotating-light.png",
+    items: [
+      "Flashing/rotating beacon light in working condition."
+    ]
+  },
+  {
+    title: "Grill (Sieve)",
+    type: "warning",
+    image: "grill.png",
+    items: [
+      "Check condition – no damage.",
+      "Not clogged.",
+      "Air is moving freely."
+    ]
+  },
+  {
+    title: "Battery",
+    type: "warning",
+    image: "battery.png",
+    items: [
+      "Secure.",
+      "Sufficient water.",
+      "Terminals clean/tight & covers on.",
+      "No exposed wiring."
+    ]
+  },
+  {
+    title: "Radiator",
+    type: "warning",
+    image: "radiator.png",
+    items: [
+      "Secure.",
+      "Water level correct.",
+      "No signs of leaking."
+    ]
+  },
+  {
+    title: "Air Pre-Cleaner",
+    type: "warning",
+    image: "air-pre-cleaner.png",
+    items: [
+      "Good condition – no damage/no sucking of air.",
+      "Clean and secure.",
+      "No dust in pre-cleaner bowl."
+    ]
+  },
+  {
+    title: "Fan Belt",
+    type: "warning",
+    image: "fan-belt.png",
+    items: [
+      "No squeaking.",
+      "No signs of damage."
+    ]
+  },
+  {
+    title: "Fuel & Oil levels",
+    type: "warning",
+    image: "fuel-oil-levels.png",
+    items: [
+      "Fuel and oil levels correct.",
+      "Fuel cap and hydraulic filler cap secure.",
+      "All dipsticks secure."
+    ]
+  },
+  {
+    title: "Fuel & Oil Leaks",
+    type: "warning",
+    image: "fuel-leaks.png",
+    items: [
+      "Fuel and oil pipes secure.",
+      "No worn or damaged pipes.",
+      "No visible fuel and oil leaks."
+    ]
+  },
+  {
+    title: "Wiring",
+    type: "critical",
+    image: "wiring.png",
+    items: [
+      "No loose, damaged or exposed wires.",
+      "No loose broken plugs."
+    ]
+  },
+  {
+    title: "Grease",
+    type: "warning",
+    image: "grease.png",
+    items: [
+      "Adequately greased chassis.",
+      "No missing or damaged grease nipples."
+    ]
+  },
+  {
+    title: "Boom Structure",
+    type: "critical",
+    image: "boom-structure.png",
+    items: [
+      "Not bent/cracked.",
+      "Pins all secured.",
+      "No loose/missing bolts."
+    ]
+  },
+  {
+    title: "Hydraulic Cylinders",
+    type: "warning",
+    image: "hydraulic-cylinders.png",
+    items: [
+      "Good condition – no damage.",
+      "No loose fittings.",
+      "No oil leaks.",
+      "No missing bolts/nuts."
+    ]
+  },
+  {
+    title: "Hydraulic Hoses and Fittings",
+    type: "warning",
+    image: "hydraulic-hoses.png",
+    items: [
+      "No excessive rubbing.",
+      "No loose brackets/bolts/nuts.",
+      "Smooth operation.",
+      "Jaws not cracked or broken."
+    ]
+  },
+  {
+    title: "Grab",
+    type: "warning",
+    image: "grab.png",
+    items: [
+      "No leaking/rubbing pipes.",
+      "No loose brackets/bolts/nuts.",
+      "Smooth operation.",
+      "Jaws not cracked."
+    ]
+  },
+  {
+    title: "Tracks & Sprockets",
+    type: "warning",
+    image: "tracks-sprockets.png",
+    items: [
+      "Tracks are aligned.",
+      "Not damaged or worn.",
+      "No cracks.",
+      "No bolts/pins loose or missing."
+    ]
+  },
+  {
+    title: "All Excess Loose Debris Removed Pre-Shift",
+    type: "warning",
+    image: "all-excess-loose-debris.png",
+    items: [
+      "Battery are/exhaust area.",
+      "Behind the boom/hydraulic cooler.",
+      "Engine bay."
+    ]
+  },
+  {
+    title: "Escape Hatch & Hammer",
+    type: "critical",
+    image: "escape-hatch.png",
+    items: [
+      "Test the escape hatch opening.",
+      "Escape hammer is easily accessible."
+    ]
+  },
+  {
+    title: "Communication",
+    type: "warning",
+    image: "communication.png",
+    items: [
+      "Radio or cell phone in working condition.",
+      "Handheld panic alarm functional."
+    ]
+  },
+  {
+    title: "Fire Systems",
+    type: "critical",
+    image: "fire-system.png",
+    items: [
+      "Gauge light working/no warning lights.",
+      "No damaged hoses.",
+      "Secured/service/seal in place.",
+      "Gauges in order."
     ]
   }
 ]
@@ -107,44 +348,49 @@ const sections = [
 // Flatten all items for progress and state
 const allItems = sections.flatMap(section => section.items)
 
-// Map section titles to illustrative images (use images from public/images when available)
-const sectionImages: Record<string, string | undefined> = {
-  "Fire & Safety Equipment": "fire-system.png",
-  "Operator Environment": "cabs.png",
-  "Fluids & Filters": "air-pre-cleaner.png",
-  "Electrical": "battery.png",
-  "Undercarriage & Attachments": "tracks-sprockets.png",
-  "Exhaust & Instruments": "exhaust.png",
-  "Brakes & Steering": "gauges.png",
-  "Wheels & Tyres": "tracks-sprockets.png",
-  "Lubrication & Leaks": "grease.png",
-  "Loader & Quick Hitch": "boom-structure.png",
-}
-
 export function ExcavatorLoaderForm() {
   const router = useRouter()
-  const pathname = usePathname()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submissionData, setSubmissionData] = useState<any>(null)
+  const [automaticNumber, setAutomaticNumber] = useState("")
 
   // ---------- Operator Information ----------
   const [formData, setFormData] = useState({
     operatorName: "",
     shift: "",
-    date: new Date().toISOString().split("T")[0],
+    date: "",
     hourMeterStart: "",
     hourMeterStop: "",
     validTrainingCard: "",
     unitNumber: "",
   })
 
-  // ---------- Auto‑generate Document Number ----------
-  const documentNo = useMemo(() => {
-    const date = new Date()
-    const year = date.getFullYear().toString().slice(-2)
-    const month = (date.getMonth() + 1).toString().padStart(2, "0")
-    const day = date.getDate().toString().padStart(2, "0")
-    const random = Math.floor(Math.random() * 1000).toString().padStart(3, "0")
-    return `EL-${year}${month}${day}-${random}`
+  // ---------- Document Reference Data ----------
+  const [docRefData, setDocRefData] = useState({
+    documentRefNo: "HSEMS / 8.1.19 / REG / 01",
+    author: "HSE MANAGER",
+    revision: "4",
+    creationDate: "2024-03-27",
+  })
+
+  // ---- Safe Client Pathname and Document Number ----
+  const [pathname, setPathname] = useState("")
+  const [documentNo, setDocumentNo] = useState("")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    if (typeof window !== "undefined") {
+      setPathname(window.location.pathname)
+      const date = new Date()
+      const generatedNo = `EL-${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`
+      setDocumentNo(generatedNo)
+      setFormData(prev => ({
+        ...prev,
+        date: date.toISOString().split("T")[0]
+      }))
+    }
   }, [])
 
   // ---------- Inspection Items ----------
@@ -291,24 +537,33 @@ export function ExcavatorLoaderForm() {
 
     setIsSubmitting(true)
 
+    // Generate Auto Number
+    const autoNum = Math.floor(2000 + Math.random() * 9000).toString()
+    setAutomaticNumber(autoNum)
+
     try {
+      const submission = {
+        formType: "excavator-loader",
+        formTitle: "Excavator Loader Pre-Shift Inspection Checklist",
+        submittedBy: formData.operatorName,
+        submittedAt: new Date().toISOString(),
+        hasDefects,
+        data: {
+          ...formData,
+          ...docRefData,
+          documentNo,
+          items,
+          hasDefects,
+          defectDetails,
+          signature: signatureImage,
+          automaticNumber: autoNum
+        },
+      }
+
       const response = await fetch("/api/submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "excavator-loader",
-          formTitle: "Excavator Loader Pre-Shift Inspection Checklist",
-          submittedBy: formData.operatorName,
-          hasDefects,
-          data: {
-            ...formData,
-            documentNo,
-            items,
-            hasDefects,
-            defectDetails,
-            signature: signatureImage,
-          },
-        }),
+        body: JSON.stringify(submission),
       })
 
       if (response.status === 401) {
@@ -318,8 +573,11 @@ export function ExcavatorLoaderForm() {
       }
 
       if (response.ok) {
+        const result = await response.json()
+        setSubmissionData({ ...submission, id: result.id })
         toast.success("Checklist submitted successfully!")
-        router.push("/")
+        setIsSubmitted(true)
+        window.scrollTo({ top: 0, behavior: "smooth" })
       } else if (response.status === 403) {
         toast.error("Forbidden — you do not have permission to submit this form")
       } else {
@@ -333,107 +591,103 @@ export function ExcavatorLoaderForm() {
     }
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-6 p-4 pb-12 lg:p-8 lg:pb-16">
-      {/* Back Button */}
-      <div className="flex items-center gap-3">
-        <Button type="button" variant="ghost" size="sm" asChild className="gap-2 text-muted-foreground">
-          <Link href="/">
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Link>
-        </Button>
+  if (isSubmitted && submissionData) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in duration-500">
+        <div className="rounded-full bg-green-100 p-6">
+          <CheckCircle2 className="h-16 w-16 text-green-600" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold text-gray-900">Submission Successful!</h2>
+          <p className="text-lg text-gray-500">The Excavator Loader Pre-Shift Inspection has been recorded.</p>
+          <p className="text-xl font-bold text-[#4e8c31] mt-2">Automatic Number: {automaticNumber}</p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+          <Button
+            className="bg-[#fbb016] hover:bg-[#e5a014] text-black font-bold gap-2 h-12 px-8"
+            onClick={() => exportSubmissionToPDF(submissionData)}
+          >
+            <FileText className="h-5 w-5" /> Download PDF
+          </Button>
+          <Button variant="outline" className="h-12 px-8 font-bold" onClick={() => router.push("/")}>
+            Back to Dashboard
+          </Button>
+        </div>
       </div>
+    )
+  }
 
-      {/* ===== HEADER ===== */}
-      <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="grid grid-cols-3 items-center gap-4">
-          {/* Left: logo */}
-          <div className="flex items-start">
+  return (
+    <div className="mx-auto max-w-5xl space-y-10 pb-20 p-6 md:p-10 bg-white shadow-xl rounded-none my-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Back Button */}
+        <div className="flex items-center gap-3">
+          <Button type="button" variant="ghost" size="sm" asChild className="gap-2 text-muted-foreground">
+            <Link href="/">
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Link>
+          </Button>
+        </div>
+
+        {/* ===== HEADER ===== */}
+        <div className="flex flex-col items-center space-y-4 border-b-2 border-gray-100 pb-6 mb-8">
+          <div className="flex w-full items-start justify-between">
             <Image
               src="/images/ringomode-logo.png"
-              alt="Ringomode DSP logo"
-              width={160}
-              height={50}
+              alt="Ringomode Logo"
+              width={200}
+              height={60}
               className="object-contain"
             />
-          </div>
-
-          {/* Center: headings (stacked, centered) */}
-          <div className="text-center">
-            <h1 className="text-xl font-semibold text-emerald-700">HSE Management System</h1>
-            <h2 className="text-xl font-semibold text-emerald-700 underline decoration-emerald-200 underline-offset-4">
-              Excavator Loader Pre-Shift Inspection
-            </h2>
-          </div>
-
-          {/* Right: completion */}
-          <div className="flex flex-col items-end">
-            <ChecklistStatusBadge completion={Math.round((checkedCount / allItems.length) * 100)} />
-            <span className="text-sm text-gray-600 mt-1">{Math.round((checkedCount / allItems.length) * 100)}% Complete</span>
+            <div className="flex-1 text-center">
+              <h1 className="text-2xl font-bold text-[#4e8c31] uppercase tracking-tight">HSE Management System</h1>
+              <h2 className="text-2xl font-bold text-[#4e8c31] underline decoration-[#4e8c31] underline-offset-8 mt-1">
+                Excavator Loader Pre-Shift Inspection Checklist
+              </h2>
+            </div>
+            <div className="w-[200px]" /> {/* Spacer for balance */}
           </div>
         </div>
-      </Card>
 
-      {/* ===== GENERAL INSTRUCTIONS ===== */}
-      <Card className="border-amber-200 bg-amber-50">
-        <CardHeader className="pb-2">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-amber-600" />
-            <CardTitle className="text-sm font-semibold text-amber-800">
-              General Instructions for Checklist:
-            </CardTitle>
+        {/* ===== GENERAL INSTRUCTIONS ===== */}
+        <div className="text-center space-y-2 mb-10">
+          <h3 className="text-lg font-bold text-[#4e8c31] underline decoration-[#4e8c31] underline-offset-4 mb-4">
+            General Instructions for Checklist:
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-bold text-gray-800">
+            <div className="underline decoration-blue-400">1. Select "Ok" if in order.</div>
+            <div className="underline decoration-blue-400">2. Select "Def" for any defect.</div>
+            <div className="underline decoration-blue-400">3. Select "N/A" if not applicable.</div>
           </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-amber-700">
-            The operator is to conduct a 10 minute physical walkabout of the machinery on a daily basis
-            and assess the condition of the attachment.
-          </p>
-          <p className="mt-2 text-sm text-amber-700">
-            Outcome to be detailed with an "Ok" if in order and a "Def" if defective. Defective outcomes
-            to be documented below.
-          </p>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* ===== OPERATOR INFORMATION ===== */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base text-foreground">Operator Information</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="operatorName" className="text-foreground">
-              Operators Name & Surname <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="operatorName"
+        {/* ===== METADATA GRID ===== */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6 mb-12">
+          {/* Row 1 */}
+          <div className="space-y-1">
+            <Label htmlFor="operatorName" className="text-sm font-bold text-gray-900">Operators Name & Surname</Label>
+            <Select
               value={formData.operatorName}
-              onChange={(e) => setFormData((p) => ({ ...p, operatorName: e.target.value }))}
-              placeholder="Enter operator name"
-              required
-            />
+              onValueChange={(val) => setFormData((p) => ({ ...p, operatorName: val }))}
+            >
+              <SelectTrigger id="operatorName" className="rounded-none border-gray-300">
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Operator A">Operator A</SelectItem>
+                <SelectItem value="Operator B">Operator B</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Auto-generated Document Number */}
-          <div className="space-y-2">
-            <Label htmlFor="documentNo" className="text-foreground">Document No.</Label>
-            <Input
-              id="documentNo"
-              value={documentNo}
-              readOnly
-              className="bg-muted"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="shift" className="text-foreground">Select Shift</Label>
+          <div className="space-y-1">
+            <Label htmlFor="shift" className="text-sm font-bold text-gray-900">Select Shift</Label>
             <Select
               value={formData.shift}
               onValueChange={(val) => setFormData((p) => ({ ...p, shift: val }))}
             >
-              <SelectTrigger id="shift">
+              <SelectTrigger id="shift" className="rounded-none border-gray-300">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
@@ -443,121 +697,102 @@ export function ExcavatorLoaderForm() {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="date" className="text-foreground">Date</Label>
-            <Input
-              id="date"
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData((p) => ({ ...p, date: e.target.value }))}
-            />
+          <div className="space-y-1">
+            <Label htmlFor="date" className="text-sm font-bold text-gray-900">Date</Label>
+            <div className="relative">
+              <Input
+                id="date"
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData((p) => ({ ...p, date: e.target.value }))}
+                className="rounded-none border-gray-300 pr-10"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="hourMeterStop" className="text-foreground">Hour Meter Stop</Label>
-            <Input
-              id="hourMeterStop"
-              type="number"
-              value={formData.hourMeterStop}
-              onChange={(e) => setFormData((p) => ({ ...p, hourMeterStop: e.target.value }))}
-              placeholder="e.g. 1262"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="hourMeterStart" className="text-foreground">Hour Meter Start</Label>
+          {/* Row 2 */}
+          <div className="space-y-1">
+            <Label htmlFor="hourMeterStart" className="text-sm font-bold text-gray-900">Hour Meter Start</Label>
             <Input
               id="hourMeterStart"
-              type="number"
               value={formData.hourMeterStart}
               onChange={(e) => setFormData((p) => ({ ...p, hourMeterStart: e.target.value }))}
-              placeholder="e.g. 1250"
+              placeholder=""
+              className="rounded-none border-gray-300"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="validTrainingCard" className="text-foreground">Valid Training Card (Exp Date)</Label>
+          <div className="space-y-1">
+            <Label htmlFor="hourMeterStop" className="text-sm font-bold text-gray-900">Hour Meter Stop</Label>
+            <Input
+              id="hourMeterStop"
+              value={formData.hourMeterStop}
+              onChange={(e) => setFormData((p) => ({ ...p, hourMeterStop: e.target.value }))}
+              placeholder=""
+              className="rounded-none border-gray-300"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="validTrainingCard" className="text-sm font-bold text-gray-900">Valid Training Card (Exp Date)</Label>
             <Input
               id="validTrainingCard"
               type="date"
               value={formData.validTrainingCard}
               onChange={(e) => setFormData((p) => ({ ...p, validTrainingCard: e.target.value }))}
+              className="rounded-none border-gray-300"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="unitNumber" className="text-foreground">
-              Unit Number <span className="text-destructive">*</span>
-            </Label>
+          {/* Row 3 */}
+          <div className="space-y-1">
+            <Label htmlFor="unitNumber" className="text-sm font-bold text-gray-900">Unit Number</Label>
             <Input
               id="unitNumber"
               value={formData.unitNumber}
               onChange={(e) => setFormData((p) => ({ ...p, unitNumber: e.target.value }))}
-              placeholder="e.g. EXC-L-001"
-              required
+              placeholder=""
+              className="rounded-none border-gray-300"
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* ===== QUICK REFERENCE ===== */}
-      <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="pt-6">
-          <h3 className="mb-2 text-sm font-semibold text-foreground">Quick Reference:</h3>
-          <div className="grid grid-cols-3 gap-2 text-center text-sm">
-            <div className="rounded-md bg-green-100 p-2 text-green-700">OK - In order</div>
-            <div className="rounded-md bg-red-100 p-2 text-red-700">DEF - Defective</div>
-            <div className="rounded-md bg-gray-100 p-2 text-gray-700">N/A - Not applicable</div>
-          </div>
-        </CardContent>
-      </Card>
+        <div className="w-full border-t border-gray-900 my-8" />
 
-      {/* ===== PROGRESS ===== */}
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">
-          Progress: {checkedCount} / {allItems.length} items checked
-        </span>
-        {allItemsChecked && (
-          <span className="flex items-center gap-1 text-[hsl(142,76%,36%)]">
-            <CheckCircle2 className="h-4 w-4" />
-            All items checked
-          </span>
-        )}
-      </div>
-      <div className="h-2 overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-full rounded-full bg-primary transition-all"
-          style={{ width: `${(checkedCount / allItems.length) * 100}%` }}
-        />
-      </div>
-
-      {/* ===== INSPECTION ITEMS – GROUPED BY SECTION ===== */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base text-foreground">Inspection Items</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {sections.map((section, sectionIdx) => {
-            const img = sectionImages[section.title]
-            return (
-              <div key={sectionIdx} className="space-y-2">
-                <h4 className="text-sm font-semibold text-primary">{section.title}</h4>
-
-                {/* render section image (when available) to mirror DocuWare visuals */}
-                {img && (
-                  <div className="flex justify-center py-6">
-                    <Image
-                      src={`/images/${img}`}
-                      alt={`${section.title} icon`}
-                      width={200}
-                      height={200}
-                      className="object-contain"
-                    />
+        {/* ===== INSPECTION ITEMS – GROUPED BY SECTION ===== */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base text-foreground">Inspection Items</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-12">
+            {sections.map((section: any, sectionIdx: number) => (
+              <div key={sectionIdx} className="space-y-6 border-b pb-12 last:border-b-0">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                  <h4 className="text-lg font-bold text-gray-900 uppercase tracking-tight">{section.title}:</h4>
+                  <div className="flex gap-6 items-center">
+                    {section.type === "critical" && <Skull className="h-14 w-14 text-black" strokeWidth={1} />}
+                    {section.type === "warning" && <AlertTriangle className="h-14 w-14 text-black" strokeWidth={1} />}
+                    {section.image && (
+                      <div className="relative">
+                        <Image
+                          src={`/images/${section.image}`}
+                          alt=""
+                          width={100}
+                          height={100}
+                          className="object-contain"
+                        />
+                        {section.title === "License and Phepha" && (
+                          <div className="absolute -right-2 -top-2 flex h-14 w-14 items-center justify-center rounded-full border-2 border-black bg-white p-1 text-center text-[9px] font-bold leading-tight">
+                            Phepha<br />Valid
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
 
-                <div className="ml-4 space-y-2">
-                  {section.items.map((item, itemIdx) => (
+                <div className="space-y-4 max-w-2xl">
+                  {section.items.map((item: string, itemIdx: number) => (
                     <ChecklistRadioGroup
                       key={`${sectionIdx}-${itemIdx}`}
                       label={item}
@@ -568,50 +803,53 @@ export function ExcavatorLoaderForm() {
                   ))}
                 </div>
               </div>
-            )
-          })}
-        </CardContent>
-      </Card>
+            ))}
+          </CardContent>
+        </Card>
 
-      {/* ===== DEFECTS SECTION ===== */}
-      {hasDefects && (
-        <Card className="border-destructive/30 bg-destructive/5">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base text-destructive">
-              <AlertTriangle className="h-5 w-5" />
-              Defects Detected
-            </CardTitle>
-            <CardDescription>
-              Are There Any Defects Selected
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Label className="text-sm font-medium">Details of Defects (If "Def" is selected, please specify defects here)</Label>
+        {/* ===== DEFECTS SECTION ===== */}
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label className="text-sm font-bold text-gray-900 uppercase">Are There Any Defects Selected</Label>
+            <Select
+              value={hasDefects ? "yes" : "no"}
+              onValueChange={(val) => {
+                if (val === "no") {
+                  // If switching to no, we should ideally clear defect flags or ignore it
+                  // But the logic is driven by the items themselves
+                }
+              }}
+            >
+              <SelectTrigger className="rounded-none border-gray-300 w-full md:w-1/3">
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-bold text-gray-900">Details of Defects (If "Def" is selected, please specify defects here)</Label>
             <Textarea
               value={defectDetails}
               onChange={(e) => setDefectDetails(e.target.value)}
-              placeholder={"Details of Defects (If \"Def\" is selected, please specify defects here)"}
+              placeholder=""
               rows={4}
-              className="resize-none mt-2"
+              className="resize-none rounded-none border-gray-300"
               required={hasDefects}
             />
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        </div>
 
-      {/* ===== SIGNATURE PAD ===== */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base text-foreground">Signature</CardTitle>
-          <CardDescription>
-            Draw your signature using your mouse or touchpad
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-col items-center">
+        {/* ===== SIGNATURE SECTION ===== */}
+        <div className="space-y-4">
+          <Label className="text-sm font-bold text-gray-900">Signature</Label>
+          <div className="border border-gray-300 p-1 w-fit">
             <canvas
               ref={canvasRef}
-              className="w-full max-w-[400px] h-[120px] border rounded-md touch-none cursor-crosshair"
+              className="w-[400px] h-[120px] touch-none cursor-crosshair bg-white"
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
@@ -621,63 +859,87 @@ export function ExcavatorLoaderForm() {
               onTouchEnd={stopDrawing}
               onTouchCancel={stopDrawing}
             />
-            <div className="flex gap-2 mt-3 self-start">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={clearSignature}
-                className="gap-2"
-              >
-                <Eraser className="h-4 w-4" />
-                Clear
-              </Button>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={clearSignature}
+              className="rounded-none border-gray-400 text-xs h-7 px-4 hover:bg-gray-100"
+            >
+              Clear
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                // Simple undo could be implemented if needed, but for now clear is standard
+                clearSignature();
+              }}
+              className="rounded-none border-gray-400 text-xs h-7 px-4 hover:bg-gray-100"
+            >
+              Undo
+            </Button>
+          </div>
+        </div>
+
+        {/* ===== FOOTER DOCUMENT DETAILS ===== */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 pt-8 border-t border-gray-200 items-end">
+          <div className="space-y-1">
+            <Label className="text-[10px] font-bold text-gray-900">Document Reference No.</Label>
+            <Input
+              value={docRefData.documentRefNo}
+              readOnly
+              className="rounded-none border-gray-300 bg-gray-100 text-xs h-9"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-[10px] font-bold text-gray-900">Author</Label>
+            <Input
+              value={docRefData.author}
+              readOnly
+              className="rounded-none border-gray-300 bg-gray-100 text-xs h-9"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-[10px] font-bold text-gray-900">Revision</Label>
+            <Input
+              value={docRefData.revision}
+              readOnly
+              className="rounded-none border-gray-300 bg-gray-100 text-xs h-9"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-[10px] font-bold text-gray-900">Creation Date</Label>
+            <div className="relative">
+              <Input
+                type="date"
+                value={docRefData.creationDate}
+                readOnly
+                className="rounded-none border-gray-300 bg-gray-100 text-xs h-9 pr-8"
+              />
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <div className="pb-2">
+            <div className="text-xs font-bold text-gray-900">
+              Automatic Number<br />
+              <span className="text-sm">{automaticNumber || "2095"}</span>
+            </div>
+          </div>
+        </div>
 
-      <Card className="border-muted/20 bg-muted/5">
-        <CardContent className="grid grid-cols-2 gap-4">
-          <div className="text-sm">
-            <div className="font-medium">Document Reference No</div>
-            <div className="text-xs text-muted-foreground mt-1">HSEMS / 8.1.19 / REG / 002</div>
-          </div>
-          <div className="text-sm">
-            <div className="font-medium">Author</div>
-            <div className="text-xs text-muted-foreground mt-1">HSE MANAGER</div>
-          </div>
-          <div className="text-sm">
-            <div className="font-medium">Revision</div>
-            <div className="text-xs text-muted-foreground mt-1">4</div>
-          </div>
-          <div className="text-sm">
-            <div className="font-medium">Creation Date</div>
-            <div className="text-xs text-muted-foreground mt-1">03/27/2020</div>
-          </div>
-          <div className="text-sm col-span-2">
-            <div className="font-medium">Automatic Number</div>
-            <div className="text-xs text-muted-foreground mt-1">{documentNo}</div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Separator />
-
-      {/* ===== SUBMIT BUTTONS ===== */}
-      <div className="flex items-center justify-end gap-4">
-        <Button type="button" variant="outline" asChild>
-          <Link href="/">Cancel</Link>
-        </Button>
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          <Send className="h-4 w-4" />
-          {isSubmitting ? "Submitting..." : "Submit Checklist"}
-        </Button>
-      </div>
-    </form>
+        <div className="flex justify-end pt-8">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-[#fbb016] hover:bg-[#e5a014] text-black font-bold h-10 px-12 rounded-none shadow-sm"
+          >
+            {isSubmitting ? "Submitting..." : "Submit"}
+          </Button>
+        </div>
+      </form>
+    </div>
   )
 }

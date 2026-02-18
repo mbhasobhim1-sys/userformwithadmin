@@ -60,11 +60,12 @@ export default function CintasignShorthaulForm() {
         const submission: Submission = {
             id: Math.random().toString(36).substring(2, 9),
             formType: "cintasign-shorthaul",
+            formTitle: "Cintasign Shorthaul Trip Sheet",
             submittedAt: new Date().toISOString(),
             submittedBy: "Trip Manager",
-            data: formData
+            data: formData,
+            hasDefects: false
         }
-
         const existing = JSON.parse(localStorage.getItem("form_submissions") || "[]")
         localStorage.setItem("form_submissions", JSON.stringify([...existing, submission]))
 

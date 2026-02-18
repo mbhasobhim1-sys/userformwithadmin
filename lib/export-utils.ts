@@ -1,4 +1,4 @@
-import type { Submission, CheckStatus } from "@/lib/types"
+import type { Submission, CheckStatus, FormType } from "@/lib/types"
 
 // ============================================================================
 // SECTIONS ARRAY – EXACTLY THE SAME AS YOUR WEB FORM (34 sections)
@@ -270,16 +270,39 @@ const skidderSections = [
 
 // Sections specifically for Excavator Loader (used by PDF export)
 const loaderSections = [
-  { title: "Fire & Safety Equipment", items: ["Fire extinguisher (serviced/sealed)", "First aid kit"] },
-  { title: "Operator Environment", items: ["Seat belt", "Mirrors", "Lights (head/tail/work)", "Horn / reverse alarm", "Windscreen / wipers", "Steps / handrails", "Guards / covers in place", "Cabin (clean/undamaged)"] },
-  { title: "Fluids & Filters", items: ["Engine oil level", "Hydraulic oil level", "Coolant level", "Fuel level", "Air filter indicator"] },
-  { title: "Electrical", items: ["Battery (condition/terminals)"] },
-  { title: "Undercarriage & Attachments", items: ["Tracks / undercarriage", "Bucket (teeth/cutting edge)", "Boom / stick / linkage pins", "Hydraulic hoses / fittings", "Slew ring / bearing", "Swing mechanism"] },
-  { title: "Exhaust & Instruments", items: ["Exhaust system", "Instruments / gauges", "Controls (levers/pedals)"] },
-  { title: "Brakes & Steering", items: ["Brakes (service/park)", "Steering"] },
-  { title: "Wheels & Tyres", items: ["Tyres / wheels (if applicable)"] },
-  { title: "Lubrication & Leaks", items: ["Grease points", "No leaks (oil/fuel/coolant)"] },
-  { title: "Loader & Quick Hitch", items: ["Loader arms / linkage", "Quick hitch (if fitted)", "Attachments secure"] },
+  { title: "License and Phepha", items: ["Phepha valid.", "Displayed and visible."] },
+  { title: "Protective Structure", items: ["No cracks/damages.", "No bolts missing/loose.", "Guards not damaged and intact."] },
+  { title: "Exhaust", items: ["Clamps secure.", "No excessive smoking/blowing."] },
+  { title: "Steps and Rails", items: ["Steps in good condition.", "Not loose/broken."] },
+  { title: "Cab", items: ["Cab neat and tidy.", "Door and mechanism working.", "Door rubber in good condition.", "Door handles functional."] },
+  { title: "Windscreen, Windows & Wipers", items: ["Clean/secure.", "No cracks or damages to windscreen.", "Window visibility not obscured by cracks.", "Wipers are working."] },
+  { title: "Air Conditioner", items: ["In working condition."] },
+  { title: "Seats", items: ["Condition of seat.", "Seat secured.", "Rotating lock functional.", "Seat adjuster functional."] },
+  { title: "Safety Belt", items: ["Safety belts bolted/secured.", "No damage/not extremely dirty/bleached or dyed.", "Retractor clip in order and clicks into place."] },
+  { title: "Hooter and Reverse Alarm", items: ["Hooter working and in good condition.", "Reverse alarm working."] },
+  { title: "Gauges", items: ["In working order.", "Any warning symbols/lights."] },
+  { title: "Hydraulic Controls", items: ["Not loose/responsive.", "No steering play.", "Rear steering.", "Pivot/steering ram pins not loose."] },
+  { title: "Hydraulic Head Cut Off (Bail Lever)", items: ["Operational (when it is disengaged, the hydraulics do not operate)."] },
+  { title: "Working Lights (LED)", items: ["In working order (if LED's, 2 thirds must be working) ie. (If 9 LED's, 6 must be working)."] },
+  { title: "Rotating Light", items: ["Flashing/rotating beacon light in working condition."] },
+  { title: "Grill (Sieve)", items: ["Check condition – no damage.", "Not clogged.", "Air is moving freely."] },
+  { title: "Battery", items: ["Secure.", "Sufficient water.", "Terminals clean/tight & covers on.", "No exposed wiring."] },
+  { title: "Radiator", items: ["Secure.", "Water level correct.", "No signs of leaking."] },
+  { title: "Air Pre-Cleaner", items: ["Good condition – no damage/no sucking of air.", "Clean and secure.", "No dust in pre-cleaner bowl."] },
+  { title: "Fan Belt", items: ["No squeaking.", "No signs of damage."] },
+  { title: "Fuel & Oil levels", items: ["Fuel and oil levels correct.", "Fuel cap and hydraulic filler cap secure.", "All dipsticks secure."] },
+  { title: "Fuel & Oil Leaks", items: ["Fuel and oil pipes secure.", "No worn or damaged pipes.", "No visible fuel and oil leaks."] },
+  { title: "Wiring", items: ["No loose, damaged or exposed wires.", "No loose broken plugs."] },
+  { title: "Grease", items: ["Adequately greased chassis.", "No missing or damaged grease nipples."] },
+  { title: "Boom Structure", items: ["Not bent/cracked.", "Pins all secured.", "No loose/missing bolts."] },
+  { title: "Hydraulic Cylinders", items: ["Good condition – no damage.", "No loose fittings.", "No oil leaks.", "No missing bolts/nuts."] },
+  { title: "Hydraulic Hoses and Fittings", items: ["No excessive rubbing.", "No loose brackets/bolts/nuts.", "Smooth operation.", "Jaws not cracked or broken."] },
+  { title: "Grab", items: ["No leaking/rubbing pipes.", "No loose brackets/bolts/nuts.", "Smooth operation.", "Jaws not cracked."] },
+  { title: "Tracks & Sprockets", items: ["Tracks are aligned.", "Not damaged or worn.", "No cracks.", "No bolts/pins loose or missing."] },
+  { title: "All Excess Loose Debris Removed Pre-Shift", items: ["Battery area/exhaust area.", "Behind the boom/hydraulic cooler.", "Engine bay."] },
+  { title: "Escape Hatch & Hammer", items: ["Test the escape hatch opening.", "Escape hammer is easily accessible."] },
+  { title: "Communication", items: ["Radio or cell phone in working condition.", "Handheld panic alarm functional."] },
+  { title: "Fire Systems", items: ["Gauge light working/no warning lights.", "No damaged hoses.", "Secured/service/seal in place.", "Gauges in order."] }
 ]
 
 const weeklyAssessmentSections = [
@@ -342,6 +365,572 @@ const dezziTimberTruckSections = [
   { title: "Emergency Triangles", items: ["2 x available as per legal requirements.", "In good condition."] },
 ]
 
+const ponsseBisonSections = [
+  {
+    title: "License and Phepha",
+    items: ["Phepha valid.", "Displayed and visible."]
+  },
+  {
+    title: "Protective Structure",
+    items: ["No cracks/damages.", "No bolts missing/loose.", "Guards not damaged and intact."]
+  },
+  {
+    title: "Exhaust",
+    items: ["Clamps secure.", "No excessive smoking/blowing."]
+  },
+  {
+    title: "Steps and Rails",
+    items: ["Steps in good condition.", "Not loose/broken."]
+  },
+  {
+    title: "Cab",
+    items: [
+      "Cab neat and tidy.",
+      "Door and mechanism working.",
+      "Door rubber in good condition.",
+      "Door handles functional."
+    ]
+  },
+  {
+    title: "Windscreen, Windows & Wipers",
+    items: [
+      "Clean/secure.",
+      "No cracks or damages to windscreen.",
+      "Window visibility not obscured by cracks.",
+      "Wipers are working."
+    ]
+  },
+  {
+    title: "Air Conditioner",
+    items: ["In working condition."]
+  },
+  {
+    title: "Seats",
+    items: [
+      "Condition of seat.",
+      "Seat secured.",
+      "Rotating lock functional.",
+      "Seat adjuster functional."
+    ]
+  },
+  {
+    title: "Safety Belt",
+    items: [
+      "Safety belts bolted/secured.",
+      "No damage/not extremely dirty/bleached or dyed.",
+      "Retractor clip in order and clicks into place."
+    ]
+  },
+  {
+    title: "Hooter and Reverse Alarm",
+    items: ["Hooter working and in good condition.", "Reverse alarm working."]
+  },
+  {
+    title: "Gauges",
+    items: ["In working order.", "Any warning symbols/lights."]
+  },
+  {
+    title: "Hydraulic Controls",
+    items: [
+      "Not loose/responsive.",
+      "No steering play.",
+      "Rear steering.",
+      "Pivot/steering ram pins not loose."
+    ]
+  },
+  {
+    title: "Safety/Emergency Cut Out System",
+    items: ["Fitted.", "Functional."]
+  },
+  {
+    title: "Working Lights (LED)",
+    items: [
+      "In working order (if LED's, 2 thirds must be working) ie. (If 9 LED's, 6 must be working)."
+    ]
+  },
+  {
+    title: "Rotating Light",
+    items: ["Flashing/rotating beacon light in working condition."]
+  },
+  {
+    title: "Park Brake",
+    items: ["In working order.", "No damages."]
+  },
+  {
+    title: "Battery",
+    items: [
+      "Secure.",
+      "Sufficient water.",
+      "Terminals clean/tight & covers on.",
+      "No exposed wiring."
+    ]
+  },
+  {
+    title: "Radiator",
+    items: ["Secure.", "Water level correct.", "No signs of leaking."]
+  },
+  {
+    title: "Fan Belt",
+    items: ["No squeaking.", "No signs of damage."]
+  },
+  {
+    title: "Wiring",
+    items: ["No loose, damaged or exposed wires.", "No loose broken plugs."]
+  },
+  {
+    title: "Oil/Fluid/Air Levels",
+    items: [
+      "Check all oil levels/brake fluid levels/clutch fluid levels are correct.",
+      "Check air gauge in order."
+    ]
+  },
+  {
+    title: "Fuel & Oil Leaks",
+    items: [
+      "Fuel and oil pipes secure.",
+      "No worn or damaged pipes.",
+      "No visible fuel and oil leaks."
+    ]
+  },
+  {
+    title: "Grease",
+    items: ["Adequately greased chassis.", "No missing or damaged grease nipples."]
+  },
+  {
+    title: "Tyres",
+    items: [
+      "No excessive wear and tear.",
+      "No loose/missing/damaged nuts.",
+      "Wheel nuts secure."
+    ]
+  },
+  {
+    title: "Headboard and Uprights",
+    items: ["Uprights secure.", "No cracks."]
+  },
+  {
+    title: "Boom Structure",
+    items: [
+      "Not bent/cracked.",
+      "Pins all secured.",
+      "No loose/missing bolts."
+    ]
+  },
+  {
+    title: "Hydraulic Cylinders",
+    items: [
+      "Good condition – no damage.",
+      "No loose fittings.",
+      "No oil leaks.",
+      "No missing bolts/nuts."
+    ]
+  },
+  {
+    title: "Hydraulic Hoses and Fittings",
+    items: [
+      "No excessive rubbing.",
+      "No loose brackets/bolts/nuts.",
+      "Smooth operation.",
+      "Jaws not cracked or broken."
+    ]
+  },
+  {
+    title: "Grab",
+    items: [
+      "No leaking/rubbing pipes.",
+      "No loose brackets/bolts/nuts.",
+      "Smooth operation.",
+      "Jaws not cracked."
+    ]
+  },
+  {
+    title: "All Excess Loose Debris Removed Pre-Shift",
+    items: [
+      "Battery are/exhaust area.",
+      "Behind the boom/hydraulic cooler.",
+      "Engine bay."
+    ]
+  },
+  {
+    title: "Visibility Triangle",
+    items: [
+      "On the back of the machine.",
+      "Secure.",
+      "Clean and visible."
+    ]
+  },
+  {
+    title: "Communication",
+    items: [
+      "Radio or cell phone in working condition.",
+      "Handheld panic alarm functional."
+    ]
+  },
+  {
+    title: "Dafo Fire Suppression & 1 x 6kg Fire Extinguisher",
+    items: [
+      "Gauge light working to confirm power.",
+      "No warning lights showing.",
+      "No damaged hoses.",
+      "Test system on internal panel and fire extinguisher.",
+      "Secured/service/seal in place.",
+      "Gauges in order."
+    ]
+  },
+  {
+    title: "Escape Hatch & Hammer",
+    items: ["Test the escape hatch opening.", "Escape hammer is easily accessible."]
+  }
+]
+
+const selfLoadingForwarderSections = [
+  {
+    title: "License and Phepha",
+    items: ["Phepha valid.", "Displayed and visible."]
+  },
+  {
+    title: "Protective Structure",
+    items: ["No cracks/damages.", "No bolts missing/loose.", "Guards not damaged and intact."]
+  },
+  {
+    title: "Exhaust",
+    items: ["Clamps secure.", "No excessive smoking/blowing."]
+  },
+  {
+    title: "Steps and Rails",
+    items: ["Steps in good condition.", "Not loose/broken."]
+  },
+  {
+    title: "Cab",
+    items: [
+      "Cab neat and tidy.",
+      "Door and mechanism working.",
+      "Door rubber in good condition.",
+      "Door handles functional."
+    ]
+  },
+  {
+    title: "Windscreen, Windows & Wipers",
+    items: [
+      "Clean/secure.",
+      "No cracks or damages to windscreen.",
+      "Window visibility not obscured by cracks.",
+      "Wipers are working."
+    ]
+  },
+  {
+    title: "Air Conditioner",
+    items: ["In working condition."]
+  },
+  {
+    title: "Seats",
+    items: [
+      "Condition of seat.",
+      "Seat secured.",
+      "Rotating lock functional.",
+      "Seat adjuster functional."
+    ]
+  },
+  {
+    title: "Safety Belt",
+    items: [
+      "Safety belts bolted/secured.",
+      "No damage/not extremely dirty/bleached or dyed.",
+      "Retractor clip in order and clicks into place."
+    ]
+  },
+  {
+    title: "Hooter and Reverse Alarm",
+    items: ["Hooter working and in good condition.", "Reverse alarm working."]
+  },
+  {
+    title: "Gauges",
+    items: ["In working order.", "Any warning symbols/lights."]
+  },
+  {
+    title: "Hydraulic Controls",
+    items: [
+      "Not loose/responsive.",
+      "No steering play.",
+      "Rear steering.",
+      "Pivot/steering ram pins not loose."
+    ]
+  },
+  {
+    title: "Safety/Emergency Cut Out System (Emergency Button)",
+    items: ["Fitted.", "Functional."]
+  },
+  {
+    title: "Working Lights (LED)",
+    items: [
+      "In working order (if LED's, 2 thirds must be working) ie. (If 9 LED's, 6 must be working)."
+    ]
+  },
+  {
+    title: "Park Brake",
+    items: ["In working order.", "No damages."]
+  },
+  {
+    title: "Battery",
+    items: [
+      "Secure.",
+      "Sufficient water.",
+      "Terminals clean/tight & covers on.",
+      "No exposed wiring."
+    ]
+  },
+  {
+    title: "Radiator",
+    items: ["Secure.", "Water level correct.", "No signs of leaking."]
+  },
+  {
+    title: "Fan Belt",
+    items: ["No squeaking.", "No signs of damage."]
+  },
+  {
+    title: "Wiring",
+    items: ["No loose, damaged or exposed wires.", "No loose broken plugs."]
+  },
+  {
+    title: "Fuel & Oil levels",
+    items: [
+      "Fuel and oil levels correct.",
+      "Fuel cap and hydraulic filler cap secure.",
+      "All dipsticks secure."
+    ]
+  },
+  {
+    title: "Fuel & Oil Leaks",
+    items: [
+      "Fuel and oil pipes secure.",
+      "No worn or damaged pipes.",
+      "No visible fuel and oil leaks."
+    ]
+  },
+  {
+    title: "Grease",
+    items: ["Adequately greased chassis.", "No missing or damaged grease nipples."]
+  },
+  {
+    title: "Tyres",
+    items: [
+      "No excessive wear and tear.",
+      "No loose/missing/damaged nuts.",
+      "Wheel nuts secure."
+    ]
+  },
+  {
+    title: "Headboard and Uprights",
+    items: ["Uprights secure.", "No cracks."]
+  },
+  {
+    title: "Boom Structure",
+    items: [
+      "Not bent/cracked.",
+      "Pins all secured.",
+      "No loose/missing bolts."
+    ]
+  },
+  {
+    title: "Hydraulic Cylinders",
+    items: [
+      "Good condition – no damage.",
+      "No loose fittings.",
+      "No oil leaks.",
+      "No missing bolts/nuts."
+    ]
+  },
+  {
+    title: "Hydraulic Hoses and Fittings",
+    items: [
+      "No excessive rubbing.",
+      "No loose brackets/bolts/nuts.",
+      "Smooth operation.",
+      "Jaws not cracked or broken."
+    ]
+  },
+  {
+    title: "Grab",
+    items: [
+      "No leaking/rubbing pipes.",
+      "No loose brackets/bolts/nuts.",
+      "Smooth operation.",
+      "Jaws not cracked."
+    ]
+  },
+  {
+    title: "All Excess Loose Debris Removed Pre-Shift",
+    items: [
+      "Battery are/exhaust area.",
+      "Behind the boom/hydraulic cooler.",
+      "Engine bay."
+    ]
+  },
+  {
+    title: "Communication",
+    items: [
+      "Radio or cell phone in working condition.",
+      "Handheld panic alarm functional."
+    ]
+  },
+  {
+    title: "Fire Systems",
+    items: [
+      "Gauge light working/no warning lights.",
+      "No damaged hoses.",
+      "Secured/service/seal in place.",
+      "Gauges in order."
+    ]
+  },
+  {
+    title: "Escape Hatch",
+    items: ["Able to reach fasteners and not jammed."]
+  }
+]
+
+const serviceDieselTruckSections = [
+  {
+    title: "Vehicle License and Phepha",
+    items: ["Vehicle license valid.", "PHEPHA valid.", "Displayed and visible.", "Number plates secure."]
+  },
+  {
+    title: "Body of Cab / Tank",
+    items: ["Body work not damaged.", "No new dents or scratches."]
+  },
+  {
+    title: "Exhaust",
+    items: ["Clamps secure.", "No excessive smoking/blowing."]
+  },
+  {
+    title: "Steps and Rails",
+    items: ["Steps in good condition.", "Not loose/broken."]
+  },
+  {
+    title: "Cab",
+    items: ["Cab neat and tidy.", "Door and mechanism working.", "Door rubber in good condition.", "Door handles functional."]
+  },
+  {
+    title: "Mirrors",
+    items: ["Mirrors in good condition.", "Not damaged.", "Adequately secured – not loose."]
+  },
+  {
+    title: "Windscreen, Windows & Wipers",
+    items: ["Clean/secure.", "No cracks or damages to windscreen.", "Window visibility not obscured by cracks.", "Wipers are working."]
+  },
+  {
+    title: "Air Conditioner",
+    items: ["In working condition."]
+  },
+  {
+    title: "Seats",
+    items: ["Condition of seat.", "Seat secured.", "Rotating lock functional.", "Seat adjuster functional."]
+  },
+  {
+    title: "Safety Belt",
+    items: ["Safety belts bolted/secured.", "No damage/not extremely dirty/bleached or dyed.", "Retractor clip in order and clicks into place."]
+  },
+  {
+    title: "Steering",
+    items: ["Not loose/responsive.", "No steering play – Not > than 15 degrees.", "Power steering in order/no leaks."]
+  },
+  {
+    title: "Hooter and Reverse Alarm",
+    items: ["Hooter working and in good condition.", "Reverse alarm working."]
+  },
+  {
+    title: "Gauges",
+    items: ["In working order.", "Any warning symbols/lights."]
+  },
+  {
+    title: "Clutch",
+    items: ["Clutch taking correctly – not slipping.", "In working order."]
+  },
+  {
+    title: "Lamps",
+    items: ["Dim/bright lights/brake lights/indicators/hazards/reflector in working order."]
+  },
+  {
+    title: "Foot Brake",
+    items: ["In working order.", "Check brake fluid levels in order."]
+  },
+  {
+    title: "Hand Brake/ Brake Cable",
+    items: ["In working order.", "No damage."]
+  },
+  {
+    title: "Battery",
+    items: ["Secure.", "Sufficient water.", "Terminals clean/tight & covers on.", "No exposed wiring."]
+  },
+  {
+    title: "Radiator",
+    items: ["Secure.", "Water level correct.", "No signs of leaking."]
+  },
+  {
+    title: "Air Tank Drain",
+    items: ["Good condition.", "Drained daily."]
+  },
+  {
+    title: "Oil/Fluid/Air Levels",
+    items: ["Check all oil levels/brake fluid levels/clutch fluid levels are correct.", "Check air gauge in order."]
+  },
+  {
+    title: "Fuel, Air and Oil leaks",
+    items: ["No more than 4 drops of oil per minute."]
+  },
+  {
+    title: "Differentials",
+    items: ["No Leaks.", "No Damages."]
+  },
+  {
+    title: "Tyres",
+    items: ["No external damage.", "No foreign objects in tyre thread or between the tyres.", "No cracks or bulges.", "No uneven tread wear or excessive wear or tear.", "No loose/missing/damaged nuts.", "Wheel nuts secure."]
+  },
+  {
+    title: "Mud Flaps",
+    items: ["Available as per legal requirements.", "In good condition – not damaged."]
+  },
+  {
+    title: "All Excess Loose Debris Removed Pre-Shift",
+    items: ["Battery are/exhaust area.", "Behind the boom/hydraulic cooler.", "Engine bay."]
+  },
+  {
+    title: "Storage Lockers (Doors)",
+    items: ["Doors are closed and secure before moving.", "Hinges of doors in good condition.", "No damage to storage lockers.", "Containers adequately stored (no leaking)."]
+  },
+  {
+    title: "Tool kit (In Compartment)",
+    items: ["1 x flat screwdriver.", "1 x 10/12 inch spanner.", "1 x 14/17 inch spanner."]
+  },
+  {
+    title: "Chevron, Reflectors and Tape",
+    items: ["Securely mounted.", "In good condition."]
+  },
+  {
+    title: "Hazchem Signage",
+    items: ["In place and clearly visible – not faded.", "Clean."]
+  },
+  {
+    title: "Spill Kit (Monthly Checklist in Place and Completed)",
+    items: ["Service truck spill kit in place.", "Spill kit contents in order (monthly checklist)."]
+  },
+  {
+    title: "Communication",
+    items: ["Radio or cell phone in working condition.", "Handheld panic alarm functional."]
+  },
+  {
+    title: "Chocks",
+    items: ["2 x chocks available.", "In good condition."]
+  },
+  {
+    title: "Emergency Triangles",
+    items: ["2 x available as per legal requirements.", "In good condition."]
+  },
+  {
+    title: "Fire Extinguisher (2 x 9Kg DCP) & (1 x 9Kg CO2) Outside",
+    items: ["Secure – brackets not broken.", "Secured/seal in place.", "Gauges in order.", "Fire equipment signage in place (not faded)."]
+  }
+]
+
 // ============================================================================
 // ICON MAPPING – maps section titles to image filenames
 // ============================================================================
@@ -396,7 +985,95 @@ const iconMap: Record<string, string> = {
   "Emergency Triangles": "emergency-triangles.png",
   "Tackle": "hydraulic-hoses.png",
   "Foot Brake": "excavator-loader-brakes-steering.png",
-  "Tyres": "excavator-loader-wheels-tyres.png"
+  "Tyres": "excavator-loader-wheels-tyres.png",
+  // Diesel Cart Trailer icons
+  "Number Plate": "number-plate.png",
+  "Trailer Body": "trailer-body.png",
+  "Diesel Tank": "diesel-tank.png",
+  "Hose Pipe & Nozzle": "fuel-nozzle.png",
+  "Trailer Plug & Electric Wiring": "trailer-plug.png",
+  "Hand Brake/ Brake Cable": "brake-cable.png",
+  "U-Bolts": "trailer-u-bolts.png",
+  "Wheel Rims": "wheel-rim.png",
+  "Wheel Nuts": "wheel-nuts.png",
+  "Mud Flaps": "trailer-mud-flaps.png",
+  "Drawbar": "trailer-drawbar.png",
+  "Safety Chain": "safety-chain.png",
+  "Jockey Wheel": "trailer-jockey-wheel.png",
+  "Land Gear, Wooden Stands Not Permitted": "trailer-land-gear.png",
+  "Hazchem Signage": "hazchem-signage.png",
+  "Fire Extinguisher (1 x 1.5kg extinguisher)": "fire-system.png",
+  // Ponsse Bison icons
+  "Grab": "harvester-head.png",
+  "Safety/Emergency Cut Out System": "emergency-triangles.png",
+  "Park Brake": "bail-lever.png",
+  "Dafo Fire Suppression & 1 x 6kg Fire Extinguisher": "excavator-loader-fire-safety.png",
+  "Safety/Emergency Cut Out System (Emergency Button)": "bail-lever.png",
+  "Escape Hatch": "escape-hatch.png",
+  // Service Diesel Truck specific/new icons (not in main block)
+  "Vehicle License and Phepha": "license2.png",
+  "Body of Cab / Tank": "service-truck-body.png",
+  "Clutch": "clutch-pedal.png",
+  "Lamps": "led.png",
+  "Differential": "differential.png",
+  "Differentials": "differential.png",
+  "Storage Lockers (Doors)": "storage-lockers.png",
+  "Tool kit (In Compartment)": "excavator-loader-loader-quick-hitch.png",
+  "Spill Kit (Monthly Checklist in Place and Completed)": "spill-kit.png",
+  "Fire Extinguisher (2 x 9Kg DCP) & (1 x 9Kg CO2) Outside": "fire-extinguisher-bottle.png",
+  // Water Cart Trailer icons
+  "Water Tank": "trailer-body.png",
+  "Straps & Ratchets": "trailer-safety-chain.png",
+  "Signage": "hazchem-signage.png",
+  "Fire Extinguishers (One in place)": "fire-system.png",
+  "General Condition": "trailer-body.png",
+  "On/Off Switch": "hydraulic-controls.png",
+  "Pull Start Rope": "fan-belt.png",
+  "Fuel Tank": "diesel-tank.png",
+  "Fuel levels": "fuel-oil-levels.png",
+  "Engine Oil": "excavator-loader-fluids-filters.png",
+  "Air Filter": "air-pre-cleaner.png",
+  "Guards": "protective-structure.png",
+  "Pressure Hose": "hydraulic-hoses.png",
+  "Hose Couplings / Quick Coupler": "hydraulic-hoses.png",
+  "Pressure Gun": "hydraulic-hoses.png",
+  "Lance (Wand)": "hydraulic-hoses.png",
+  "Trailer Doors/Opening Flaps": "trailer-doors.png"
+}
+
+const trailerExclLabourSections = [
+  { title: "License and Phepha", items: ["Phepha valid", "Displayed and visible"] },
+  { title: "Number Plate", items: ["Number plate in place", "Clean & visible"] },
+  { title: "Trailer Body", items: ["No damage", "No rust", "Structure secure"] },
+  { title: "Trailer Doors/Opening Flaps", items: ["Opening flaps secure", "Locks/latches working"] },
+  { title: "Steps and Rails", items: ["No damage", "No bolts missing/loose", "Secure"] },
+  { title: "Chevron, Reflectors and Tape", items: ["Clean & visible", "No damage", "Secured"] },
+  { title: "Working Lights", items: ["In working order", "Indicators", "Brake lights", "Tail lights"] },
+  { title: "Trailer Plug/Electric Wiring & Connectors", items: ["Connectors working", "No exposed wires"] },
+  { title: "Hand Brake/ Brake Cable", items: ["Working and secure"] },
+  { title: "U-Bolts", items: ["Secure", "No missing nuts"] },
+  { title: "Grease", items: ["Adequately greased", "Grease nipples intact"] },
+  { title: "Tyres", items: ["No wear and tear", "Thread depth in order", "No cuts"] },
+  { title: "Wheel Rims", items: ["Not damaged", "No cracks"] },
+  { title: "Wheel Nuts", items: ["Wheel nuts secure", "None missing"] },
+  { title: "Mud Flaps", items: ["In place", "Secure"] },
+  { title: "Drawbar", items: ["Drawbar and eye in good condition", "Drawbar bolts in place and secure", "No metal fatigue"] },
+  { title: "Safety Chain", items: ["In place", "Good condition", "Not damaged and secured"] },
+  { title: "Jockey Wheel", items: ["Jockey wheel in good condition", "No signs of rust", "Adequately secured to trailer", "Correct rating (GCM) for the trailer"] },
+  { title: "Land Gear, Wooden Stands Not Permitted", items: ["Adequate for the tare & GVM of trailer", "Base plate in place", "No damage or rust"] },
+  { title: "Chocks", items: ["2 x chocks available", "In good condition"] },
+  { title: "Emergency Triangles", items: ["2 x available as per legal requirements", "In good condition"] },
+  { title: "Fire Extinguisher (1 x 9kg extinguisher)", items: ["In working order", "Serviced", "Gauge in order", "Seal in place"] },
+]
+
+const trailerExclLabourDangerTypeMap: Record<string, "skull" | "warning"> = {
+  "Drawbar": "skull",
+  "Safety Chain": "skull",
+  "Jockey Wheel": "skull",
+  "Land Gear, Wooden Stands Not Permitted": "skull",
+  "Chocks": "warning",
+  "Emergency Triangles": "skull",
+  "Fire Extinguisher (1 x 9kg extinguisher)": "skull"
 }
 
 // Maps Dezzi section titles to high-risk danger icons
@@ -431,6 +1108,59 @@ const skidderDangerTypeMap: Record<string, "skull" | "warning"> = {
   "Fire Extinguisher": "skull"
 }
 
+// Maps Ponsse Bison section titles to high-risk danger icons
+const ponsseBisonDangerTypeMap: Record<string, "skull" | "warning"> = {
+  "License and Phepha": "skull",
+  "Protective Structure": "skull",
+  "Exhaust": "skull",
+  "Safety Belt": "skull",
+  "Safety/Emergency Cut Out System": "skull",
+  "Working Lights (LED)": "skull",
+  "Park Brake": "skull",
+  "Wiring": "skull",
+  "Tyres": "skull",
+  "Headboard and Uprights": "skull",
+  "Boom Structure": "skull",
+  "Dafo Fire Suppression & 1 x 6kg Fire Extinguisher": "skull",
+  "Escape Hatch & Hammer": "skull"
+}
+
+const selfLoadingForwarderDangerTypeMap: Record<string, "skull" | "warning"> = {
+  "License and Phepha": "skull",
+  "Protective Structure": "skull",
+  "Exhaust": "skull",
+  "Safety Belt": "skull",
+  "Safety/Emergency Cut Out System (Emergency Button)": "skull",
+  "Working Lights (LED)": "skull",
+  "Park Brake": "skull",
+  "Wiring": "skull",
+  "Tyres": "skull",
+  "Headboard and Uprights": "skull",
+  "Boom Structure": "skull",
+  "Fire Systems": "skull",
+  "Escape Hatch": "skull"
+}
+
+// Maps Service Diesel Truck sections to danger icons
+const serviceDieselTruckDangerTypeMap: Record<string, "skull" | "warning"> = {
+  "Vehicle License and Phepha": "skull",
+  "Exhaust": "skull",
+  "Safety Belt": "skull",
+  "Steering": "skull",
+  "Lamps": "skull",
+  "Foot Brake": "skull",
+  "Hand Brake/ Brake Cable": "skull",
+  "Fuel, Air and Oil leaks": "skull",
+  "Tyres": "skull",
+  "Chevron, Reflectors and Tape": "skull",
+  "Hazchem Signage": "skull",
+  "Spill Kit (Monthly Checklist in Place and Completed)": "warning",
+  "Communication": "warning",
+  "Chocks": "warning",
+  "Emergency Triangles": "skull",
+  "Fire Extinguisher (2 x 9Kg DCP) & (1 x 9Kg CO2) Outside": "skull"
+}
+
 // ============================================================================
 // HELPER: Load any image from public/images/ as base64 (server + client)
 // ============================================================================
@@ -460,6 +1190,150 @@ async function getImageBase64(filename: string): Promise<string> {
 
 // ============================================================================
 // FORM LABEL HELPERS (unchanged)
+const dieselCartTrailerSections = [
+  {
+    title: "License and Phepha",
+    items: ["Phepha valid.", "Displayed and visible."]
+  },
+  {
+    title: "Number Plate",
+    items: ["In place and secure.", "Visible (clean and numbering clear)."]
+  },
+  {
+    title: "Trailer Body",
+    items: ["Frame in good condition (no rust).", "No damage."]
+  },
+  {
+    title: "Diesel Tank",
+    items: ["In good condition.", "No rusts, dents or leaks.", "Cap on tank in place and seal intact (no rag/paper to be used as a cap)."]
+  },
+  {
+    title: "Hose Pipe & Nozzle",
+    items: ["In working order.", "No leaks or cracks."]
+  },
+  {
+    title: "Chevron, Reflectors and Tape",
+    items: ["Securely mounted.", "In good condition."]
+  },
+  {
+    title: "Working Lights",
+    items: ["Brake lights, indicators and hazards in working condition.", "No damage."]
+  },
+  {
+    title: "Trailer Plug & Electric Wiring",
+    items: ["Tension in order.", "Good condition and adequately guarded.", "No exposed wiring.", "No joints to cable."]
+  },
+  {
+    title: "Hand Brake/ Brake Cable",
+    items: ["In working order.", "No damage."]
+  },
+  {
+    title: "Wiring",
+    items: ["No loose, damaged or exposed wires.", "No loose broken plugs."]
+  },
+  {
+    title: "Grease",
+    items: ["Adequately greased chassis.", "No missing or damaged grease nipples."]
+  },
+  {
+    title: "U-Bolts",
+    items: ["In good condition.", "Bolts tightened and secure."]
+  },
+  {
+    title: "Tyres",
+    items: ["Tyres in good condition.", "Air pressure correct.", "Tyres not smooth.", "No damage to the tyres."]
+  },
+  {
+    title: "Wheel Rims",
+    items: ["In good condition.", "No damage."]
+  },
+  {
+    title: "Wheel Nuts",
+    items: ["Wheel nuts all fastened.", "All wheel nuts in place."]
+  },
+  {
+    title: "Mud Flaps",
+    items: ["Available as per legal requirements.", "In good condition – not damaged."]
+  },
+  {
+    title: "Drawbar",
+    items: ["Drawbar and eye in good condition.", "Drawbar bolts in place and secure.", "No metal fatigue."]
+  },
+  {
+    title: "Safety Chain",
+    items: ["In place.", "Good condition.", "Not damaged and secured."]
+  },
+  {
+    title: "Jockey Wheel",
+    items: ["Jockey wheel in good condition.", "No signs of rust.", "Adequately secured to trailer.", "Correct rating (GCM) for the trailer."]
+  },
+  {
+    title: "Land Gear, Wooden Stands Not Permitted",
+    items: ["In good condition (no rust).", "Adequately secured to trailer.", "Correct rating (GCM) for the trailer."]
+  },
+  {
+    title: "Hazchem Signage",
+    items: ["In place and clearly visible – not faded.", "Clean."]
+  },
+  {
+    title: "Chocks",
+    items: ["2 x chocks available.", "In good condition."]
+  },
+  {
+    title: "Emergency Triangles",
+    items: ["2 x available as per legal requirements.", "In good condition."]
+  },
+  {
+    title: "Fire Extinguisher (1 x 1.5kg extinguisher)",
+    items: ["Mounted and secured.", "Serviced.", "Gauge in order.", "Seal in place."]
+  }
+]
+
+const waterCartInspectionSections = [
+  { title: "License and Phepha", items: ["License and Phepha"] },
+  { title: "Number Plate", items: ["Number Plate"] },
+  { title: "Trailer Body", items: ["Trailer Body"] },
+  { title: "Water Tank", items: ["Water Tank"] },
+  { title: "Hose Pipe & Nozzle", items: ["Hose Pipe & Nozzle"] },
+  { title: "Chevron, Reflectors and Tape", items: ["Chevron, Reflectors and Tape"] },
+  { title: "Working Lights", items: ["Working Lights"] },
+  { title: "Trailer Plug & Electric Wiring", items: ["Trailer Plug & Electric Wiring"] },
+  { title: "U-Bolts", items: ["U-Bolts"] },
+  { title: "Straps & Ratchets", items: ["Straps & Ratchets"] },
+  { title: "Safety Chain", items: ["Safety Chain"] },
+  { title: "Tyres", items: ["Tyres"] },
+  { title: "Wheel Rims", items: ["Wheel Rims"] },
+  { title: "Wheel Nuts", items: ["Wheel Nuts"] },
+  { title: "Mud Flaps", items: ["Mud Flaps"] },
+  { title: "Drawbar", items: ["Drawbar"] },
+  { title: "Jockey Wheel", items: ["Jockey Wheel"] },
+  { title: "Land Gear, Wooden Stands Not Permitted", items: ["Land Gear, Wooden Stands Not Permitted"] },
+  { title: "Signage", items: ["Signage"] },
+  { title: "Chocks", items: ["Chocks"] },
+  { title: "Emergency Triangles", items: ["Emergency Triangles"] },
+  { title: "Fire Extinguishers (One in place)", items: ["Fire Extinguishers (One in place)"] },
+]
+
+const pressureWasherChecklistSections = [
+  { title: "General Condition", items: ["General Condition"] },
+  { title: "On/Off Switch", items: ["On/Off Switch"] },
+  { title: "Pull Start Rope", items: ["Pull Start Rope"] },
+  { title: "Fuel Tank", items: ["Fuel Tank"] },
+  { title: "Fuel levels", items: ["Fuel levels"] },
+  { title: "Engine Oil", items: ["Engine Oil"] },
+  { title: "Air Filter", items: ["Air Filter"] },
+  { title: "Guards", items: ["Guards"] },
+  { title: "Pressure Hose", items: ["Pressure Hose"] },
+  { title: "Hose Couplings / Quick Coupler", items: ["Hose Couplings / Quick Coupler"] },
+  { title: "Pressure Gun", items: ["Pressure Gun"] },
+  { title: "Lance (Wand)", items: ["Lance (Wand)"] },
+]
+
+const waterCartTrailerSections = [
+  ...waterCartInspectionSections,
+  ...pressureWasherChecklistSections
+]
+
 // ============================================================================
 // Extended for new forms
 function formTypeLabel(type: string) {
@@ -492,6 +1366,12 @@ function formTypeLabel(type: string) {
       return "Motorized Equipment/Vehicle Job Card"
     case "water-cart-trailer-pressure-washer":
       return "Water Cart Trailer & Pressure Washer Checklist"
+    case "diesel-cart-trailer-inspection-checklist":
+      return "Diesel Cart Trailer Inspection Checklist"
+    case "ponsse-bison-pre-shift-inspection":
+      return "Ponsse Bison Pre-Shift Inspection Checklist"
+    case "service-diesel-truck-pre-shift-inspection":
+      return "Service/Diesel Truck Pre-Shift Inspection Checklist"
     default:
       return type
   }
@@ -528,6 +1408,16 @@ function getDocumentDetails(type: string) {
       return { ref: "HSEMS/8.2.1/REG/01", rev: "3", date: "20.04.2020" }
     case "water-cart-trailer-pressure-washer":
       return { ref: "HSEMS/8.1.19/REG/015", rev: "2", date: "23.03.2020" }
+    case "water-cart-trailer-inspection":
+      return { ref: "HSEMS/8.1.19/REG/015A", rev: "3", date: "04.10.2024" }
+    case "pressure-washer-checklist":
+      return { ref: "HSEMS/8.1.19/REG/015B", rev: "2", date: "23.03.2020" }
+    case "diesel-cart-trailer-inspection-checklist":
+      return { ref: "HSEMS / 8.1.9 / REG /014", rev: "2", date: "03/27/20" }
+    case "ponsse-bison-pre-shift-inspection":
+      return { ref: "HSEMS / 8.1.9 / REG /014", rev: "3", date: "03/27/20" }
+    case "service-diesel-truck-pre-shift-inspection":
+      return { ref: "HSEMS / 8.1.19 / REG / 014", rev: "4", date: "04/10/24" }
     default:
       return { ref: "HSEMS/8.1.19/REG/000", rev: "0", date: "01.01.2020" }
   }
@@ -573,8 +1463,8 @@ export function exportSubmissionsToCSV(submissions: Submission[]): void {
         minute: "2-digit",
       }),
       sub.hasDefects ? "Defects Found" : "Clean",
-      sub.data.defectDetails || "",
-      sub.data.signature || "",
+      (sub.data as any).defectDetails || "",
+      (sub.data as any).signature || "",
     ])
   }
   const csv = rows.map((r) => r.map(escapeCSV).join(",")).join("\n")
@@ -611,10 +1501,10 @@ export function exportSingleSubmissionToCSV(sub: Submission): void {
     }
   }
   rows.push([])
-  if (sub.data.defectDetails) {
-    rows.push(["Defect Details", sub.data.defectDetails])
+  if ((sub.data as any).defectDetails) {
+    rows.push(["Defect Details", (sub.data as any).defectDetails])
   }
-  rows.push(["Signature", sub.data.signature || "-"])
+  rows.push(["Signature", (sub.data as any).signature || "-"])
   const csv = rows.map((r) => r.map(escapeCSV).join(",")).join("\n")
   const filename = `ringomode-${sub.formType}-${sub.submittedBy.replace(/\s/g, "_")}-${sub.id.slice(0, 8)}.csv`
   downloadFile(csv, filename, "text/csv;charset=utf-8;")
@@ -703,7 +1593,14 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
   doc.text(formTypeLabel(sub.formType), pageWidth / 2, yOffset + 18, { align: 'center' })
 
   // ----- Document Reference -----
-  const docDetails = getDocumentDetails(sub.formType);
+  const docDetails = (sub.data as any).documentRefNo
+    ? {
+      ref: (sub.data as any).documentRefNo,
+      rev: (sub.data as any).revision,
+      date: (sub.data as any).creationDate || (sub.data as any).date
+    }
+    : getDocumentDetails(sub.formType);
+
   doc.setFontSize(10)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(34, 100, 54)
@@ -770,6 +1667,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
   let y = (doc as any).lastAutoTable?.finalY ?? yOffset + 33
   y += 10
 
+
   // Choose sections array based on form type (harvester, loader, or skidder)
   const formSections = sub.formType === 'excavator-harvester'
     ? sections
@@ -781,10 +1679,70 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
           ? weeklyAssessmentSections
           : (sub.formType === 'daily-machine-checklist'
             ? dailyChecklistSections
-            : null))))
+
+            // Ponsse Bison
+            : (sub.formType === 'ponsse-bison-pre-shift-inspection'
+              ? ponsseBisonSections
+              : (sub.formType === 'self-loading-forwarder-pre-shift-inspection'
+                ? selfLoadingForwarderSections
+                : (sub.formType === 'service-diesel-truck-pre-shift-inspection'
+                  ? serviceDieselTruckSections
+                  : (sub.formType === 'trailer-excl-labour'
+                    ? trailerExclLabourSections
+                    : (sub.formType === 'water-cart-trailer-pressure-washer'
+                      ? waterCartTrailerSections
+                      : (sub.formType === 'water-cart-trailer-inspection'
+                        ? waterCartInspectionSections
+                        : (sub.formType === 'pressure-washer-checklist'
+                          ? pressureWasherChecklistSections
+                          : null
+                        )))))))))))
 
   if (formSections) {
     for (const section of formSections) {
+      // DANGER ICON LOGIC
+      let dangerType: "skull" | "warning" | undefined
+      if (sub.formType === ('dezzi-timber-truck' as FormType)) {
+        dangerType = dezziDangerTypeMap[section.title]
+      } else if (sub.formType === 'skidder-pre-shift-inspection') {
+        dangerType = skidderDangerTypeMap[section.title]
+      } else if (sub.formType === 'ponsse-bison-pre-shift-inspection') {
+        dangerType = ponsseBisonDangerTypeMap[section.title]
+      } else if (sub.formType === 'self-loading-forwarder-pre-shift-inspection') {
+        dangerType = selfLoadingForwarderDangerTypeMap[section.title]
+      } else if (sub.formType === 'service-diesel-truck-pre-shift-inspection') {
+        dangerType = serviceDieselTruckDangerTypeMap[section.title]
+      } else if (sub.formType === 'trailer-excl-labour') {
+        // We don't have a separate map variable exported, but we can check the section definition or use a local map
+        // For now, let's hardcode the known danger items based on the form definition
+        if (["Drawbar", "Safety Chain", "Jockey Wheel", "Land Gear, Wooden Stands Not Permitted", "Emergency Triangles", "Fire Extinguisher (1 x 9kg extinguisher)"].includes(section.title)) {
+          dangerType = "skull";
+        } else if (section.title === "Chocks") {
+          dangerType = "warning";
+        }
+      } else if (sub.formType === 'water-cart-trailer-pressure-washer' || sub.formType === 'water-cart-trailer-inspection' || sub.formType === 'pressure-washer-checklist') {
+        const skullItems = [
+          "Drawbar",
+          "Jockey Wheel",
+          "Land Gear, Wooden Stands Not Permitted",
+          "Signage",
+          "Emergency Triangles",
+          "Fire Extinguishers (One in place)",
+          "Pressure Hose",
+          "Pressure Gun",
+          "Lance (Wand)"
+        ];
+
+        if (skullItems.includes(section.title)) {
+          dangerType = "skull";
+        }
+      }
+
+      // Check for page break
+      if (y > 270) {
+        doc.addPage()
+        y = 20
+      }
       // Find which items of this section are present in the submission
       const sectionItems = section.items.filter(item => (sub.data as any).items && item in (sub.data as any).items)
       if (sectionItems.length === 0) continue
@@ -858,10 +1816,11 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
 
             // Render main icon (centered)
             if (iconBase64 && iconBase64.length > 200) {
-              const iconSize = 60
-              const iconX = (pageWidth - iconSize) / 2
-              doc.addImage(iconBase64, 'PNG', iconX, y, iconSize, iconSize)
-              y += iconSize + 5
+              const iconWidth = 55
+              const iconHeight = 40
+              const iconX = (pageWidth - iconWidth) / 2
+              doc.addImage(iconBase64, 'PNG', iconX, y, iconWidth, iconHeight)
+              y += iconHeight + 5
             } else {
               y += 5
             }
@@ -880,7 +1839,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       // ----- Second half items -----
       const secondHalfRows = secondHalf.map(item => [
         item,
-        statusLabel(sub.data.items[item] as CheckStatus)
+        statusLabel((sub.data as any).items[item] as CheckStatus)
       ])
 
       if (secondHalfRows.length > 0) {
@@ -927,8 +1886,9 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
       return result.charAt(0).toUpperCase() + result.slice(1)
     }
 
-    if (sub.data.items) {
-      for (const [item, status] of Object.entries(sub.data.items)) {
+    // Check if items exist before accessing
+    if ('items' in sub.data && (sub.data as any).items) {
+      for (const [item, status] of Object.entries((sub.data as any).items)) {
         itemRows.push([item, statusLabel(status as CheckStatus)])
       }
     } else {
@@ -949,7 +1909,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
     if (itemRows.length > 0) {
       ; (doc as any).autoTable({
         startY: y,
-        head: [[sub.data.items ? "Inspection Item" : "Field", sub.data.items ? "Status" : "Value"]],
+        head: [[(sub.data as any).items ? "Inspection Item" : "Field", (sub.data as any).items ? "Status" : "Value"]],
         body: itemRows,
         theme: "grid",
         headStyles: {
@@ -1053,7 +2013,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
   }
 
   // ----- Defect Details -----
-  if (sub.data.defectDetails) {
+  if ((sub.data as any).defectDetails) {
     if (y > 260) {
       doc.addPage()
       y = 15
@@ -1064,7 +2024,7 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
     y += 5
     doc.setFontSize(8)
     doc.setTextColor(60)
-    const lines = doc.splitTextToSize(sub.data.defectDetails, pageWidth - 28)
+    const lines = doc.splitTextToSize((sub.data as any).defectDetails, pageWidth - 28)
     doc.text(lines, 14, y)
     y += lines.length * 4 + 6
   }
@@ -1087,8 +2047,8 @@ export async function exportSubmissionToPDF(sub: Submission): Promise<void> {
 
     if (sig.data && typeof sig.data === "string" && sig.data.startsWith("data:image")) {
       try {
-        doc.addImage(sig.data, "PNG", 14, y, 50, 20)
-        y += 25
+        doc.addImage(sig.data, "PNG", 14, y, 100, 50)
+        y += 55
       } catch (err) {
         console.error("Error adding signature image:", err)
         doc.setFontSize(9)

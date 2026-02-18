@@ -1,15 +1,10 @@
-import DezziTimberTruckForm from "@/components/forms/dezzi-timber-truck-form"
+import DieselCartTrailerForm from "@/components/forms/diesel-cart-trailer-form"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { SiteHeader } from "@/components/site-header"
 
-export const metadata = {
-    title: "Dezzi Timber Truck Pre-Shift Checklist | Ringomode",
-    description: "Complete your pre-shift Dezzi timber truck inspection checklist.",
-}
-
-export default function DezziTimberTruckPage() {
+export default function DieselCartTrailerPage() {
     return (
         <div className="min-h-screen bg-[#f0f4ec]">
             <SiteHeader />
@@ -23,7 +18,7 @@ export default function DezziTimberTruckPage() {
                         Back to Dashboard
                     </Button>
                 </Link>
-                <DezziTimberTruckForm />
+                <DieselCartTrailerForm />
             </div>
         </div>
     )

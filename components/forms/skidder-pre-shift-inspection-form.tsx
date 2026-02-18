@@ -1,20 +1,19 @@
 "use client"
 
 import React, { useRef, useState, useMemo, useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChecklistRadioGroup } from "@/components/checklist-radio-group"
-import { ChecklistStatusBadge } from "@/components/checklist-status-badge"
 import { type CheckStatus } from "@/lib/types"
-import { CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser, Info } from "lucide-react"
+import { CheckCircle2, Send, ArrowLeft, AlertCircle, Eraser, Info, Calendar, FileText } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { exportSubmissionToPDF } from "@/lib/export-utils"
 import { Separator } from "@/components/ui/separator"
 
 const sections = [
@@ -74,7 +73,7 @@ const renderGroupedSection = (
         {/* Center: Icons */}
         <div className="flex items-center gap-10 py-4">
           {/* Main Section Icon (machine part) */}
-          <div className="w-32 h-32 relative flex items-center justify-center p-2 bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden transform hover:scale-105 transition-transform duration-300">
+          <div className="w-32 h-32 relative flex items-center justify-center p-2 bg-white rounded-none shadow-md border border-gray-200 overflow-hidden transform hover:scale-105 transition-transform duration-300">
             <div className="relative w-full h-full flex items-center justify-center">
               <Image src={iconSrc} alt={`${title} icon`} width={110} height={110} className="object-contain relative z-10" />
               <div className="absolute inset-0 flex items-center justify-center -z-0">
@@ -103,7 +102,7 @@ const renderGroupedSection = (
         </div>
 
         {/* Right: Select Dropdown */}
-        <div className="w-full md:w-40 bg-gray-50 p-4 rounded-xl border border-gray-200">
+        <div className="w-full md:w-40 bg-gray-50 p-4 rounded-none border border-gray-200">
           <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 block">Status Control</Label>
           <Select
             value={itemState[items[0]] || ""}
@@ -128,9 +127,18 @@ const renderGroupedSection = (
 
 export default function SkidderPreShiftInspectionForm() {
   const router = useRouter()
-  const pathname = usePathname()
+  const [pathname, setPathname] = useState("")
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPathname(window.location.pathname)
+    }
+  }, [])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [documentNo, setDocumentNo] = useState("")
+
+  const [automaticNumber, setAutomaticNumber] = useState("")
+  const [submissionData, setSubmissionData] = useState<any>(null)
 
   const [formData, setFormData] = useState({
     operatorName: "",
@@ -311,26 +319,32 @@ export default function SkidderPreShiftInspectionForm() {
 
     setIsSubmitting(true)
 
+    // Generate Auto Number
+    const autoNum = Math.floor(2000 + Math.random() * 9000).toString()
+    setAutomaticNumber(autoNum)
+
     try {
-      const submissionData = {
-        ...formData,
-        documentNo,
-        items,
+      const submission = {
+        formType: "skidder-pre-shift-inspection",
+        formTitle: "Skidder (Grapple & Cable) Pre-Shift Inspection Checklist",
+        submittedBy: formData.operatorName,
+        submittedAt: new Date().toISOString(),
         hasDefects,
-        defectDetails,
-        signature: signatureImage,
+        data: {
+          ...formData,
+          documentNo,
+          items,
+          hasDefects,
+          defectDetails,
+          signature: signatureImage,
+          automaticNumber: autoNum
+        },
       }
 
       const response = await fetch("/api/submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "skidder-pre-shift-inspection",
-          formTitle: "Skidder (Grapple & Cable) Pre-Shift Inspection Checklist",
-          submittedBy: formData.operatorName,
-          hasDefects,
-          data: submissionData,
-        }),
+        body: JSON.stringify(submission),
       })
 
       if (response.status === 401) {
@@ -341,6 +355,7 @@ export default function SkidderPreShiftInspectionForm() {
 
       if (response.ok) {
         const result = await response.json()
+        setSubmissionData({ ...submission, id: result.id })
         toast.success("Checklist submitted successfully!")
         setSubmissionId(result.id)
         setSubmitted(true)
@@ -376,40 +391,28 @@ export default function SkidderPreShiftInspectionForm() {
     } as any)
   }
 
-  if (submitted) {
+  if (submitted && submissionData) {
     return (
-      <div className="mx-auto max-w-2xl p-4 lg:p-8 space-y-8">
-        <Card className="border-emerald-200 bg-emerald-50 p-8 text-center transition-all animate-in fade-in zoom-in duration-500">
-          <div className="flex justify-center mb-6">
-            <div className="h-20 w-20 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="h-10 w-10" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-emerald-900 mb-2">Submission Complete!</h1>
-          <p className="text-emerald-700 mb-8">
-            The Skidder Pre-Shift Inspection has been recorded successfully.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Button
-              size="lg"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 h-14 text-lg gap-2"
-              onClick={handleDownload}
-            >
-              <Info className="h-5 w-5" />
-              Download Form (PDF)
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full border-emerald-200 h-14 text-lg gap-2"
-              onClick={() => window.location.href = '/'}
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back to Dashboard
-            </Button>
-          </div>
-        </Card>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in duration-500">
+        <div className="rounded-full bg-green-100 p-6">
+          <CheckCircle2 className="h-16 w-16 text-green-600" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold text-gray-900">Submission Successful!</h2>
+          <p className="text-lg text-gray-500">The Skidder Pre-Shift Inspection Checklist has been recorded.</p>
+          <p className="text-xl font-bold text-[#4e8c31] mt-2">Automatic Number: {automaticNumber}</p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+          <Button
+            className="bg-[#fbb016] hover:bg-[#e5a014] text-black font-bold gap-2 h-12 px-8"
+            onClick={() => exportSubmissionToPDF(submissionData)}
+          >
+            <FileText className="h-5 w-5" /> Download PDF
+          </Button>
+          <Button variant="outline" className="h-12 px-8 font-bold" onClick={() => router.push("/")}>
+            Back to Dashboard
+          </Button>
+        </div>
       </div>
     )
   }
@@ -496,9 +499,9 @@ export default function SkidderPreShiftInspectionForm() {
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="pt-6">
           <div className="grid grid-cols-3 gap-2 text-center text-sm">
-            <div className="rounded-md bg-green-100 p-2 text-green-700">OK - In order</div>
-            <div className="rounded-md bg-red-100 p-2 text-red-700">DEF - Defective</div>
-            <div className="rounded-md bg-gray-100 p-2 text-gray-700">N/A - Not applicable</div>
+            <div className="rounded-none bg-green-100 p-2 text-green-700">OK - In order</div>
+            <div className="rounded-none bg-red-100 p-2 text-red-700">DEF - Defective</div>
+            <div className="rounded-none bg-gray-100 p-2 text-gray-700">N/A - Not applicable</div>
           </div>
         </CardContent>
       </Card>

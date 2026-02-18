@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 export const metadata: Metadata = {
   title: 'Ringomode HSE Management System',
   description: 'Health, Safety & Environment management checklists and inspection forms for Ringomode operations.',
+  // Forced refresh for route split
 }
 
 export default function RootLayout({

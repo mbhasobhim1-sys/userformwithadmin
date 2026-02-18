@@ -92,6 +92,24 @@ function formTypeLabel(type: string) {
       return "Lowbed & Roll Back Trailer"
     case "mechanic-ldv":
       return "Mechanic LDV"
+    case "diesel-cart-trailer-inspection-checklist":
+      return "Diesel Cart Trailer"
+    case "service-diesel-truck-pre-shift-inspection":
+      return "Service/Diesel Truck"
+    case "water-cart-trailer-pressure-washer":
+      return "Water Cart & Pressure Washer"
+    case "water-cart-trailer-inspection":
+      return "Water Cart Trailer"
+    case "pressure-washer-checklist":
+      return "Pressure Washer"
+    case "cintasign-shorthaul":
+      return "Cintasign Shorthaul"
+    case "vehicle-job-card":
+      return "Vehicle Job Card"
+    case "weekly-machinery-condition-assessment":
+      return "Weekly Machinery Assessment"
+    case "daily-machine-checklist":
+      return "Daily Machine Checklist"
     default:
       return type
   }
@@ -112,6 +130,18 @@ function getFormIcon(type: string) {
       return <Container className="h-4 w-4 text-muted-foreground" />
     case "mechanic-ldv":
       return <Wrench className="h-4 w-4 text-muted-foreground" />
+    case "service-diesel-truck-pre-shift-inspection":
+      return <Truck className="h-4 w-4 text-muted-foreground" />
+    case "water-cart-trailer-pressure-washer":
+      return <Truck className="h-4 w-4 text-muted-foreground" />
+    case "water-cart-trailer-inspection":
+      return <Container className="h-4 w-4 text-muted-foreground" />
+    case "pressure-washer-checklist":
+      return <Wrench className="h-4 w-4 text-muted-foreground" />
+    case "vehicle-job-card":
+      return <FileText className="h-4 w-4 text-muted-foreground" />
+    case "cintasign-shorthaul":
+      return <ClipboardList className="h-4 w-4 text-muted-foreground" />
     default:
       return <FileText className="h-4 w-4 text-muted-foreground" />
   }
@@ -212,10 +242,10 @@ function SubmissionPreview({ submission }: { submission: Submission }) {
               <div
                 key={item}
                 className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${status === "def"
-                    ? "bg-destructive/5"
-                    : idx % 2 === 0
-                      ? "bg-muted/30"
-                      : "bg-card"
+                  ? "bg-destructive/5"
+                  : idx % 2 === 0
+                    ? "bg-muted/30"
+                    : "bg-card"
                   }`}
               >
                 <span className="text-foreground">{item}</span>
@@ -727,6 +757,12 @@ export function AdminDashboard() {
                 {/* ✅ ADDED: New form types */}
                 <SelectItem value="lowbed-trailer">Lowbed & Roll Back</SelectItem>
                 <SelectItem value="mechanic-ldv">Mechanic LDV</SelectItem>
+                <SelectItem value="service-diesel-truck-pre-shift-inspection">Service/Diesel Truck</SelectItem>
+                <SelectItem value="water-cart-trailer-pressure-washer">Water Cart Trailer</SelectItem>
+                <SelectItem value="vehicle-job-card">Vehicle Job Card</SelectItem>
+                <SelectItem value="cintasign-shorthaul">Cintasign Shorthaul</SelectItem>
+                <SelectItem value="weekly-machinery-condition-assessment">Weekly Assessment</SelectItem>
+                <SelectItem value="daily-machine-checklist">Daily Machine Checklist</SelectItem>
               </SelectContent>
             </Select>
             <Select value={defectFilter} onValueChange={setDefectFilter}>
@@ -1066,8 +1102,8 @@ export function AdminDashboard() {
                               <div
                                 key={item}
                                 className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${status === "def"
-                                    ? "bg-destructive/5"
-                                    : "bg-muted/50"
+                                  ? "bg-destructive/5"
+                                  : "bg-muted/50"
                                   }`}
                               >
                                 <span className="text-foreground">{item}</span>
